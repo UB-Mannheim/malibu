@@ -6,7 +6,7 @@ Author: <a href="https://github.com/zuphilip">Philipp Zumstein</a> (UB Mannheim)
 
 ## Summary ![en](http://bib.uni-mannheim.de/fileadmin/scripts/flag_en.jpeg)
 
-malib is a collection of ligthweighted, web tools for bibliograhic data to help with the workflows, which are frequently found in libraries especially for subject librarians and in the acquisition departement. Main part is a mashup for ISBN-search and a search tool for the BNB weekly as well as some other tools.
+malibu is a collection of ligthweighted, web tools for bibliograhic data to help with the workflows, which are frequently found in libraries especially for subject librarians and in the acquisition departement. Main part is a mashup for ISBN-search and a search tool for the BNB weekly as well as some other tools.
 
 ## Online Test Installation
 
