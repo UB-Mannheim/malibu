@@ -1,7 +1,7 @@
 /*
  * Source: https://github.com/UB-Mannheim/malibu/isbn
  *
- * Copyright (C) 2014 Universit‰tsbibliothek Mannheim
+ * Copyright (C) 2014 Universit√§tsbibliothek Mannheim
  *
  * Author:
  *    Philipp Zumstein <philipp.zumstein@bib.uni-mannheim.de>
@@ -10,7 +10,7 @@
  * version 3, or (at your option) any later version.
  * See <http://www.gnu.org/licenses/> for more details.
  * 
- * Zusammenstellung von Javascript Funktionen haups‰chlich zur
+ * Zusammenstellung von Javascript Funktionen haupts√§chlich zur
  * Darstellung von den einzelnen Informationen.
  */
 
@@ -34,8 +34,8 @@ function renderRVK(rvkArray) {
             var rvk = rvkArray[i];
             var rvkUrl = 'http://rvk.uni-regensburg.de/index.php?rvkoNotationKey=' + rvk.replace(' ','+') + '&amp;option=com_rvko&amp;view=show&amp;mode=searchNotation';
             rvkArray[i] = '<a href="' + rvkUrl + '" target="_blank" class="' + rvk.replace(' ','-') + '">' + rvk + '</a>';
-            //Die Klassenbezeichnung hier ben¸tzen wir sp‰ter f¸r das
-            //dazuladen der Notationen im title-Attribute.
+            // Die Klassenbezeichnung hier ben√ºtzen wir sp√§ter f√ºr das
+            // dazuladen der Notationen im title-Attribute.
         }
         return rvkArray.join(', ');
     }
@@ -45,7 +45,7 @@ function renderRVK(rvkArray) {
 //Die Links erhalten gemaess ihrer RVK eine Klassenbezeichnung.
 //Dann wird JSONP irgendwann fertig sein und in diese Links
 //das Attribut title auf die entsprechende Benennung setzen.
-//Wichtig ist, dass die Link bereits da sein m¸ssen, bevor
+//Wichtig ist, dass die Link bereits da sein m√ºssen, bevor
 //die Funktion hier aufgeruft wird.
 function addBenennung(index, element) {
     var className = $(element).attr('class');
@@ -73,7 +73,7 @@ function renderDDC(ddcArray) {
     }
 }
 
-var paketInfoMap = [];//kann um die lokalen Pakete erg‰nzt werden
+var paketInfoMap = [];// kann um die lokalen Pakete erg√§nzt werden
 var overallPaketSigel = [];//alle bereits gefunden Sigel werden in einer Liste gespeichert
 
 function renderPS(psArray) {// PS = Produktsigel
@@ -163,8 +163,8 @@ function bestellInfoFenster(databaseText, currentRecord) {
     content += '; ' + render(currentRecord.erscheinungsinfo)+ ' ' + render(currentRecord.hochschulvermerk);
     content += '; ' + render(currentRecord.umfang);
 
-    //rudiment‰rer COinS Daten um beispielsweise Titel in Citavi, Zotero oder Mendeley zu speichern
-    //und dar¸ber Bestellungen zu verwalten:
+    // rudiment√§rer COinS Daten um beispielsweise Titel in Citavi, Zotero oder Mendeley zu speichern
+    // und dar√ºber Bestellungen zu verwalten:
     var coins = '<span class="Z3988" title="url_ver=Z39.88-2004&amp;ctx_ver=Z39.88-2004&amp;rft_val_fmt=info%3Aofi%2Ffmt%3Akev%3Amtx%3Abook';
     if (currentRecord.titel) { coins += '&amp;rft.btitle=' + encodeURIComponent(currentRecord.titel); }
     if (currentRecord.erscheinungsinfo) { coins += '&amp;rft.publisher=' + encodeURIComponent(currentRecord.erscheinungsinfo[1]); }

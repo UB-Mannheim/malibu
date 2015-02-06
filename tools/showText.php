@@ -3,20 +3,20 @@
 </head>
 <body>
 <?php
-/* 
+/*
  * Source: https://github.com/UB-Mannheim/malibu/
  *
- * Copyright (C) 2013 Universitätsbibliothek Mannheim
+ * Copyright (C) 2013 UniversitÃ¤tsbibliothek Mannheim
  *
  * Author:
  *    Philipp Zumstein <philipp.zumstein@bib.uni-mannheim.de>
- * 
- * This is free software licensed under the terms of the GNU GPL, 
+ *
+ * This is free software licensed under the terms of the GNU GPL,
  * version 3, or (at your option) any later version.
  * See <http://www.gnu.org/licenses/> for more details.
  *
  * Beschreibung: Wandelt eine Texteingabe um stellt den Texteingabe
- * als HTML-Seite dar. Dies ist insbesondere nützlich in Kombination
+ * als HTML-Seite dar. Dies ist insbesondere nÃ¼tzlich in Kombination
  * mit dem Mannheimer AutoLink Tool (Greasemonkey-Skript).
  */
 

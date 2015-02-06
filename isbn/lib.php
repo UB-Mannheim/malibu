@@ -2,7 +2,7 @@
 /*
  * Source: https://github.com/UB-Mannheim/malibu/isbn
  *
- * Copyright (C) 2014 Universitätsbibliothek Mannheim
+ * Copyright (C) 2014 UniversitÃ¤tsbibliothek Mannheim
  *
  * Author:
  *    Philipp Zumstein <philipp.zumstein@bib.uni-mannheim.de>
@@ -191,7 +191,7 @@ function getValues($xmlObject) {
 }
 
 
-//für MAB als XML Ausgabe
+// fÃ¼r MAB als XML Ausgabe
 function printLine($line) {
     $output = '';
     //nicht umgesetzt wurden: Stichwortzeichen <stw></stw>, Nichtsortierzeichen -> <ns></ns>
