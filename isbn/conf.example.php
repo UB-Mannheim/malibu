@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /*
  * Example Configuration File for malibu
  *
