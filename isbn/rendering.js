@@ -32,7 +32,7 @@ function renderRVK(rvkArray) {
     } else {
         for (var i=0; i<rvkArray.length; i++) {
             var rvk = rvkArray[i];
-            var rvkUrl = 'http://rvk.uni-regensburg.de/index.php?rvkoNotationKey=' + rvk.replace(' ','+') + '&amp;option=com_rvko&amp;view=show&amp;mode=searchNotation';
+            var rvkUrl = 'http://rvk.uni-regensburg.de/notation/' + rvk.replace(' ','+');
             rvkArray[i] = '<a href="' + rvkUrl + '" target="_blank" class="' + rvk.replace(' ','-') + '">' + rvk + '</a>';
             // Die Klassenbezeichnung hier benützen wir später für das
             // dazuladen der Notationen im title-Attribute.
