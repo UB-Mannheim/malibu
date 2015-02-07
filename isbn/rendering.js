@@ -183,7 +183,7 @@ function bestellInfoFenster(databaseText, currentRecord) {
  
 function getParameterByName(name) {
 /*
- * Paramter als URL-Anhaenge werden direkt
+ * Parameter als URL-Anhaenge werden direkt
  * ueber ihren Namen ansprechbar. Z.B.
  * bei liste-se.html?isbn=0521518148
  * getParameterByName("isbn") = 0521518148
