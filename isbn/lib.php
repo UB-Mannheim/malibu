@@ -41,7 +41,7 @@ $standardMarcMap = array(
     'rvk' => '//datafield[@tag="084" and contains(subfield[@code="2"], "rvk")]/subfield[@code="a"]',
     'ddc' => '//datafield[@tag="082" and @ind2!="9"]/subfield[@code="a"]',
     'sw' => array(
-        'mainPart' => '//datafield[@tag="689" and @ind2!=" "]',
+        'mainPart' => '//datafield[starts-with(@tag,"6") and (subfield[@code="2"]="gbv" or subfield[@code="2"]="gnd")]',
         'value' => './subfield[@code="a" or @code="t"]',
         'key' => './subfield[@code="0" and contains(text(), "(DE-588)")]'
      ),
