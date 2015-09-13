@@ -7,7 +7,7 @@
 
 ## bnb
 
-We included the getBNBData.sh as a cronjob, which runs every Saturday, at 10 am (010**6).
+We included `getBNBData.sh` as a cronjob, which runs every Saturday, at 10 am (010**6).
 
 ## isbn
 
@@ -16,9 +16,11 @@ You need the php library <a href="http://php.net/manual/en/book.yaz.php">yaz</a>
 
 1. <code>apt-get install yaz libyaz4-dev php5-dev php-pear</code> (maybe you have already some packages)
 2. <code>pecl install yaz</code>
-3. Open <code>/etc/php5/apache2/php.ini</code>, goto section <code>Dynamic Extensions</code> and add <code>extension=yaz.so</code>
+3. Open `/etc/php5/apache2/php.ini`, goto section `Dynamic Extensions` and add `extension=yaz.so`
 
-Maybe, the file <code>yaz.so</code> is in a different directory then what is indicated in <code>extension_dir</code> in <code>/etc/alternatives/php-config</code> and you have toc copy it therefore.
+Maybe, the file `yaz.so` is not located in the directory
+which is configured by `extension_dir` in
+`/etc/alternatives/php-config` and you have to copy it therefore.
 (e.g. <code>cp /usr/lib/php5/20090626/yaz.so /usr/lib/php5/20100525/yaz.so</code> in our case).
 
 #### For Debian 8 (Apache 2.4)
@@ -26,7 +28,7 @@ You need the php library <a href="http://php.net/manual/en/book.yaz.php">yaz</a>
 
 * <code>apt-get install yaz libyaz4-dev php5-dev php-pear</code> (maybe you have already some packages)
 * <code>pecl install yaz</code>
-* create new file <code>/etc/php5/mods-available/yaz.ini</code> and add
+* create new file `/etc/php5/mods-available/yaz.ini` and add
 ```sh
 ; configuration for php YAZ module
 ; priority=20
