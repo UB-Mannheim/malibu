@@ -49,6 +49,13 @@ define('HEBIS_SYNTAX',      '');//TODO look up
 define('HEBIS_ELEMENTSET',  'F');
 
 
+//NEBIS
+//http://nebis2.ethz.ch/technik/z3950.html
+define('NEBIS_URL',           'opac.nebis.ch:9909/NEBIS_UTF');
+define('NEBIS_SYNTAX',        'marc21');
+define('NEBIS_ELEMENTSET',    'F');//gross
+
+
 //BL = British Library
 //http://www.bl.uk/bibliographic/z3950configuration.html
 define('BL_URL',            'z3950cat.bl.uk:9909/BNB03U');

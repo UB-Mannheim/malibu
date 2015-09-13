@@ -45,7 +45,7 @@ $standardMarcMap = array(
         'value' => './subfield[@code="a" or @code="t"]',
         'key' => './subfield[@code="0" and contains(text(), "(DE-588)")]'
      ),
-     'produktSigel' => '//datafield[@tag="912"]/subfield[@code="a"]'
+     'produktSigel' => '//datafield[@tag="912" and not(@ind2="7")]/subfield[@code="a"]'
 );
 
 $standardMabMap = array(
