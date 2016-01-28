@@ -212,5 +212,3 @@ if (isset($rating)) {
 }
 
 echo '</td></tr></table>';
-       
-?>

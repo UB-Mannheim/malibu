@@ -116,4 +116,3 @@ foreach ($nrArray as $nrElement) {
 }
 
 echo "</bnb>";
-?>
