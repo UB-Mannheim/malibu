@@ -99,6 +99,7 @@ function isbnEingabe(n) {
     $('#suche'+'HEBIS').html('<a href="http://cbsopac.rz.uni-frankfurt.de/DB=2.1/SET=1/TTL=1/CMD?ACT=SRCHA&IKT=6015&SRT=YOP&TRM='+nArray[0]+'" target="_blank">HEBIS</a>');
     $('#suche'+'B3KAT').html('<a href="https://opacplus.bib-bvb.de/TouchPoint_touchpoint/start.do?Query=-1%3D%22' + nArray[0] + '%22&Language=De&SearchProfile=" target="_blank">B3KAT</a>');
     $('#suche'+'HBZ').html('<a href="http://okeanos-www.hbz-nrw.de/F/?FUNC=find-c&CCL_TERM=+IBN=%28'+nArray[0]+'" target="_blank">HBZ</a>');
+    $('#suche'+'SWISS').html('<a href="https://www.swissbib.ch/Search/Results?lookfor='+nArray[0]+'&type=AllFields&limit=20&sort=relevance" target="_blank">SWISS</a>');
     
     
     // Bestandsabgleich für die UB Mannheim
@@ -206,7 +207,7 @@ function isbnEingabe(n) {
     });
     
     
-    var andereVerbuende = ["GBV", "HEBIS", "B3KAT", "HBZ"];
+    var andereVerbuende = ["GBV", "HEBIS", "B3KAT", "HBZ", "SWISS"];
     $.each(andereVerbuende, function(index, verbund){
         $.getJSON(verbund.toLowerCase()+".php"+query+"&format=json", function(data){
             
@@ -256,6 +257,7 @@ ID: <input id="eingabePpn" type="text" size="30" maxlength="30">
 <input type="radio" name="eingabeVerbund" value="B3KAT">B3KAT
 <input type="radio" name="eingabeVerbund" value="HEBIS">HEBIS
 <input type="radio" name="eingabeVerbund" value="HBZ">HBZ
+<input type="radio" name="eingabeVerbund" value="SWISS">SWISS
 <input type="submit" value="Submit">
 </form>
 </td>  
@@ -314,6 +316,12 @@ ID: <input id="eingabePpn" type="text" size="30" maxlength="30">
         <td id="rvkGBV"></td>
         <td id="ddcGBV"></td>
         <td id="swGBV"></td>
+    </tr>
+	<tr>
+        <td><div id="sucheSWISS">swissbib</div><div id="bestandSWISS"></div></td>
+        <td id="rvkSWISS"></td>
+        <td id="ddcSWISS"></td>
+        <td id="swSWISS"></td>
     </tr>
 </table>
 
