@@ -130,7 +130,7 @@ function isbnEingabe(n) {
         
         $('#ausgaben').html('<table border="1" width="100%"></table>');
         databaseText = 'SWB-Nr.: ';
-        var bestandsArray = new Array;
+        var bestandsArray = [];
         $.each(data.einzelaufnahmen, function(key, currentRecord) {
             $('#ausgaben table').append("<tr id='"+currentRecord.id+"'><td>"+currentRecord.id+"<br/><form action='#'><input type='button' value='Bestell Info'/></form></td>");
             $('#'+currentRecord.id).append("<td>"+render(currentRecord.auflage)+"</td>");
@@ -222,7 +222,7 @@ function isbnEingabe(n) {
             if (data.oclcNr && data.oclcNr.length>0) {
                 $('#links').append( renderLinks( [ "http://www.worldcat.org/oclc/"+data.oclcNr[0] ] ) );
             }
-            var bestandsListe = new Array;
+            var bestandsListe = [];
             for (var i=0; i<data.einzelaufnahmen.length; i++) {
                 bestandsListe.push(data.einzelaufnahmen[i].bestand.length);
             }

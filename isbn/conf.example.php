@@ -59,5 +59,3 @@ define('BL_ELEMENTSET',     'F');
 
 
 //you can add more here
-
-?>

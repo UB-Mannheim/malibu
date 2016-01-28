@@ -232,5 +232,3 @@ function printMabContent($content) {
     return htmlspecialchars($content, ENT_XML1);
 }
 */
-
-?>
