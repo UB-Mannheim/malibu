@@ -6,7 +6,7 @@
  *
  * Author:
  *    Philipp Zumstein <philipp.zumstein@bib.uni-mannheim.de>
- * 
+ *
  * Aufruf aus Webbrowser:
  * bl?isbn=ISBN
  *   ISBN ist eine 10- bzw. 13-stellige ISBN mit/ohne Bindestriche/Leerzeichen
@@ -17,11 +17,11 @@
  * bl?ppn=PPN&format=json
  *   Ausgabe erfolgt als JSON
  *
- * Sucht übergebene ISBN bzw. PPN im BL-Katalog 
+ * Sucht übergebene ISBN bzw. PPN im BL-Katalog
  * und gibt maximal 10 Ergebnisse als MARCXML zurück
  * bzw. als JSON.
  */
- 
+
 include 'lib.php';
 
 $id = yaz_connect(BL_URL, array("user" => BL_USER, "password" => BL_PASSWORD));
@@ -35,7 +35,7 @@ if (isset($_GET['ppn'])) {
 }
 if (isset($_GET['isbn'])) {
     $n = trim($_GET['isbn']);
-    $nArray = explode(",",$n);
+    $nArray = explode(",", $n);
     if (count($nArray)>1) {
         //mehrere ISBNs, z.B. f @or @or @attr 1=7 "9783937219363" @attr 1=7 "9780521369107" @attr 1=7 "9780521518147"
         //Anfuehrungsstriche muessen demaskiert werden, egal ob String mit ' gemacht wird
@@ -73,7 +73,7 @@ $map = $standardMarcMap;
 $map['bestand'] = '//datafield[@tag="900"]/subfield[@code="b"]';
 
 
-if (!isset($_GET['format'] )) {
+if (!isset($_GET['format'])) {
     header('Content-type: text/xml');
     echo $outputString;
 
@@ -88,8 +88,8 @@ if (!isset($_GET['format'] )) {
         array_push($outputIndividualMap, $outputSingleMap);
     }
     $outputMap["einzelaufnahmen"] = $outputIndividualMap;
-    
-    
+
+
     header('Content-type: application/json');
     echo json_encode($outputMap, JSON_PRETTY_PRINT);
 }

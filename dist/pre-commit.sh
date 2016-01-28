@@ -19,7 +19,7 @@
 #        of git staged files.
 #
 # SEE ALSO
-#        shellcheck(1), phpcs(1), git-diff(1)
+#        phpcs(1), git-diff(1), shellcheck(1)
 #------------------------------------------------------------------------------
 
 # git-diff command

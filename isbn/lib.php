@@ -6,16 +6,16 @@
  *
  * Author:
  *    Philipp Zumstein <philipp.zumstein@bib.uni-mannheim.de>
- * 
- * This is free software licensed under the terms of the GNU GPL, 
+ *
+ * This is free software licensed under the terms of the GNU GPL,
  * version 3, or (at your option) any later version.
  * See <http://www.gnu.org/licenses/> for more details.
  *
  * Zusammenstellung von Funktionen und gemeinsam genutzten Konstrukten
  * sowie Laden der ini Datei.
- * 
+ *
  */
- 
+
 if (!file_exists('conf.php')) {
     exit("ERROR: conf.php nicht gefunden");
 }
@@ -69,7 +69,8 @@ $standardMabMap = array(
     'produktSigel' => '//feld[@nr="078" and @ind="e"]/uf[@code="a"]',
 );
 
-function performMapping($map, $outputXml) {
+function performMapping($map, $outputXml)
+{
     $outputMap = [];
     foreach ($map as $label => $xpath) {
         //$xpath = '//datafield[@tag="020"]/subfield[@code="a"]';
@@ -100,14 +101,15 @@ function performMapping($map, $outputXml) {
                 }
             }
             $outputMap[$label] = $outputArray;
-            
+
         }
-         
+
     }
     return cleanUp($outputMap);
 }
 
-function cleanUp($outputMap) {
+function cleanUp($outputMap)
+{
     if (is_array($outputMap['bestand'])) {
         foreach ($outputMap['bestand'] as $i => $sigel) {
             $outputMap['bestand'][$i] = str_replace('DE-', '', $sigel);
@@ -131,10 +133,10 @@ function cleanUp($outputMap) {
                 "  4045981-0           Physiologie"
                 "  |Lehrbuch"
                 */
-                if ( preg_match('/^\s*([0123456789Xx-]+)\s+(\S.*)$/', $value, $treffer) ) {
+                if (preg_match('/^\s*([0123456789Xx-]+)\s+(\S.*)$/', $value, $treffer)) {
                     $outputMap['sw'][ $treffer[2] ] = $treffer[1];
                 } else {
-                    $value = trim(str_replace('|', '', str_replace('1|', '',$value)));
+                    $value = trim(str_replace('|', '', str_replace('1|', '', $value)));
                     $outputMap['sw'][ $value ] = true;
                 }
                 unset($outputMap['sw'][ $index ]);
@@ -144,7 +146,7 @@ function cleanUp($outputMap) {
     if (is_array($outputMap['gesamttitel'])) {
         foreach ($outputMap['gesamttitel'] as $i => $gesamttitel) {
             if (is_string($gesamttitel)) {
-                $outputMap['gesamttitel'][$i] = trim( preg_replace ('/\s+/' , ' ' , $gesamttitel) );
+                $outputMap['gesamttitel'][$i] = trim(preg_replace('/\s+/', ' ', $gesamttitel));
             }
         }
     }
@@ -180,32 +182,34 @@ function cleanUp($outputMap) {
             }
         }
     }
-    
+
     return $outputMap;
 }
 
 
-function getValues($xmlObject) {
+function getValues($xmlObject)
+{
     //return (string)$xmlObject;
     return dom_import_simplexml($xmlObject)->textContent;
 }
 
 
 // für MAB als XML Ausgabe
-function printLine($line) {
+function printLine($line)
+{
     $output = '';
     //nicht umgesetzt wurden: Stichwortzeichen <stw></stw>, Nichtsortierzeichen -> <ns></ns>
     if (strlen($line) > 1) {//Am Ende gibt es ein Satzendezeichen 1E, damit hat der String die Groesse 1.
-        $nr  = substr($line,0,3);
-        $ind = substr($line,3,1);
-        $inhalt = substr($line,4);
+        $nr  = substr($line, 0, 3);
+        $ind = substr($line, 3, 1);
+        $inhalt = substr($line, 4);
         if (strstr($inhalt, "\x1f")) {
-           $lineArray =  explode("\x1f", $inhalt);
-           $output .= "<feld nr='$nr' ind='$ind'>\n";
-           for ($k = 1; $k < count($lineArray); $k++) {
-                $output .= '<uf code="'.substr($lineArray[$k],0,1).'">'.printMabContent(substr($lineArray[$k],1)).'</uf>'."\n";
-           }
-           $output .= "</feld>";
+            $lineArray =  explode("\x1f", $inhalt);
+            $output .= "<feld nr='$nr' ind='$ind'>\n";
+            for ($k = 1; $k < count($lineArray); $k++) {
+                 $output .= '<uf code="'.substr($lineArray[$k], 0, 1).'">'.printMabContent(substr($lineArray[$k], 1)).'</uf>'."\n";
+            }
+            $output .= "</feld>";
         } else {
             $output .= '<feld nr="'.$nr.'" ind="'.$ind.'">'.printMabContent($inhalt).'</feld>'."\n";
         }
@@ -214,9 +218,10 @@ function printLine($line) {
 }
 
 
-function printMabContent($content) {
+function printMabContent($content)
+{
     $tf = "\xE2\x80\xA1";//Teilfeldtrennzeichen
-    if (strpos($content, $tf) !== false ) {
+    if (strpos($content, $tf) !== false) {
         $feldArray =  explode($tf, $content);
         for ($l = 1; $l < count($feldArray); $l++) {
             $feldArray[$l] = htmlspecialchars($feldArray[$l], ENT_XML1);
@@ -228,7 +233,8 @@ function printMabContent($content) {
 }
 
 /* Alternative:
-function printMabContent($content) {
+function printMabContent($content)
+{
     return htmlspecialchars($content, ENT_XML1);
 }
 */

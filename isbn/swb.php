@@ -6,8 +6,8 @@
  *
  * Author:
  *    Philipp Zumstein <philipp.zumstein@bib.uni-mannheim.de>
- * 
- * This is free software licensed under the terms of the GNU GPL, 
+ *
+ * This is free software licensed under the terms of the GNU GPL,
  * version 3, or (at your option) any later version.
  * See <http://www.gnu.org/licenses/> for more details.
  *
@@ -21,7 +21,7 @@
  * swb?ppn=PPN&format=json
  *   Ausgabe erfolgt als JSON
  *
- * Sucht übergebene ISBN bzw. PPN im SWB-Katalog 
+ * Sucht übergebene ISBN bzw. PPN im SWB-Katalog
  * und gibt maximal 10 Ergebnisse als MARCXML zurück
  * bzw. als JSON.
  */
@@ -39,7 +39,7 @@ if (isset($_GET['ppn'])) {
 }
 if (isset($_GET['isbn'])) {
     $n = trim($_GET['isbn']);
-    $nArray = explode(",",$n);
+    $nArray = explode(",", $n);
     if (count($nArray)>1) {
         //mehrere ISBNs, z.B. f @or @or @attr 1=7 "9783937219363" @attr 1=7 "9780521369107" @attr 1=7 "9780521518147"
         //Anfuehrungsstriche muessen demaskiert werden, egal ob String mit ' gemacht wird
@@ -80,7 +80,7 @@ if (!isset($_GET['format'] )) {
     echo $outputString;
 } else if ($_GET['format']=='json') {
     $outputXml = simplexml_load_string($outputString);
-    
+
     $outputMap = performMapping($map, $outputXml);
     $outputIndividualMap = [];
     for ($j=0; $j<count($outputArray); $j++) {
@@ -89,8 +89,8 @@ if (!isset($_GET['format'] )) {
         array_push($outputIndividualMap, $outputSingleMap);
     }
     $outputMap["einzelaufnahmen"] = $outputIndividualMap;
-    
-    
+
+
     header('Content-type: application/json');
     echo json_encode($outputMap, JSON_PRETTY_PRINT);
 }
