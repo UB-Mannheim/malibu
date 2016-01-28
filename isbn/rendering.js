@@ -207,7 +207,7 @@ function isbn10(z) {
         if (t == 10) {
             t = 'X';
         }
-        return z.substr(3, 9) + $t;
+        return z.substr(3, 9) + t;
     } else {
         return z;
     }
