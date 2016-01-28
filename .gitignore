@@ -4,3 +4,4 @@
 /isbn/temp
 /isbn/jquery*.js
 /bnb/BNBDaten/*
+/dist/phpcs.phar
