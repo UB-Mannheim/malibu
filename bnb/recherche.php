@@ -201,6 +201,7 @@ Lesezeichen zu erstellen, z.B.
                         <input type="radio" name="forth" value="no" checked>nein
                         <input type="radio" name="forth" value="only">nur diese</td>
                 </tr>
+                <tr>
                 <td>Publikationen ohne ISBN (Zeitschriften, graue Literatur) auch anzeigen?</td>
                 <td><input type="radio" name="noisbn" value="yes">ja
                     <input type="radio" name="noisbn" value="no" checked>nein
