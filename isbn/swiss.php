@@ -2,7 +2,7 @@
 /*
  * Source: https://github.com/UB-Mannheim/malibu/isbn
  *
- * Copyright (C) 2013 Universitätsbibliothek Mannheim
+ * Copyright (C) 2015 Universitätsbibliothek Mannheim
  *
  * Author:
  *    Philipp Zumstein <philipp.zumstein@bib.uni-mannheim.de>
@@ -12,65 +12,69 @@
  * See <http://www.gnu.org/licenses/> for more details.
  *
  * Aufruf aus Webbrowser:
- * swb?isbn=ISBN
+ * swissbib?isbn=ISBN
  *   ISBN ist eine 10- bzw. 13-stellige ISBN mit/ohne Bindestriche/Leerzeichen
  *   ISBN kann ebenfalls eine Komma-separierte Liste von ISBNs sein
- * swb?ppn=PPN
- *   PPN ist die eine ID-Nummer des SWB
- * swb?isbn=ISBN&format=json
- * swb?ppn=PPN&format=json
+ * swissbib?ppn=PPN
+ *   PPN ist die eine ID-Nummer des swissbib
+ * swissbib?isbn=ISBN&format=json
+ * swissbib?ppn=PPN&format=json
  *   Ausgabe erfolgt als JSON
  *
- * Sucht übergebene ISBN bzw. PPN im SWB-Katalog
+ * Sucht übergebene ISBN bzw. PPN im swissbib-Katalog
  * und gibt maximal 10 Ergebnisse als MARCXML zurück
  * bzw. als JSON.
  */
 
 include 'lib.php';
 
-$id = yaz_connect(SWB_URL);
-yaz_syntax($id, SWB_SYNTAX);//utf-8 Kodierung
-yaz_range($id, 1, 10);
-yaz_element($id, SWB_ELEMENTSET);
-
 if (isset($_GET['ppn'])) {
     $ppn = trim($_GET['ppn']);
-    yaz_search($id, "rpn", '@attr 5=100 @attr 1=12 "' . $ppn . '"');
+    $suchString = 'dc.id=' . $ppn;
 }
+
+/*
+http://sru.swissbib.ch/sru/search/defaultdb?query=
++dc.identifier+%3D+978981-4447508+OR+dc.identifier+%3D+981444751
+&operation=searchRetrieve&recordSchema=info%3Asrw%2Fschema%2F1%2Fmarcxml-v1.1-light&maximumRecords=10&x-info-10-get-holdings=true&startRecord=0&recordPacking=XML&availableDBs=defaultdb&sortKeys=Submit+query
+*/
+
+$urlBase = 'http://sru.swissbib.ch/sru/search/defaultdb?query=';
+$urlSuffix = '&operation=searchRetrieve&recordSchema=info%3Asrw%2Fschema%2F1%2Fmarcxml-v1.1-light&maximumRecords=10&x-info-10-get-holdings=true&startRecord=0&recordPacking=XML&availableDBs=defaultdb&sortKeys=Submit+query';
+
 if (isset($_GET['isbn'])) {
     $n = trim($_GET['isbn']);
     $nArray = explode(",", $n);
-    if (count($nArray)>1) {
-        //mehrere ISBNs, z.B. f @or @or @attr 1=7 "9783937219363" @attr 1=7 "9780521369107" @attr 1=7 "9780521518147"
-        //Anfuehrungsstriche muessen demaskiert werden, egal ob String mit ' gemacht wird
-        $suchString = str_repeat("@or ", count($nArray)-1) . '@attr 1=7 \"' . implode('\" @attr 1=7 \"', $nArray) . '\"';
-        yaz_search($id, "rpn", $suchString);
-    } else {
-        yaz_search($id, "rpn", '@attr 5=100 @attr 1=7 "' . $n . '"');
-    }
-    // @attr 5=100 -> no truncation, ist aber Standardeinstellung, kann daher auch weg
+    $suchString = 'dc.identifier=' . implode('+OR+dc.identifier=', $nArray);
 }
-yaz_wait();
-$error = yaz_error($id);
-if (!empty($error)) {
-    echo "Error Number: " . yaz_errno($id);
-    echo "Error Description: " . $error ;
-    echo "Additional Error Information: " . yaz_addinfo($id);
+
+$result = file_get_contents($urlBase . $suchString . $urlSuffix);
+
+if ($result === false) {
+    var_dump($urlBase . $suchString . $urlSuffix);
+    exit;
 }
+
+$result = str_replace(' xmlns:xs="http://www.w3.org/2001/XMLSchema"', '', $result);
+
+$doc = new DOMDocument();
+$doc->preserveWhiteSpace = false;
+@$doc->loadHTML($result);
+$xpath = new DOMXPath($doc);
+
+$records = $xpath->query("//records/record/recorddata/record");//beachte: kein CamelCase sondern alles klein schreiben
 
 $outputString = "<?xml version=\"1.0\"?>\n";
 $outputString .= "<collection>\n";
 $outputArray = [];
 
-for ($p = 1; $p <= yaz_hits($id); $p++) {
-    $record = yaz_record($id, $p, "xml");
-    //namespace löschen
-    $record = str_replace('xmlns="http://www.loc.gov/MARC21/slim"', '', $record);
-    $outputString .=  $record;
-    array_push($outputArray, $record);
+foreach ($records as $record) {
+
+    $outputString .=  $doc->saveXML($record);
+    array_push($outputArray, $doc->saveXML($record));
 }
 $outputString .=  "</collection>";
-yaz_close($id);
+
 
 $map = $standardMarcMap;
 

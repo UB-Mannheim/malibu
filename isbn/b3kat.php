@@ -56,9 +56,9 @@ if (isset($_GET['isbn'])) {
 yaz_wait();
 $error = yaz_error($id);
 if (!empty($error)) {
-    echo "Error Number: " + yaz_errno($id);
-    echo "Error Description: " + $error ;
-    echo "Additional Error Information: " + yaz_addinfo($id);
+    echo "Error Number: " . yaz_errno($id);
+    echo "Error Description: " . $error ;
+    echo "Additional Error Information: " . yaz_addinfo($id);
 }
 
 $outputString = "<?xml version=\"1.0\"?>\n";
@@ -109,5 +109,3 @@ if (!isset($_GET['format'])) {
     header('Content-type: application/json');
     echo json_encode($outputMap, JSON_PRETTY_PRINT);
 }
-
-?>

@@ -55,9 +55,9 @@ if (isset($_GET['isbn'])) {
 yaz_wait();
 $error = yaz_error($id);
 if (!empty($error)) {
-    echo "Error Number: " + yaz_errno($id);
-    echo "Error Description: " + $error ;
-    echo "Additional Error Information: " + yaz_addinfo($id);
+    echo "Error Number: " . yaz_errno($id);
+    echo "Error Description: " . $error ;
+    echo "Additional Error Information: " . yaz_addinfo($id);
 }
 
 $outputString = "<?xml version=\"1.0\"?>\n";
@@ -68,9 +68,9 @@ for ($p = 1; $p <= yaz_hits($id); $p++) {
     $record = yaz_record($id, $p, "render;charset=iso5426,utf8");//render;charset=iso5426,utf8
     $error = yaz_error($id);
     if (!empty($error)) {
-        echo "Error Number: " + yaz_errno($id);
-        echo "Error Description: " + $error ;
-        echo "Additional Error Information: " + yaz_addinfo($id);
+        echo "Error Number: " . yaz_errno($id);
+        echo "Error Description: " . $error ;
+        echo "Additional Error Information: " . yaz_addinfo($id);
     }
     $recordArray =  explode("\x1e", $record);
     $header = substr($recordArray[0], 0, 24);
@@ -112,5 +112,3 @@ if (!isset($_GET['format'])) {
     header('Content-type: application/json');
     echo json_encode($outputMap, JSON_PRETTY_PRINT);
 }
-
-?>

@@ -26,7 +26,9 @@
 function isbn10($z)
 {
     if (strlen($z) == 13) {
-        $t = (substr($z, 3, 1) + 2 * substr($z, 4, 1) + 3 * substr($z, 5, 1) + 4 * substr($z, 6, 1) + 5 * substr($z, 7, 1) + 6 * substr($z, 8, 1) + 7 * substr($z, 9, 1) + 8 * substr($z, 10, 1) + 9 * substr($z, 11, 1)) % 11;
+        $t = (substr($z, 3, 1) . 2 * substr($z, 4, 1) . 3 * substr($z, 5, 1) . 4 * substr($z, 6, 1) .
+                5 * substr($z, 7, 1) . 6 * substr($z, 8, 1) . 7 * substr($z, 9, 1) . 8 * substr($z, 10, 1) .
+                9 * substr($z, 11, 1) ) % 11;
         if ($t == 10) {
             $t = 'X';
         }
@@ -40,7 +42,9 @@ function isbn13($z)
 {
     if (strlen($z) == 10) {
         $z = '978' . substr($z, 0, 9);
-        $t = (10 - ((substr($z, 0, 1) + 3 * substr($z, 1, 1) + substr($z, 2, 1) + 3 * substr($z, 3, 1) + substr($z, 4, 1) + 3 * substr($z, 5, 1) + substr($z, 6, 1) + 3 * substr($z, 7, 1) + substr($z, 8, 1) + 3 * substr($z, 9, 1) + substr($z, 10, 1) + 3 * substr($z, 11, 1)) % 10)) % 10;
+        $t = (10 - ((substr($z, 0, 1) . 3 * substr($z, 1, 1) . substr($z, 2, 1) . 3 * substr($z, 3, 1) .
+                     substr($z, 4, 1) . 3 * substr($z, 5, 1) . substr($z, 6, 1) . 3 * substr($z, 7, 1) .
+                     substr($z, 8, 1) . 3 * substr($z, 9, 1) . substr($z, 10, 1) . 3 * substr($z, 11, 1)) % 10)) % 10;
         return $z . $t;
     } else {
         return $z;
@@ -214,5 +218,3 @@ if (isset($rating)) {
 }
 
 echo '</td></tr></table>';
-       
-?>

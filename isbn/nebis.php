@@ -2,7 +2,7 @@
 /*
  * Source: https://github.com/UB-Mannheim/malibu/isbn
  *
- * Copyright (C) 2013 Universitätsbibliothek Mannheim
+ * Copyright (C) 2014 Universitätsbibliothek Mannheim
  *
  * Author:
  *    Philipp Zumstein <philipp.zumstein@bib.uni-mannheim.de>
@@ -12,26 +12,26 @@
  * See <http://www.gnu.org/licenses/> for more details.
  *
  * Aufruf aus Webbrowser:
- * gbv?isbn=ISBN
+ * nebis?isbn=ISBN
  *   ISBN ist eine 10- bzw. 13-stellige ISBN mit/ohne Bindestriche/Leerzeichen
  *   ISBN kann ebenfalls eine Komma-separierte Liste von ISBNs sein
- * gbv?ppn=PPN
- *   PPN ist die eine ID-Nummer des GBV
- * gbv?isbn=ISBN&format=json
- * gbv?ppn=PPN&format=json
+ * nebis?ppn=PPN
+ *   PPN ist die eine ID-Nummer des NEBIS
+ * nebis?isbn=ISBN&format=json
+ * nebis?ppn=PPN&format=json
  *   Ausgabe erfolgt als JSON
  *
- * Sucht übergebene ISBN bzw. PPN im GBV-Katalog
+ * Sucht übergebene ISBN bzw. PPN im NEBIS-Katalog
  * und gibt maximal 10 Ergebnisse als MARCXML zurück
  * bzw. als JSON.
  */
 
 include 'lib.php';
 
-$id = yaz_connect(GBV_URL);
-yaz_syntax($id, GBV_SYNTAX);
+$id = yaz_connect(NEBIS_URL);
+yaz_syntax($id, NEBIS_SYNTAX);
 yaz_range($id, 1, 10);
-yaz_element($id, GBV_ELEMENTSET);
+yaz_element($id, NEBIS_ELEMENTSET);
 
 if (isset($_GET['ppn'])) {
     $ppn = trim($_GET['ppn']);
@@ -55,9 +55,9 @@ if (isset($_GET['isbn'])) {
 yaz_wait();
 $error = yaz_error($id);
 if (!empty($error)) {
-    echo "Error Number: " . yaz_errno($id);
-    echo "Error Description: " . $error ;
-    echo "Additional Error Information: " . yaz_addinfo($id);
+    echo "Error Number: " + yaz_errno($id);
+    echo "Error Description: " + $error ;
+    echo "Additional Error Information: " + yaz_addinfo($id);
 }
 
 $outputString = "<?xml version=\"1.0\"?>\n";
@@ -79,7 +79,7 @@ $map = $standardMarcMap;
 $map['bestand'] = '//datafield[@tag="900"]/subfield[@code="b"]';
 
 
-if (!isset($_GET['format'])) {
+if (!isset($_GET['format'] )) {
     header('Content-type: text/xml');
     echo $outputString;
 
