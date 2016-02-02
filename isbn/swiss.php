@@ -30,7 +30,7 @@ include 'lib.php';
 
 if (isset($_GET['ppn'])) {
     $ppn = trim($_GET['ppn']);
-	$suchString = 'dc.id=' . $ppn;
+    $suchString = 'dc.id=' . $ppn;
 }
 
 /*
@@ -44,15 +44,15 @@ $urlSuffix = '&operation=searchRetrieve&recordSchema=info%3Asrw%2Fschema%2F1%2Fm
 
 if (isset($_GET['isbn'])) {
     $n = trim($_GET['isbn']);
-    $nArray = explode(",",$n);
-	$suchString = 'dc.identifier=' . implode('+OR+dc.identifier=', $nArray);
+    $nArray = explode(",", $n);
+    $suchString = 'dc.identifier=' . implode('+OR+dc.identifier=', $nArray);
 }
 
 $result = file_get_contents($urlBase . $suchString . $urlSuffix);
 
-if($result === FALSE) {
-	var_dump($urlBase . $suchString . $urlSuffix);
-	exit;
+if ($result === false) {
+    var_dump($urlBase . $suchString . $urlSuffix);
+    exit;
 }
 
 $result = str_replace(' xmlns:xs="http://www.w3.org/2001/XMLSchema"', '', $result);
@@ -70,8 +70,8 @@ $outputArray = [];
 
 foreach ($records as $record) {
 
-    $outputString .=  $doc->saveXML( $record );
-    array_push($outputArray, $doc->saveXML( $record ));
+    $outputString .=  $doc->saveXML($record);
+    array_push($outputArray, $doc->saveXML($record));
 }
 $outputString .=  "</collection>";
 

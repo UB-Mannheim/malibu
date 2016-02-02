@@ -32,8 +32,8 @@ function renderRVK(rvkArray) {
     } else {
         for (var i=0; i<rvkArray.length; i++) {
             var rvk = rvkArray[i];
-            var rvkUrl = 'http://rvk.uni-regensburg.de/notation/' + rvk.replace(' ','+');
-            rvkArray[i] = '<a href="' + rvkUrl + '" target="_blank" class="' + rvk.replace(' ','-') + '">' + rvk + '</a>';
+            var rvkUrl = 'http://rvk.uni-regensburg.de/notation/' + rvk.replace(' ', '+');
+            rvkArray[i] = '<a href="' + rvkUrl + '" target="_blank" class="' + rvk.replace(' ', '-') + '">' + rvk + '</a>';
             // Die Klassenbezeichnung hier benützen wir später für das
             // dazuladen der Notationen im title-Attribute.
         }
@@ -50,12 +50,12 @@ function renderRVK(rvkArray) {
 function addBenennung(index, element) {
     var className = $(element).attr('class');
     //z.B. http://rvk.uni-regensburg.de/api/json/ancestors/SU+680?jsonp=wrapper
-    var rvkApi = 'http://rvk.uni-regensburg.de/api/json/ancestors/' + className.replace('-','+') + '?jsonp=?';
+    var rvkApi = 'http://rvk.uni-regensburg.de/api/json/ancestors/' + className.replace('-', '+') + '?jsonp=?';
     $.getJSON(rvkApi, function(json) {
         if (json.node.ancestor) {//Benennung des Knoten + Benennung des Vorfahrens
-            $('.'+className).attr("title",json.node.benennung + ' <-- ' + json.node.ancestor.node.benennung);
+            $('.'+className).attr("title", json.node.benennung + ' <-- ' + json.node.ancestor.node.benennung);
         } else {//Benennung des Knoten
-            $('.'+className).attr("title",json.node.benennung);
+            $('.'+className).attr("title", json.node.benennung);
         }
     });
 }
@@ -220,7 +220,7 @@ function isbn13(z) {
  * eine 13-stellige ISBN oder eine 10-
  * stellige ISBN sein muss.
  */
-    z = z.replace(/-/g,"").replace(/ /g,"").replace(/x/g,"X");
+    z = z.replace(/-/g, "").replace(/ /g, "").replace(/x/g, "X");
     if (z.length == 10) {
         z = '978' + z.substr(0, 9);
         var t = (10 - (( z.substr(0, 1) + 3 * z.substr(1, 1) + z.substr(2, 1) + 3 * z.substr(3, 1) + z.substr(4, 1) + 3 * z.substr(5, 1) + z.substr(6, 1) + 3 * z.substr(7, 1) + z.substr(8, 1) + 3 * z.substr(9, 1) + z.substr(10, 1) + 3 * z.substr(11, 1) ) % 10 )) % 10;

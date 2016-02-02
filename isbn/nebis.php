@@ -39,7 +39,7 @@ if (isset($_GET['ppn'])) {
 }
 if (isset($_GET['isbn'])) {
     $n = trim($_GET['isbn']);
-    $nArray = explode(",",$n);
+    $nArray = explode(",", $n);
     if (count($nArray)>1) {
         //mehrere ISBNs, z.B. f @or @or @attr 1=7 "9783937219363" @attr 1=7 "9780521369107" @attr 1=7 "9780521518147"
         //Anfuehrungsstriche muessen demaskiert werden, egal ob String mit ' gemacht wird

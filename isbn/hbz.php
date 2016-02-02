@@ -6,8 +6,8 @@
  *
  * Author:
  *    Philipp Zumstein <philipp.zumstein@bib.uni-mannheim.de>
- * 
- * This is free software licensed under the terms of the GNU GPL, 
+ *
+ * This is free software licensed under the terms of the GNU GPL,
  * version 3, or (at your option) any later version.
  * See <http://www.gnu.org/licenses/> for more details.
  *
@@ -21,11 +21,11 @@
  * hbz?ppn=PPN&format=json
  *   Ausgabe erfolgt als JSON
  *
- * Sucht übergebene ISBN bzw. PPN im HBZ-Katalog 
+ * Sucht übergebene ISBN bzw. PPN im HBZ-Katalog
  * und gibt maximal 10 Ergebnisse als MABXML zurück
  * bzw. als JSON.
  */
- 
+
 include 'lib.php';
 
 $id = yaz_connect(HBZ_URL);
@@ -40,7 +40,7 @@ if (isset($_GET['ppn'])) {
 }
 if (isset($_GET['isbn'])) {
     $n = trim($_GET['isbn']);
-    $nArray = explode(",",$n);
+    $nArray = explode(",", $n);
     if (count($nArray)>1) {
         //mehrere ISBNs, z.B. f @or @or @attr 1=7 "9783937219363" @attr 1=7 "9780521369107" @attr 1=7 "9780521518147"
         //Anfuehrungsstriche muessen demaskiert werden, egal ob String mit ' gemacht wird
@@ -73,11 +73,11 @@ for ($p = 1; $p <= yaz_hits($id); $p++) {
         echo "Additional Error Information: " . yaz_addinfo($id);
     }
     $recordArray =  explode("\x1e", $record);
-    $header = substr($recordArray[0],0,24);
-    $recordContent = '<datensatz id="" typ="'.substr($header,23,1).'" status="'.substr($header,5,1).'" mabVersion="'.substr($header,6,4).'">'."\n";
-    $recordContent .= printLine(substr($recordArray[0],24));
-    
-    
+    $header = substr($recordArray[0], 0, 24);
+    $recordContent = '<datensatz id="" typ="'.substr($header, 23, 1).'" status="'.substr($header, 5, 1).'" mabVersion="'.substr($header, 6, 4).'">'."\n";
+    $recordContent .= printLine(substr($recordArray[0], 24));
+
+
     for ($j = 1; $j < count($recordArray); $j++) {
         $recordContent .= printLine($recordArray[$j]);
     }
@@ -92,7 +92,7 @@ yaz_close($id);
 
 $map = $standardMabMap;
 
-if (!isset($_GET['format'] )) {
+if (!isset($_GET['format'])) {
     header('Content-type: text/xml');
     echo $outputString;
 
@@ -107,8 +107,8 @@ if (!isset($_GET['format'] )) {
         array_push($outputIndividualMap, $outputSingleMap);
     }
     $outputMap["einzelaufnahmen"] = $outputIndividualMap;
-    
-    
+
+
     header('Content-type: application/json');
     echo json_encode($outputMap, JSON_PRETTY_PRINT);
 }

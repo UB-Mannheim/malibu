@@ -4,8 +4,8 @@
  *
  * Author:
  *    Philipp Zumstein <philipp.zumstein@bib.uni-mannheim.de>
- * 
- * This is free software licensed under the terms of the GNU GPL, 
+ *
+ * This is free software licensed under the terms of the GNU GPL,
  * version 3, or (at your option) any later version.
  * See <http://www.gnu.org/licenses/> for more details.
  *
@@ -23,7 +23,8 @@
  * als Gesamtdarstellung wieder. Hierbei werden einige gängige
  * Anbieter dafür abgefragt.
  */
-function isbn10($z) {
+function isbn10($z)
+{
     if (strlen($z) == 13) {
         $t = (substr($z, 3, 1) . 2 * substr($z, 4, 1) . 3 * substr($z, 5, 1) . 4 * substr($z, 6, 1) .
                 5 * substr($z, 7, 1) . 6 * substr($z, 8, 1) . 7 * substr($z, 9, 1) . 8 * substr($z, 10, 1) .
@@ -37,7 +38,8 @@ function isbn10($z) {
     }
 }
 
-function isbn13($z) {
+function isbn13($z)
+{
     if (strlen($z) == 10) {
         $z = '978' . substr($z, 0, 9);
         $t = (10 - ((substr($z, 0, 1) . 3 * substr($z, 1, 1) . substr($z, 2, 1) . 3 * substr($z, 3, 1) .
@@ -68,7 +70,7 @@ if (isset($_GET['isbn13'])) {
     $n10 = isbn10($n13);
 }
 
-if ( !isset($_GET['isbn13']) && !isset($_GET['isbn10']) ) {
+if (!isset($_GET['isbn13']) && !isset($_GET['isbn10'])) {
     exit("isbn13 und isbn10 fehlen");
 }
 
@@ -83,18 +85,18 @@ if ($foundOnAmazon) {
     $docAmazon->loadHTMLFile($urlAmazon);
     libxml_use_internal_errors(false);
     //$contentAmazon = $docAmazon->saveHTML();
-    
+
     //Bild von Amazon
     foreach (["imgBlkFront", "main-image-nonjs", "original-main-image" ] as $id) {
-        if ( $docAmazon->getElementById($id) && $docAmazon->getElementById($id)->getAttribute('src') !== '' ) {
+        if ($docAmazon->getElementById($id) && $docAmazon->getElementById($id)->getAttribute('src') !== '') {
             $cover = $docAmazon->getElementById($id)->getAttribute('src');
             $coverOrigin = $urlAmazon;
             break;
         }
     }
-    
+
     //Beschreibung von Amazon
-    if ( $docAmazon->getElementById('bookDesc_override_CSS') && $docAmazon->getElementById('bookDesc_override_CSS')->nextSibling && $docAmazon->getElementById('bookDesc_override_CSS')->nextSibling->textContent !== '' ) {
+    if ($docAmazon->getElementById('bookDesc_override_CSS') && $docAmazon->getElementById('bookDesc_override_CSS')->nextSibling && $docAmazon->getElementById('bookDesc_override_CSS')->nextSibling->textContent !== '') {
         $description = $docAmazon->getElementById('bookDesc_override_CSS')->nextSibling->textContent;
         $descriptionOrigin = $urlAmazon;
     } else if ($docAmazon->getElementById('postBodyPS')) {
@@ -106,32 +108,32 @@ if ($foundOnAmazon) {
     }
 
     //Preis von Amazon
-    if ( $docAmazon->getElementById('fbt_item_data') ) {
+    if ($docAmazon->getElementById('fbt_item_data')) {
         $hiddenItemData = $docAmazon->getElementById('fbt_item_data')->textContent;
         //..."buyingPrice":79.99,"ASIN":"3830493665"...
-        if ( preg_match('/"buyingPrice":(.*),"ASIN":"' . $n10 . '"/', $hiddenItemData, $match) ) {
+        if (preg_match('/"buyingPrice":(.*),"ASIN":"' . $n10 . '"/', $hiddenItemData, $match)) {
             preg_match('/"currencyCode":"([^"]*)"/', $hiddenItemData, $descriptionCurrency);
             $price =  $match[1] . ' ' . $descriptionCurrency[1];
             $priceOrigin = $urlAmazon;
         }
-    } else if ( $docAmazon->getElementById('buyNewSection') ) {
-        $price = trim($docAmazon->getElementById('buyNewSection')->textContent );
+    } else if ($docAmazon->getElementById('buyNewSection')) {
+        $price = trim($docAmazon->getElementById('buyNewSection')->textContent);
         $priceOrigin = $urlAmazon;
     }
-    
+
     //Bewertung von Amazon
-    if ( $docAmazon->getElementById('acrPopover') ) {
+    if ($docAmazon->getElementById('acrPopover')) {
         $ratingValue = $docAmazon->getElementById('acrPopover')->getAttribute('title');
         $numberOfReviews = $docAmazon->getElementById('acrCustomerReviewText')->textContent;
         $rating = $ratingValue . ' (' . $numberOfReviews . ')';
         $ratingOrigin = 'http://www.amazon.de/product-reviews/' . $n10;
-    } else if ( $docAmazon->getElementById('revFMSR') ) {
+    } else if ($docAmazon->getElementById('revFMSR')) {
         $ratingValue = $docAmazon->getElementById('revFMSR')->getElementsByTagName('a')->item(0)->getAttribute('title');
-        $numberOfReviews = trim( str_replace('Amazon.com:' , '' , $docAmazon->getElementById('revFMSR')->textContent ) );
+        $numberOfReviews = trim(str_replace('Amazon.com:', '', $docAmazon->getElementById('revFMSR')->textContent));
         $rating = $ratingValue . ' (' . $numberOfReviews . ')';
         $ratingOrigin = 'http://www.amazon.com/product-reviews/' . $n10;
     }
-    
+
 }
 
 
@@ -152,22 +154,22 @@ if ($foundOnGoogle) {
                     if ($volumeInfo->industryIdentifiers[$k]->identifier == $n13 || $volumeInfo->industryIdentifiers[$k]->identifier == $n13) {
                         $urlGoogle = $volumeInfo->infoLink;
                         //Bild von Google
-                        if (!isset($cover) && property_exists($volumeInfo, 'imageLinks') && property_exists($volumeInfo->imageLinks, 'thumbnail') ) {
+                        if (!isset($cover) && property_exists($volumeInfo, 'imageLinks') && property_exists($volumeInfo->imageLinks, 'thumbnail')) {
                             $cover = $volumeInfo->imageLinks->thumbnail ;
                             $coverOrigin = $urlGoogle;
                         }
-                        
+
                         //Beschreibung von Google
-                        if (!isset($description) && property_exists($volumeInfo, 'description') ) {
+                        if (!isset($description) && property_exists($volumeInfo, 'description')) {
                             $description = $volumeInfo->description ;
                             $descriptionOrigin = $urlGoogle;
                         }
-                        
+
                         //Bewertung von Google
-                        if (!isset($rating) && property_exists($volumeInfo, 'averageRating') ) {
+                        if (!isset($rating) && property_exists($volumeInfo, 'averageRating')) {
                             $rating = $volumeInfo->averageRating . ' von 5 (' . $volumeInfo->ratingsCount . ' Ratings)' ;
                             $ratingOrigin = $urlGoogle;
-                        } 
+                        }
                     }
                 }
             }
@@ -179,7 +181,7 @@ if ($foundOnGoogle) {
 if (!isset($cover)) {
     $urlOpenlibrary = 'http://covers.openlibrary.org/b/isbn/' . $n13 . '-M.jpg';
     $headerOpenlibrary = get_headers($urlOpenlibrary, 1);
-    if ( !strpos($headerOpenlibrary[0], '404 NotFound') ) {
+    if (!strpos($headerOpenlibrary[0], '404 NotFound')) {
         $cover = $urlOpenlibrary;
         $coverOrigin = 'https://openlibrary.org/isbn/' . $n13;
     }

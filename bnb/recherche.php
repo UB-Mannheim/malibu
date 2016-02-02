@@ -8,7 +8,7 @@ Copyright (C) 2013 Universitätsbibliothek Mannheim
 Author:
    Philipp Zumstein <philipp.zumstein@bib.uni-mannheim.de>
 
-This is free software licensed under the terms of the GNU GPL, 
+This is free software licensed under the terms of the GNU GPL,
 version 3, or (at your option) any later version.
 See <http://www.gnu.org/licenses/> for more details.
 
@@ -22,7 +22,7 @@ Direktaufruf: Es ist ebenfalls möglich die DDC-Stellen bereits beim
 Aufruf direkt auszuwählen und somit beispielsweise ein bequemes
 Lesezeichen zu erstellen, z.B.
    recherche.php?ddcgruppe[]=004%2C005%2C006
-   
+
 -->
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -32,7 +32,7 @@ Lesezeichen zu erstellen, z.B.
         <title>BNB Recherche</title>
     </head>
     <body>
-    
+
         <a href="https://github.com/UB-Mannheim/malibu"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/e7bbb0521b397edbd5fe43e7f760759336b5e05f/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f677265656e5f3030373230302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_green_007200.png"></a>
 
         <h1>BNB Recherche</h1>
@@ -44,7 +44,7 @@ Lesezeichen zu erstellen, z.B.
         aktivieren <img src="Autolink.jpg" >).
 
         <h3>Schritt 1: DDC Auswählen</h3>
-        Entweder können Sie die DDC anhand der Sachgruppen der DNB auswählen, 
+        Entweder können Sie die DDC anhand der Sachgruppen der DNB auswählen,
         oder eine Reihe von DDC Stellen direkt in das Formularfeld unten eingeben.
         Die
         <a href="http://www.dnb.de/SharedDocs/Downloads/DE/DNB/service/ddcSachgruppenDNB.pdf">Sachgruppen der DNB</a>
@@ -129,7 +129,7 @@ Lesezeichen zu erstellen, z.B.
                         <option value="65">650 Management</option>
                         <option value="66">660 Technische Chemie</option>
                         <option value="67,68">670 Industrielle und handwerkliche Fertigung</option>
-                        <option value="69">690 Hausbau, Bauhandwerk</option> 
+                        <option value="69">690 Hausbau, Bauhandwerk</option>
                     </optgroup>
                     <optgroup label="700 Künste und Unterhaltung">
                         <option value="70">700 Künste, Bildende Kunst allgemein</option>
@@ -214,20 +214,22 @@ Lesezeichen zu erstellen, z.B.
             $mapDate = array(3242 => "08/05/2013", 3241 => "01/05/2013", 3240 => "24/04/2013", 3239 => "17/04/2013", 3238 => "10/04/2013", 3237 => "03/04/2013", 3236 => "20/03/2013", 3231 => "13/02/2013");
 
             $files = glob('BNBDaten/*.rdf');
-            usort($files, function($a, $b) {
-                        return $a < $b;
-                    });
+            usort($files, function ($a, $b) {
+                return $a < $b;
+            });
             echo "<table>";
-            foreach ($files as $filename) {// BNBDaten/bnbrdf_N3240.xml            
+            foreach ($files as $filename) {// BNBDaten/bnbrdf_N3240.xml
                 $filenameShort = substr($filename, 9);
                 $nr = substr($filenameShort, -8, -4);
                 echo "<tr>";
                 echo "<td><input type=\"checkbox\" name=\"nr[]\" value=\"$nr\"></td><td width=\"150\">$filenameShort</td><td>";
+                // @codingStandardsIgnoreStart
                 if (isset($mapDate[$nr])) {
                     echo $mapDate[$nr];
                 } else {
                     echo date("d/m/Y", filemtime($filename));
                 }
+                // @codingStandardsIgnoreEnd
                 echo "</td></tr>\n";
             }
             echo "</table>";

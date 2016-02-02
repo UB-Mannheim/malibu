@@ -5,6 +5,7 @@
  * Some services requires authentication with username and password.
  * Look up the information or ask for an individual login
  * and fill out the details here. Rename this file to conf.php.
+ * @codingStandardsIgnoreStart
  *
  */
 

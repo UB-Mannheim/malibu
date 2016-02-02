@@ -1,13 +1,13 @@
 <?php
-/* 
+/*
  * Source: https://github.com/UB-Mannheim/malibu/bnb
  *
  * Copyright (C) 2013 Universitaetsbibliothek Mannheim
  *
  * Author:
  *    Philipp Zumstein <philipp.zumstein@bib.uni-mannheim.de>
- * 
- * This is free software licensed under the terms of the GNU GPL, 
+ *
+ * This is free software licensed under the terms of the GNU GPL,
  * version 3, or (at your option) any later version.
  * See <http://www.gnu.org/licenses/> for more details.
  *
@@ -21,17 +21,17 @@
  * anhand der Einstellungen gefiltert ausgegeben
  * (die Darstellung und Sortierung übernimmt aber die bnb.xsl).
  */
- 
+
 header('Content-type: text/xml');
 
 if (isset($_GET['nr'])) {
-    
+
     if (is_string($_GET['nr'])) {
         $nrArray = explode(',', $_GET['nr']);
     } else {
         $nrArray = $_GET['nr'];
     }
-    
+
     foreach ($nrArray as $nrElement) {
         $xmlArray[$nrElement] = simplexml_load_file('BNBDaten/bnbrdf_N' . trim($nrElement) . '.rdf');
     }

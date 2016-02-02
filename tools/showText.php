@@ -24,18 +24,18 @@ echo "<h2>Texteingabe</h2>";
 echo "<form action=\"showText.php\" method=\"post\">\n";
 
 if (isset($_POST['text'])) {
-	$n = $_POST['text'];
-	echo '<textarea  name="text" cols="100" rows="20">'.$n.'</textarea>';
-	echo "<br/>\n";
-	if (isset($_POST['nl2br'])) {
-		echo '<input type="checkbox" name="nl2br" value="choose" checked>Neue Zeile durch entsprechendes HTML ersetzen';
-	} else {
-		echo '<input type="checkbox" name="nl2br" value="choose">Neue Zeile durch entsprechendes HTML ersetzen';
-	}
+    $n = $_POST['text'];
+    echo '<textarea  name="text" cols="100" rows="20">'.$n.'</textarea>';
+    echo "<br/>\n";
+    if (isset($_POST['nl2br'])) {
+        echo '<input type="checkbox" name="nl2br" value="choose" checked>Neue Zeile durch entsprechendes HTML ersetzen';
+    } else {
+        echo '<input type="checkbox" name="nl2br" value="choose">Neue Zeile durch entsprechendes HTML ersetzen';
+    }
 } else {
-	echo '<textarea name="text" cols="100" rows="20"></textarea>';
-	echo "<br/>\n";
-	echo '<input type="checkbox" name="nl2br" value="choose" checked>Neue Zeile durch entsprechendes HTML ersetzen';
+    echo '<textarea name="text" cols="100" rows="20"></textarea>';
+    echo "<br/>\n";
+    echo '<input type="checkbox" name="nl2br" value="choose" checked>Neue Zeile durch entsprechendes HTML ersetzen';
 }
 //echo "<br/>\n";
 //echo '<input type="checkbox" name="nl2br" value="choose" checked>Neue Zeile durch entsprechendes HTML ersetzen';
