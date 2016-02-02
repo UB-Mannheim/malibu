@@ -1,30 +1,44 @@
 # malibu - Mannheim library utilities
 
-Copyright (C) 2013 – 2015 Universitätsbibliothek Mannheim
+![en](http://bib.uni-mannheim.de/fileadmin/scripts/flag_en.jpeg) Tools to make acquisitions fun.
 
-Author: <a href="https://github.com/zuphilip">Philipp Zumstein</a> (UB Mannheim)
+![de](http://bib.uni-mannheim.de/fileadmin/scripts/flag_de.jpeg) Literaturauswahl und -bestellung leichter gemacht
 
 ## Summary ![en](http://bib.uni-mannheim.de/fileadmin/scripts/flag_en.jpeg)
 
-malibu is a collection of lightweighted web tools for bibliographic data
-to help with the workflows, which are frequently found in libraries especially
-for subject librarians and in the acquisition department.
-Main part is a mashup for ISBN-search and a search tool for the BNB weekly as
-well as some other tools.
+**malibu** is a collection of lightweight web-based tools to work with
+bibliographic metadata from various sources on the web, aimed at supporting the
+workflows of subject librarians and acquisitions librarians.
 
-## Online Test Installation
+The main components are
 
-For a first view and tests, you can see the tools live at http://data.bib.uni-mannheim.de/services/.
+* a mashup of various library and bookseller data on books by ISBN
+  ([Demo](http://data.bib.uni-mannheim.de/malibu/isbn/suche.html)) and
+* a search tool for the British National Bibliography weekly updates
+  ([Demo](http://data.bib.uni-mannheim.de/malibu/bnb/recherche.php)).
 
+## Online Demo
+
+To get an impression of the tools, try our [online demo installation](http://data.bib.uni-mannheim.de/services/).
 
 ## Zusammenfassung ![de](http://bib.uni-mannheim.de/fileadmin/scripts/flag_de.jpeg)
 
-malibu ist eine Sammlung von leichtgewichtigen, webbasierten Tools im Umfeld von bibliographischen Daten zur Unterstützung von Arbeitsabläufen, wie sie häufig in Bibliotheken bei den Fachreferaten und der Erwerbung auftreten. Hauptbestandteil ist ein Mashup zur ISBN-Suche und ein Recherchetool für die BNB weekly sowie weitere kleine Tools.
+**malibu** ist eine Sammlung von leichtgewichtigen, webbasierten Tools im Umfeld
+von bibliographischen Daten zur Unterstützung von Arbeitsabläufen, wie sie
+häufig in Bibliotheken bei den Fachreferaten und der Erwerbung auftreten.
+Hauptbestandteil ist ein Mashup zur ISBN-Suche und ein Recherchewerkzeug für die
+BNB weekly sowie weitere kleine Tools.
 
-Eine ausführliche Beschreibung sowie das Zusammenspiel mit dem
-<a href="http://www.tempelb.de/autolink-tibub/">Autolink TIB/UB</a> Skript von Herrn Tempel
-kann in unserem Artikel <a href="https://ub-madoc.bib.uni-mannheim.de/38826/">Literaturauswahl und -bestellung leichter gemacht!</a> nachgelesen werden.
+Eine ausführliche Beschreibung sowie das Zusammenspiel mit dem [Autolink
+TIB/UB](http://www.tempelb.de/autolink-tibub/) Skript von Herrn Tempel kann in
+unserem Artikel [Literaturauswahl und -bestellung leichter
+gemacht](https://ub-madoc.bib.uni-mannheim.de/38826/) nachgelesen werden.
 
-## Licence
+## Copyright and License
 
-This is free software. You may use it under the terms of the GNU General Public License (GPL). See <a href="https://github.com/UB-Mannheim/malibu/blob/master/LICENSE">LICENCE</a> for details.
+Copyright (c) 2013 – 2016 Universitätsbibliothek Mannheim
+
+Author: [Philipp Zumstein](https://github.com/zuphilip) (UB Mannheim)
+
+**malibu** is Free Software. You may use it under the terms of the GNU General
+Public License (GPL). See [LICENSE](./LICENSE) for details.
