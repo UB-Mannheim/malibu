@@ -1,0 +1,14 @@
+# Travis configuration for UB-Mannheim/malibu
+
+sudo: required
+dist: trusty
+
+# shellcheck for testing shell scripts for common pitfalls
+# php-codesniffer is used for the PSR-2 conformance test.
+before_install:
+  - echo "deb http://archive.ubuntu.com/ubuntu/ wily universe" | sudo tee -a /etc/apt/sources.list
+  - sudo apt-get update -q
+  - sudo apt-get install -y shellcheck php-codesniffer
+
+script:
+  - bash dist/pre-commit.sh .

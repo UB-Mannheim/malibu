@@ -5,7 +5,7 @@
 #         pre-commit.sh [basedir]
 #
 # SYNOPSIS
-#         ln -s ../../pre-commit.sh .git/hooks
+#         ln -s ../../dist/pre-commit.sh .git/hooks/pre-commit
 #
 #         git add ... && git commit;
 #

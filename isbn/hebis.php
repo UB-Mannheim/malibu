@@ -136,7 +136,7 @@ $map = $standardMarcMap;
 $map['bestand'] = '//datafield[@tag="924"]/subfield[@code="b"]';
 
 
-if (!isset($_GET['format'] )) {
+if (!isset($_GET['format'])) {
     header('Content-type: text/xml');
     echo $outputString;
 
