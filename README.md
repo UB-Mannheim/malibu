@@ -1,9 +1,5 @@
 # malibu - Mannheim library utilities
 
-![en](http://bib.uni-mannheim.de/fileadmin/scripts/flag_en.jpeg) Tools to make acquisitions fun.
-
-![de](http://bib.uni-mannheim.de/fileadmin/scripts/flag_de.jpeg) Literaturauswahl und -bestellung leichter gemacht
-
 ## Summary ![en](http://bib.uni-mannheim.de/fileadmin/scripts/flag_en.jpeg)
 
 **malibu** is a collection of lightweight web-based tools to work with
