@@ -57,6 +57,7 @@ if (isset($_GET['isbn10'])) {
     global $n10, $n13;
     $n10 = trim($_GET['isbn10']);//fuer Amazon
     if (strlen($n10) != 10) {
+        header('HTTP/1.1 400 Bad Request');
         exit("ISBN war nicht 10-stellig!");
     }
     $n13 = isbn13($n10);
@@ -65,12 +66,14 @@ if (isset($_GET['isbn13'])) {
     global $n10, $n13;
     $n13 = trim($_GET['isbn13']);//fuer Google
     if (strlen($n13) != 13) {
+        header('HTTP/1.1 400 Bad Request');
         exit("ISBN war nicht 13-stellig!<br/>");
     }
     $n10 = isbn10($n13);
 }
 
 if (!isset($_GET['isbn13']) && !isset($_GET['isbn10'])) {
+    header('HTTP/1.1 400 Bad Request');
     exit("isbn13 und isbn10 fehlen");
 }
 

@@ -51,6 +51,7 @@ if (isset($_GET['isbn'])) {
 $result = file_get_contents($urlBase . $suchString . $urlSuffix);
 
 if ($result === false) {
+    header('HTTP/1.1 400 Bad Request');
     var_dump($urlBase . $suchString . $urlSuffix);
     exit;
 }
