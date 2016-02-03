@@ -1,5 +1,7 @@
 # malibu - Mannheim library utilities
 
+[![Build Status](https://travis-ci.org/UB-Mannheim/malibu.svg?branch=master)](https://travis-ci.org/UB-Mannheim/malibu)
+
 ## Summary ![en](http://bib.uni-mannheim.de/fileadmin/scripts/flag_en.jpeg)
 
 **malibu** is a collection of lightweight web-based tools to work with
