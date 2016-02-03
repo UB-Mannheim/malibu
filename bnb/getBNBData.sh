@@ -2,7 +2,7 @@
 
 BNB_DATADIR="/var/www/Tools/BNBDaten"
 mkdir -pv "$BNB_DATADIR"
-cd "$BNBDaten"
+cd "$BNB_DATADIR"
 
 wget -r -np -l 1 -A zip "http://www.bl.uk/bibliographic/bnbrdfxml.html"
 

@@ -75,7 +75,7 @@ yaz_close($id);
 $map = $standardMarcMap;
 
 
-if (!isset($_GET['format'] )) {
+if (!isset($_GET['format'])) {
     header('Content-type: text/xml');
     echo $outputString;
 } else if ($_GET['format']=='json') {
