@@ -28,5 +28,10 @@ if [[ ! -r "isbn/conf.php" ]];then
     cp isbn/conf.example.php isbn/conf.php
 fi
 
+# Create paketinfo.js
+if [[ ! -r "isbn/paketinfo.js" ]];then
+    cp isbn/paketinfo.example.js isbn/paketinfo.js
+fi
+
 # Run the CLI server
 php -S localhost:8090
