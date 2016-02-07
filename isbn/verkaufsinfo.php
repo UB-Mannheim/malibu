@@ -133,7 +133,10 @@ if ($foundOnAmazon) {
         $ratingOrigin = 'http://www.amazon.de/product-reviews/' . $n10;
     } else if ($docAmazon->getElementById('revFMSR')) {
         $ratingValue = $docAmazon->getElementById('revFMSR')->getElementsByTagName('a')->item(0)->getAttribute('title');
-        $numberOfReviews = trim(str_replace('Amazon.com:', '', $docAmazon->getElementById('revFMSR')->textContent));
+        $textTotal = $docAmazon->getElementById('revFMSR')->textContent;
+        if (preg_match('/\d+\sRezensionen/', $textTotal, $treffer)) {
+            $numberOfReviews = $treffer[0];
+        }
         $rating = $ratingValue . ' (' . $numberOfReviews . ')';
         $ratingOrigin = 'http://www.amazon.com/product-reviews/' . $n10;
     }
