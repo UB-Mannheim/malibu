@@ -134,7 +134,7 @@ if ($foundOnAmazon) {
     } else if ($docAmazon->getElementById('revFMSR')) {
         $ratingValue = $docAmazon->getElementById('revFMSR')->getElementsByTagName('a')->item(0)->getAttribute('title');
         $textTotal = $docAmazon->getElementById('revFMSR')->textContent;
-        if (preg_match('/\d+\sRezensionen/', $textTotal, $treffer)) {
+        if (preg_match('/\d+\s(?:Rezension|Rezensionen)/', $textTotal, $treffer)) {
             $numberOfReviews = $treffer[0];
         }
         $rating = $ratingValue . ' (' . $numberOfReviews . ')';
