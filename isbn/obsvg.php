@@ -87,7 +87,7 @@ yaz_close($id);
 
 $map = $standardMabMap;
 //e.g. <feld nr="700" ind="g">|SK 830<tf/>Automatisch aus BVB_2013-06 2013-03-27</feld> 
-$map['rvk'] = '//feld[@nr="700" and @ind="g"]iq/text()[1]';
+$map['rvk'] = '//feld[@nr="700" and @ind="g"]/text()[1]';
 $map['bestand'] = '//feld[@nr="088"]';
 
 if (!isset($_GET['format'])) {
