@@ -78,6 +78,7 @@ $outputString .=  "</collection>";
 
 
 $map = $standardMarcMap;
+$map['bestand'] = '//datafield[@tag="949" or @tag="852"]/subfield[@code="F"]';
 
 
 if (!isset($_GET['format'])) {
