@@ -153,7 +153,7 @@ function cleanUp($outputMap)
     }
     if (is_array($outputMap['rvk'])) {
         foreach ($outputMap['rvk'] as $i => $value) {
-            //e.g. <feld nr="700" ind="g">|SK 830<tf/>Automatisch aus BVB_2013-06 2013-03-27</feld> 
+            //e.g. <feld nr="700" ind="g">|SK 830<tf/>Automatisch aus BVB_2013-06 2013-03-27</feld>
             $value = explode('Automatisch aus', $value)[0];
             $outputMap['rvk'][$i] = str_replace('|', '', $value);
         }
