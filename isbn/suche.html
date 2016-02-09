@@ -100,7 +100,7 @@ function isbnEingabe(n) {
     $('#suche'+'B3KAT').html('<a href="https://opacplus.bib-bvb.de/TouchPoint_touchpoint/start.do?Query=-1%3D%22' + nArray[0] + '%22&Language=De&SearchProfile=" target="_blank">B3KAT</a>');
     $('#suche'+'HBZ').html('<a href="http://okeanos-www.hbz-nrw.de/F/?FUNC=find-c&CCL_TERM=+IBN=%28'+nArray[0]+'" target="_blank">HBZ</a>');
     $('#suche'+'SWISS').html('<a href="https://www.swissbib.ch/Search/Results?lookfor='+nArray[0]+'&type=AllFields&limit=20&sort=relevance" target="_blank">SWISS</a>');
-    $('#suche'+'OBSVG').html('<a href="http://search.obvsg.at/primo_library/libweb/action/dlSearch.do?institution=ACC&vid=ACC&search_scope=ACC_Aleph_Data&highlight=true&displayField=title&query=any%2Ccontains%2C'+nArray[0]+'&search=Suchen" target="_blank">OBSVG</a>');
+    $('#suche'+'OBVSG').html('<a href="http://search.obvsg.at/primo_library/libweb/action/dlSearch.do?institution=ACC&vid=ACC&search_scope=ACC_Aleph_Data&highlight=true&displayField=title&query=any%2Ccontains%2C'+nArray[0]+'&search=Suchen" target="_blank">OBVSG</a>');
 
     
     
@@ -209,7 +209,7 @@ function isbnEingabe(n) {
     });
     
     
-    var andereVerbuende = ["GBV", "HEBIS", "B3KAT", "HBZ", "SWISS", "OBSVG"];
+    var andereVerbuende = ["GBV", "HEBIS", "B3KAT", "HBZ", "SWISS", "OBVSG"];
     $.each(andereVerbuende, function(index, verbund){
         $.getJSON(verbund.toLowerCase()+".php"+query+"&format=json", function(data){
             
@@ -260,7 +260,7 @@ ID: <input id="eingabePpn" type="text" size="30" maxlength="30">
 <input type="radio" name="eingabeVerbund" value="HEBIS">HEBIS
 <input type="radio" name="eingabeVerbund" value="HBZ">HBZ
 <input type="radio" name="eingabeVerbund" value="SWISS">SWISS
-<input type="radio" name="eingabeVerbund" value="OBSVG">OBSVG
+<input type="radio" name="eingabeVerbund" value="OBVSG">OBVSG
 <input type="submit" value="Submit">
 </form>
 </td>  
@@ -328,10 +328,10 @@ ID: <input id="eingabePpn" type="text" size="30" maxlength="30">
     </tr>
     </tr>
         <tr>
-        <td><div id="sucheOBSVG">OBSVG</div><div id="bestandOBSVG"></div></td>
-        <td id="rvkOBSVG"></td>
-        <td id="ddcOBSVG"></td>
-        <td id="swOBSVG"></td>
+        <td><div id="sucheOBVSG">OBVSG</div><div id="bestandOBVSG"></div></td>
+        <td id="rvkOBVSG"></td>
+        <td id="ddcOBVSG"></td>
+        <td id="swOBVSG"></td>
     </tr>
 </table>
 

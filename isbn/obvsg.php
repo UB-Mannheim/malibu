@@ -12,26 +12,26 @@
  * See <http://www.gnu.org/licenses/> for more details.
  *
  * Aufruf aus Webbrowser:
- * obsvg.php?isbn=ISBN
+ * obvsg.php?isbn=ISBN
  *   ISBN ist eine 10- bzw. 13-stellige ISBN mit/ohne Bindestriche/Leerzeichen
  *   ISBN kann ebenfalls eine Komma-separierte Liste von ISBNs sein
- * obsvg.php?ppn=PPN
+ * obvsg.php?ppn=PPN
  *   PPN ist die eine ID-Nummer des B3KAT
- * obsvg.php?isbn=ISBN&format=json
- * obsvg.php?ppn=PPN&format=json
+ * obvsg.php?isbn=ISBN&format=json
+ * obvsg.php?ppn=PPN&format=json
  *   Ausgabe erfolgt als JSON
  *
- * Sucht übergebene ISBN bzw. PPN im OBSVG-Katalog
+ * Sucht übergebene ISBN bzw. PPN im OBVSG-Katalog
  * und gibt maximal 10 Ergebnisse als MABXML zurück
  * bzw. als JSON.
  */
 
 include 'lib.php';
 
-$id = yaz_connect(OBSVG_URL, array("user" => OBSVG_USER, "password" => OBSVG_PASSWORD));//"mab2; charset=iso5426,utf8"
-yaz_syntax($id, OBSVG_SYNTAX);
+$id = yaz_connect(OBVSG_URL, array("user" => OBVSG_USER, "password" => OBVSG_PASSWORD));//"mab2; charset=iso5426,utf8"
+yaz_syntax($id, OBVSG_SYNTAX);
 yaz_range($id, 1, 10);
-yaz_element($id, OBSVG_ELEMENTSET);
+yaz_element($id, OBVSG_ELEMENTSET);
 
 if (isset($_GET['ppn'])) {
     $ppn = trim($_GET['ppn']);

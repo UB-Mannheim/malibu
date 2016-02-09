@@ -66,12 +66,12 @@ define('BL_SYNTAX',         'marc21');
 define('BL_ELEMENTSET',     'F');
 
 
-//OBSVG = Verbundkatalog des Österreichischen Bibliotheksverbundes
+//OBVSG = Verbundkatalog des Österreichischen Bibliotheksverbundes
 //https://www.obvsg.at/services/verbundsystem/z3950/
-define('OBSVG_URL',         'z3950.obvsg.at:9991/ACC01');
-define('OBSVG_USER',        '');//TODO request one
-define('OBSVG_PASSWORD',    '');//TODO request one
-define('OBSVG_SYNTAX',      'mab2');
-define('OBSVG_ELEMENTSET',  'F');
+define('OBVSG_URL',         'z3950.obvsg.at:9991/ACC01');
+define('OBVSG_USER',        '');//TODO request one
+define('OBVSG_PASSWORD',    '');//TODO request one
+define('OBVSG_SYNTAX',      'mab2');
+define('OBVSG_ELEMENTSET',  'F');
 
 //you can add more here
