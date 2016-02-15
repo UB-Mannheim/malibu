@@ -141,7 +141,16 @@ function isbnEingabe(n) {
             if (render(currentRecord.produktSigel) == '') {
                 $('#'+currentRecord.id).append("<td>"+render(currentRecord.umfang)+"</td>");
             } else {
-                $('#'+currentRecord.id).append("<td>"+render(currentRecord.umfang)+' ['+render(currentRecord.produktSigel)+"]</td>");
+                var siegelMitZDBAlsLinks = "";
+                for (var i=0; i<currentRecord.produktSigel.length; i++) { 
+                    if (currentRecord.produktSigel[i].startsWith("ZDB-")){ // Siegel die mit ZDB- beginnen einzeln als Links darstellen
+                        siegelMitZDBAlsLinks += '<a href="http://dispatch.opac.dnb.de/DB=1.2/CMD?ACT=SRCHA&IKT=8521&SRT=LST_os&TRM='+ currentRecord.produktSigel[i] + '" '  + 'target="_blank">' + currentRecord.produktSigel[i] + '</a> ';
+                    }
+                    else{ // andere Siegel normal darstellen
+                        siegelMitZDBAlsLinks += currentRecord.produktSigel[i] + " "; //Trenner 
+                    }
+                }
+                $('#'+currentRecord.id).append("<td>"+render(currentRecord.umfang)+' ['+ siegelMitZDBAlsLinks + "]</td>");                
             }
             $('#'+currentRecord.id).append("<td>"+renderBestandSWB(currentRecord.bestand, currentRecord.id)+"</td>");
             bestandsArray.push(currentRecord.bestand.length);
