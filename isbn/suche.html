@@ -141,7 +141,7 @@ function isbnEingabe(n) {
             if (render(currentRecord.produktSigel) == '') {
                 $('#'+currentRecord.id).append("<td>"+render(currentRecord.umfang)+"</td>");
             } else {
-                $('#'+currentRecord.id).append("<td>"+render(currentRecord.umfang)+' ['+render(currentRecord.produktSigel)+"]</td>");
+                $('#'+currentRecord.id).append("<td>"+render(currentRecord.umfang)+' ['+renderSigel(currentRecord.produktSigel)+"]</td>");
             }
             $('#'+currentRecord.id).append("<td>"+renderBestandSWB(currentRecord.bestand, currentRecord.id)+"</td>");
             bestandsArray.push(currentRecord.bestand.length);
