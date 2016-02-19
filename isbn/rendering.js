@@ -40,6 +40,21 @@ function renderRVK(rvkArray) {
         return rvkArray.join(', ');
     }
 }
+function renderSigel(sigelArray){
+	var sigelMitZDBAlsLinks = "";
+	var trenner = ", ";
+	for (var i=0; i<sigelArray.length; i++) { 
+		if (sigelArray[i].startsWith("ZDB-")) { // render Sigel starting with ZDB- as links
+			sigelMitZDBAlsLinks += '<a href="http://dispatch.opac.dnb.de/DB=1.2/CMD?ACT=SRCHA&IKT=8521&SRT=LST_os&TRM='+ sigelArray[i] + '" '  + 'target="_blank">' + sigelArray[i] + '</a>';
+		} else { // render other Sigel normally
+			sigelMitZDBAlsLinks += sigelArray[i];
+		}
+		if (i+1 < sigelArray.length) { //append separator if it is not the last item
+			sigelMitZDBAlsLinks += trenner; 
+		}
+	}
+	return sigelMitZDBAlsLinks;
+}
 
 //JSONP ist immer asynchron. Daher folgender Trick:
 //Die Links erhalten gemaess ihrer RVK eine Klassenbezeichnung.
