@@ -81,7 +81,8 @@ function renderDDC(ddcArray) {
     } else {
         for (var i=0; i<ddcArray.length; i++) {
             var ddc = ddcArray[i];
-            var ddcUrl = 'http://dewey.info/class/' + ddc + '/';
+            //var ddcUrl = 'http://dewey.info/class/' + ddc + '/';
+            var ddcUrl = 'http://deweysearchde.pansoft.de/webdeweysearch/executeSearch.html?lastScheduleRecord=' + ddc + '&lastTableRecord=&query=' + ddc;
             ddcArray[i] = '<a href="' + ddcUrl + '" target="_blank">' + ddc + '</a>';
         }
         return ddcArray.join(', ');
