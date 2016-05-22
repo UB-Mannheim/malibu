@@ -44,6 +44,7 @@ $standardMarcMap = array(
     'sw' => array(
         'mainPart' => '//datafield[starts-with(@tag,"6") and (subfield[@code="2"]="gbv" or subfield[@code="2"]="gnd")]',
         'value' => './subfield[@code="a" or @code="t"]',
+        'additional' => './subfield[@code="9"]',
         'key' => './subfield[@code="0" and contains(text(), "(DE-588)")]'
      ),
      'produktSigel' => '//datafield[@tag="912" and not(@ind2="7")]/subfield[@code="a"]'
@@ -93,11 +94,21 @@ function performMapping($map, $outputXml)
             foreach ($mainPart as $singleMainPart) {
                 $value = $singleMainPart->xpath($xpath['value']);
                 $key = $singleMainPart->xpath($xpath['key']);
+                $additional = $singleMainPart->xpath($xpath['additional']);
                 if ($value) {
+                    $valueText = getValues($value[0]);
+                    if ($additional) {
+                        $additionalText = getValues($additional[0]);
+                        if (strpos($additionalText, ':') == 1) {
+                            $additionalText = substr($additionalText,2);
+                        }
+                        $valueText = $valueText . ' <' . $additionalText . '>';
+                    }
+
                     if ($key) {
-                        $outputArray[getValues($value[0])] = getValues($key[0]);
+                        $outputArray[$valueText] = getValues($key[0]);
                     } else {
-                        $outputArray[getValues($value[0])] = true;
+                        $outputArray[$valueText] = true;
                     }
                 }
             }
