@@ -165,9 +165,38 @@ function renderSW(swObject) {
     return swArray.join(', ');
 }
 
+function bestellInfo(databaseText, currentRecord) {
+    var content = databaseText+currentRecord.id+"\n";
+    content += 'ISBN: ' + render(currentRecord.isbn, ', ') + "\n";
+    content += render(currentRecord.titel) + ' ' + render(currentRecord.untertitel) + ' ' + render(currentRecord.autor);
+    if (currentRecord.gesamttitel) {
+        content += ' ( ' + render(currentRecord.gesamttitel) + ' )';
+    }
+    content += '; ' + render(currentRecord.auflage);
+    content += '; ' + render(currentRecord.erscheinungsinfo)+ ' ' + render(currentRecord.hochschulvermerk);
+    content += '; ' + render(currentRecord.umfang);
 
+    return content;
+}
+
+function coins(currentRecord) {
+    // rudimentärer COinS Daten um beispielsweise Titel in Citavi, Zotero oder Mendeley zu speichern
+    // und darüber Bestellungen zu verwalten:
+    var coins = '<span class="Z3988" title="url_ver=Z39.88-2004&amp;ctx_ver=Z39.88-2004&amp;rft_val_fmt=info%3Aofi%2Ffmt%3Akev%3Amtx%3Abook';
+    if (currentRecord.titel) { coins += '&amp;rft.btitle=' + encodeURIComponent(currentRecord.titel); }
+    if (currentRecord.erscheinungsinfo) { coins += '&amp;rft.publisher=' + encodeURIComponent(currentRecord.erscheinungsinfo[1]); }
+    if (currentRecord.erscheinungsinfo) { coins += '&amp;rft.isbn=' + encodeURIComponent(currentRecord.isbn); }
+    if (currentRecord.auflage) { coins += '&amp;rft.edition=' + encodeURIComponent(currentRecord.auflage); }
+    if (currentRecord.autor) { coins += '&amp;rft.au=' + encodeURIComponent(currentRecord.autor); }
+    if (currentRecord.erscheinungsinfo) { coins += '&amp;rft.date=' + encodeURIComponent(currentRecord.erscheinungsinfo[2]); }
+    coins += '"></span>';
+
+    return coins;
+}
+
+/*
 function bestellInfoFenster(databaseText, currentRecord) {
-    var kleinesfenster = window.open('','_blank', 'width=600,height=300,resizable=yes,status=no,menubar=yes,location=no,scrollbars=yes,toolbar=no');
+    //var kleinesfenster = window.open('','_blank', 'width=600,height=300,resizable=yes,status=no,menubar=yes,location=no,scrollbars=yes,toolbar=no');
 
     var content = databaseText+currentRecord.id+"<br/>";//+bestellInfo(currentRecord)
     content += 'ISBN: ' + render(currentRecord.isbn, ', ') + "<br/>\n";
@@ -178,6 +207,8 @@ function bestellInfoFenster(databaseText, currentRecord) {
     content += '; ' + render(currentRecord.auflage);
     content += '; ' + render(currentRecord.erscheinungsinfo)+ ' ' + render(currentRecord.hochschulvermerk);
     content += '; ' + render(currentRecord.umfang);
+
+    $('#'+currentRecord.id+" button").attr("data-clipboard-text", content);
 
     // rudimentärer COinS Daten um beispielsweise Titel in Citavi, Zotero oder Mendeley zu speichern
     // und darüber Bestellungen zu verwalten:
@@ -190,11 +221,12 @@ function bestellInfoFenster(databaseText, currentRecord) {
     if (currentRecord.erscheinungsinfo) { coins += '&amp;rft.date=' + encodeURIComponent(currentRecord.erscheinungsinfo[2]); }
     coins += '"></span>';
     
-    kleinesfenster.document.write('<html><head><title>BestellInfo zu ' + databaseText + ' ' + currentRecord.id + '</title></head><body>' + coins + content + '</body></html>');
+    //kleinesfenster.document.write('<html><head><title>BestellInfo zu ' + databaseText + ' ' + currentRecord.id + '</title></head><body>' + coins + content + '</body></html>');
 
-    kleinesfenster.document.close();
+    //kleinesfenster.document.close();
     return false;
 }
+*/
 
  
 function getParameterByName(name) {

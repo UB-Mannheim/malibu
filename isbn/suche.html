@@ -19,6 +19,7 @@ Unterstützungstool für Fachreferatsarbeit
 body { font-family:  Arial, Verdana, sans-serif; }
 </style>
 <script src="jquery-2.1.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/clipboard.js/1.5.10/clipboard.min.js"></script>
 <script src="rendering.js"></script>
 <script src="paketinfo.js"></script>
 <script type="text/javascript">
@@ -31,6 +32,7 @@ function toggleHidden() {
 <!--
 
 $(document).ready(function(){
+new Clipboard(".btn");
     //Damit werden die Variablen ueber HTML ausgewertet (so wie GET Variablen in PHP)
     if (getParameterByName("isbn")) {
         $('#eingabeIsbn').val(getParameterByName("isbn"));
@@ -135,7 +137,8 @@ function isbnEingabe(n) {
         databaseText = 'SWB-Nr.: ';
         var bestandsArray = [];
         $.each(data.einzelaufnahmen, function(key, currentRecord) {
-            $('#ausgaben table').append("<tr id='"+currentRecord.id+"'><td>"+currentRecord.id+"<br/><form action='#'><input type='button' value='Bestell Info'/></form></td>");
+            $('#ausgaben table').append("<tr id='"+currentRecord.id+"'>"+coins);
+            $('#'+currentRecord.id).append("<td>"+currentRecord.id+"<br/><button class='btn' data-clipboard-text=''>Bestell Info</button></td>");
             $('#'+currentRecord.id).append("<td>"+render(currentRecord.auflage)+"</td>");
             $('#'+currentRecord.id).append("<td>"+render(currentRecord.erscheinungsinfo)+"</td>");
             if (render(currentRecord.produktSigel) == '') {
@@ -145,11 +148,16 @@ function isbnEingabe(n) {
             }
             $('#'+currentRecord.id).append("<td>"+renderBestandSWB(currentRecord.bestand, currentRecord.id)+"</td>");
             bestandsArray.push(currentRecord.bestand.length);
-            
-            $('#'+currentRecord.id+" td:first").click( function() {
+
+            $('#'+currentRecord.id+" button").attr("data-clipboard-text", bestellInfo(databaseText, currentRecord));
+
+            /*
+            bestellInfoFenster(databaseText, currentRecord);
+            //$('#'+currentRecord.id+" td:first").click( function() {
                 //calling this function directly does not work, see http://stackoverflow.com/questions/447414/calling-a-function-in-jquery-with-click
-                bestellInfoFenster(databaseText, currentRecord);
+            //    bestellInfoFenster(databaseText, currentRecord);
             });
+            */
             
         });
 
