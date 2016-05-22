@@ -43,3 +43,16 @@ ln -s ../../mods-available/yaz.ini 20-yaz.ini
 ```sh
 service apache2 restart
 ```
+
+#### dev-server for local development
+
+The easiest for any development under Linux is to use `dev-server.sh` script,
+which will install all necessary packages on the local machine, copy some
+test configuration and start the [php built-in webserver](http://php.net/manual/en/features.commandline.webserver.php).
+
+In the `malibu` directory start with
+```bash
+./dist/dev-server.sh
+```
+Open [http://localhost:8090/isbn/suche.html](http://localhost:8090/isbn/suche.html)
+in your browser.
