@@ -79,7 +79,7 @@ $outputString .=  "</collection>";
 
 $map = $standardMarcMap;
 $map['bestand'] = '//datafield[@tag="949" or @tag="852"]/subfield[@code="F"]';
-
+$map['sw']['additional'] = './subfield[@code="z"]';
 
 if (!isset($_GET['format'])) {
     header('Content-type: text/xml');
