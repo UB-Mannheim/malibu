@@ -157,7 +157,7 @@ function renderSW(swObject) {
     $.each(swObject, function(key, value) {
         if(typeof value == 'string') {
             var swUrl = 'http://d-nb.info/gnd/' + value + '/about/html';
-            swArray.push('<a href="' + swUrl + '" target="_blank">' + key + '</a>');
+            swArray.push('<a href="' + swUrl + '" target="_blank">' + htmlEscape(key) + '</a>');
         } else {
             swArray.push(key);
         }
@@ -244,4 +244,16 @@ function isbn13(z) {
     } else {
         return z;
     }
+}
+
+//Einfache Ersetzung von einigen speziellen Zeichen
+//zur Darstellung als Text in HTML. Insbesondere bei
+//Homonymzusätzen.
+function htmlEscape(str) {
+    return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
 }
