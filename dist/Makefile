@@ -8,4 +8,4 @@ docker:
 run-docker: docker
 	@echo "Running 'malibu' container on port $(HOSTPORT)"
 	@echo "Open 'http://localhost:$(HOSTPORT)/isbn/suche.html' to access it"
-	docker --rm -it -p $(HOSTPORT):80 "malibu"
+	docker run --rm -it -p $(HOSTPORT):80 "malibu"
