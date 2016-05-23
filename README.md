@@ -3,6 +3,7 @@
 [![Build Status](https://travis-ci.org/UB-Mannheim/malibu.svg?branch=master)](https://travis-ci.org/UB-Mannheim/malibu)
 [![GitHub release](https://img.shields.io/github/release/UB-Mannheim/malibu.svg?maxAge=2592000)]()
 [![license](https://img.shields.io/github/license/UB-Mannheim/malibu.svg?maxAge=2592000)]()
+[![Docker Stars](https://img.shields.io/docker/stars/ubma/malibu.svg?maxAge=2592000)]()
 
 ## Summary ![en](http://bib.uni-mannheim.de/fileadmin/scripts/flag_en.jpeg)
 
