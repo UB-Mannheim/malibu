@@ -1,17 +1,23 @@
 # Install Notes
 
-## General Requirements
+There are three ways to run the malibu application
+
+* [On an Apache httpd server](#apache)
+* [Using docker](#docker)
+* [Using a standalone server](#dev-server) (only for development)
+
+## Apache
 
  * Sever: Apache with PHP, jQuery library
  * Client: Javascript enabled
 
-## bnb
+### bnb
 
 We included `getBNBData.sh` as a cronjob, which runs every Saturday, at 10 am (010**6).
 
-## isbn
+### isbn
 
-#### For Debian 7 (Apache 2.2)
+### For Debian 7 (Apache 2.2)
 You need the php library <a href="http://php.net/manual/en/book.yaz.php">yaz</a> on the server. For Debian 7 (Apache 2.2):
 
 1. <code>apt-get install yaz libyaz4-dev php5-dev php-pear</code> (maybe you have already some packages)
@@ -23,7 +29,7 @@ which is configured by `extension_dir` in
 `/etc/alternatives/php-config` and you have to copy it therefore.
 (e.g. <code>cp /usr/lib/php5/20090626/yaz.so /usr/lib/php5/20100525/yaz.so</code> in our case).
 
-#### For Debian 8 (Apache 2.4)
+### For Debian 8 (Apache 2.4)
 You need the php library <a href="http://php.net/manual/en/book.yaz.php">yaz</a> on the server. For Debian 8 (Apache 2.4):
 
 * <code>apt-get install yaz libyaz4-dev php5-dev php-pear</code> (maybe you have already some packages)
@@ -42,4 +48,35 @@ ln -s ../../mods-available/yaz.ini 20-yaz.ini
 * restart Apache2
 ```sh
 service apache2 restart
+```
+
+## Docker
+
+The docker image is available from Dockerhub as [ubma/malibu](https://dockerhub.com/r/ubma/malibu).
+
+You can run it from the command line:
+
+```
+docker --rm -p <host-port>:80 'ubma/malibu'
+```
+
+where `<host-port>` is the local port on the host machine on which you want to access malibu.
+
+To rebuild the image or run a container with the current development version:
+
+```
+make -C dist docker
+make -C dist run-docker
+```
+
+## Dev Server
+
+The `./dist/dev-server.sh` script will install the dependencies of malibu system-wide and start
+a server on port `8090`. The purpose is to create a working development
+environment on a Debian/Ubuntu system in a single step.
+
+To run the dev server:
+
+```
+bash ./dist/dev-server.sh
 ```
