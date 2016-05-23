@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/UB-Mannheim/malibu.svg?branch=master)](https://travis-ci.org/UB-Mannheim/malibu)
 
-## Summary ![en](http://bib.uni-mannheim.de/fileadmin/scripts/flag_en.jpeg)
+## Summary :en:
 
 **malibu** is a collection of lightweight web-based tools to work with
 bibliographic metadata from various sources on the web, aimed at supporting the
@@ -19,7 +19,7 @@ The main components are
 
 To get an impression of the tools, try our [online demo installation](http://data.bib.uni-mannheim.de/services/).
 
-## Zusammenfassung ![de](http://bib.uni-mannheim.de/fileadmin/scripts/flag_de.jpeg)
+## Zusammenfassung :de:
 
 **malibu** ist eine Sammlung von leichtgewichtigen, webbasierten Tools im Umfeld
 von bibliographischen Daten zur Unterstützung von Arbeitsabläufen, wie sie
