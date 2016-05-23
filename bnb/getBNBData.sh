@@ -1,6 +1,9 @@
 #!/bin/bash
 
-BNB_DATADIR="/var/www/Tools/BNBDaten"
+BNB_DATADIR="$1"
+# fuer backwards compatibility, war vorher fest eingetragen:
+# BNB_DATADIR="/var/www/Tools/BNBDaten"
+BNB_DATADIR="${BNB_DATADIR:-/var/www/Tools/BNBDaten}"
 mkdir -pv "$BNB_DATADIR"
 cd "$BNB_DATADIR"
 
