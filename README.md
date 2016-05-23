@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/UB-Mannheim/malibu.svg?branch=master)](https://travis-ci.org/UB-Mannheim/malibu)
 
-## Summary :en:
+## Summary :gb:
 
 **malibu** is a collection of lightweight web-based tools to work with
 bibliographic metadata from various sources on the web, aimed at supporting the
