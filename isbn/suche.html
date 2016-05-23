@@ -32,7 +32,15 @@ function toggleHidden() {
 <!--
 
 $(document).ready(function(){
-new Clipboard(".btn");
+var clipboard = new Clipboard(".btn");
+clipboard.on('success', function(e) {
+    e.trigger.setAttribute('title','Kopiert!');
+    //e.clearSelection();
+});
+clipboard.on('error', function(e) {
+    e.trigger.setAttribute('title', 'Jetzt Ctrl+C zum Kopieren drücken');
+});
+
     //Damit werden die Variablen ueber HTML ausgewertet (so wie GET Variablen in PHP)
     if (getParameterByName("isbn")) {
         $('#eingabeIsbn').val(getParameterByName("isbn"));
@@ -138,7 +146,7 @@ function isbnEingabe(n) {
         var bestandsArray = [];
         $.each(data.einzelaufnahmen, function(key, currentRecord) {
             $('#ausgaben table').append("<tr id='"+currentRecord.id+"'>"+coins);
-            $('#'+currentRecord.id).append("<td>"+currentRecord.id+"<br/><button class='btn' data-clipboard-text=''>Bestell Info</button></td>");
+            $('#'+currentRecord.id).append("<td>"+currentRecord.id+"<br/><button class='btn' title='In Zwischenablage kopieren' data-clipboard-text=''>Bestell Info <img src='../img/clippy.svg' width='16'/></button></td>");
             $('#'+currentRecord.id).append("<td>"+render(currentRecord.auflage)+"</td>");
             $('#'+currentRecord.id).append("<td>"+render(currentRecord.erscheinungsinfo)+"</td>");
             if (render(currentRecord.produktSigel) == '') {
@@ -197,7 +205,7 @@ function isbnEingabe(n) {
                 $('#ausgaben').html('<table border="1" width="100%" bgcolor="#f0e68c"></table>');
                 databaseText = 'BL-Nr.: ';
                 $.each(data.einzelaufnahmen, function(key, currentRecord) {
-                    $('#ausgaben table').append("<tr id='"+currentRecord.id+"'><td>"+currentRecord.id+"<br/><form action='#'><input type='button' value='Bestell Info'/></form></td>");
+                    $('#ausgaben table').append("<tr id='"+currentRecord.id+"'><td>"+currentRecord.id+"<br/><form action='#'><input type='button' title='In Zwischenablage kopieren' value='Bestell Info'/></form></td>");
                     $('#'+currentRecord.id).append("<td>"+render(currentRecord.auflage)+"</td>");
                     $('#'+currentRecord.id).append("<td>"+render(currentRecord.erscheinungsinfo)+"</td>");
                     $('#'+currentRecord.id).append("<td>"+render(currentRecord.umfang)+"</td>");
