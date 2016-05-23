@@ -7,6 +7,8 @@
 
 FROM php:apache
 
+ENV JQUERY 2.1.1
+
 RUN apt-get update && apt-get install -y yaz libyaz4-dev php5-dev php-pear wget unzip
 
 RUN pecl install yaz
@@ -14,10 +16,11 @@ RUN docker-php-ext-enable yaz
 
 RUN mkdir malibu
 WORKDIR malibu
+RUN mkdir isbn
 
-# Download the jQuery file with curl
-# because wget is not installed on php:apache
-ADD "https://code.jquery.com/jquery-2.1.1.min.js" "isbn/jquery-2.1.1.min.js"
+# From the best practices: you should use curl or wget instead of ADD
+# https://docs.docker.com/engine/userguide/eng-image/dockerfile_best-practices/#add-or-copy
+RUN curl -o "isbn/jquery-${JQUERY}.min.js" "https://code.jquery.com/jquery-${JQUERY}.min.js"
 
 # Download BNB data
 COPY ./bnb/getBNBData.sh ./bnb/getBNBData.sh

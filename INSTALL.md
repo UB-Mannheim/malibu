@@ -52,7 +52,7 @@ service apache2 restart
 
 ## Docker
 
-The docker image is available from Dockerhub as [ubma/malibu](https://dockerhub.com/r/ubma/malibu).
+The docker image is available from Dockerhub as [ubma/malibu](https://hub.docker.com/r/ubma/malibu/).
 
 You can run it from the command line:
 
