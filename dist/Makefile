@@ -9,6 +9,7 @@ docker:
 docker-run: docker
 	@echo "Running 'malibu' container on port $(HOSTPORT)"
 	@echo "Open 'http://localhost:$(HOSTPORT)/malibu/isbn/suche.html' to access it"
+	@echo "Alternatively substitute 'localhost' with the docker-machine ip"
 	docker run --rm -it -p $(HOSTPORT):80 "$(IMAGENAME)" $(DOCKER_COMMAND)
 
 docker-run-%:
