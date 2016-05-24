@@ -34,6 +34,16 @@ function toggleHidden() {
 $(document).ready(function(){
 var clipboard = new Clipboard(".btn");
 clipboard.on('success', function(e) {
+    var $notification = $("<span>")
+      .appendTo('body')
+      .html('In die Zwischenablage kopiert!')
+      .css('position', 'fixed')
+      .css('top', '0')
+      .css('display', 'block')
+      .css('width', '100%')
+      .css('background', 'black')
+      .css('color', 'white');
+    setTimeout(function() { $notification.remove(); }, 1000);
     e.trigger.setAttribute('title','Kopiert!');
     //e.clearSelection();
 });
