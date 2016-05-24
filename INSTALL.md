@@ -68,7 +68,7 @@ To rebuild the image or run a container with the current development version:
 
 ```
 make -C dist docker
-make -C dist run-docker
+make -C dist docker-run
 ```
 
 ## Dev Server
