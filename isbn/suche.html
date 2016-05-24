@@ -32,24 +32,14 @@ function toggleHidden() {
 <!--
 
 $(document).ready(function(){
-var clipboard = new Clipboard(".btn");
-clipboard.on('success', function(e) {
-    var $notification = $("<span>")
-      .appendTo('body')
-      .html('In die Zwischenablage kopiert!')
-      .css('position', 'fixed')
-      .css('top', '0')
-      .css('display', 'block')
-      .css('width', '100%')
-      .css('background', 'black')
-      .css('color', 'white');
-    setTimeout(function() { $notification.remove(); }, 1000);
-    e.trigger.setAttribute('title','Kopiert!');
-    //e.clearSelection();
-});
-clipboard.on('error', function(e) {
-    e.trigger.setAttribute('title', 'Jetzt Ctrl+C zum Kopieren drücken');
-});
+    var clipboard = new Clipboard(".btn");
+    clipboard.on('success', function(e) {
+        showNotification('In die Zwischenablage kopiert!', 'black', 'white');
+        //e.clearSelection();
+    });
+    clipboard.on('error', function(e) {
+        showNotification('Jetzt Cmd+C zum Kopieren drücken!', 'black', 'white');
+    });
 
     //Damit werden die Variablen ueber HTML ausgewertet (so wie GET Variablen in PHP)
     if (getParameterByName("isbn")) {
@@ -84,6 +74,19 @@ clipboard.on('error', function(e) {
 
 });
 
+
+function showNotification(message, bcolor, color) {
+    var $notification = $("<span>")
+      .appendTo('body')
+      .html('<p>' + message + '</p>')
+      .css('position', 'fixed')
+      .css('top', '0')
+      .css('display', 'block')
+      .css('width', '100%')
+      .css('background', bcolor)
+      .css('color', color);
+    setTimeout(function() { $notification.remove(); }, 1000);
+}
 
 function ppnEingabe(ppn, verbund) {
     verbund = verbund.toLowerCase();
@@ -168,14 +171,6 @@ function isbnEingabe(n) {
             bestandsArray.push(currentRecord.bestand.length);
 
             $('#'+currentRecord.id+" button").attr("data-clipboard-text", bestellInfo(databaseText, currentRecord));
-
-            /*
-            bestellInfoFenster(databaseText, currentRecord);
-            //$('#'+currentRecord.id+" td:first").click( function() {
-                //calling this function directly does not work, see http://stackoverflow.com/questions/447414/calling-a-function-in-jquery-with-click
-            //    bestellInfoFenster(databaseText, currentRecord);
-            });
-            */
             
         });
 
@@ -215,16 +210,13 @@ function isbnEingabe(n) {
                 $('#ausgaben').html('<table border="1" width="100%" bgcolor="#f0e68c"></table>');
                 databaseText = 'BL-Nr.: ';
                 $.each(data.einzelaufnahmen, function(key, currentRecord) {
-                    $('#ausgaben table').append("<tr id='"+currentRecord.id+"'><td>"+currentRecord.id+"<br/><form action='#'><input type='button' title='In Zwischenablage kopieren' value='Bestell Info'/></form></td>");
+                    $('#ausgaben table').append("<tr id='"+currentRecord.id+"'><td>"+currentRecord.id+"<br/><button class='btn' title='In Zwischenablage kopieren' data-clipboard-text=''>Bestell Info <img src='../img/clippy.svg' width='16'/></button></td>");
                     $('#'+currentRecord.id).append("<td>"+render(currentRecord.auflage)+"</td>");
                     $('#'+currentRecord.id).append("<td>"+render(currentRecord.erscheinungsinfo)+"</td>");
                     $('#'+currentRecord.id).append("<td>"+render(currentRecord.umfang)+"</td>");
                     $('#'+currentRecord.id).append("<td>"+renderBestandSWB(currentRecord.bestand)+"</td>");
                     
-                    $('#'+currentRecord.id+" td:first").click( function() {
-                        bestellInfoFenster(databaseText, currentRecord);
-                    });
-                    
+                    $('#'+currentRecord.id+" button").attr("data-clipboard-text", bestellInfo(databaseText, currentRecord));
                 });
                 
                 $('#links').append( renderLinks(data.links) );

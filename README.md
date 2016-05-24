@@ -40,3 +40,15 @@ Author: [Philipp Zumstein](https://github.com/zuphilip) (UB Mannheim)
 
 **malibu** is Free Software. You may use it under the terms of the GNU General
 Public License (GPL). See [LICENSE](./LICENSE) for details.
+
+## Acknowledgements
+
+The tools are depending on some third party libraries and fonts:
+
+* yaz
+* jQuery (MIT License)
+* clipboard.js
+* clippy.svg from https://github.com/github/octicons (SIL Font)
+
+
+
