@@ -158,8 +158,9 @@ function isbnEingabe(n) {
         databaseText = 'SWB-Nr.: ';
         var bestandsArray = [];
         $.each(data.einzelaufnahmen, function(key, currentRecord) {
-            $('#ausgaben table').append("<tr id='"+currentRecord.id+"'>"+coins);
-            $('#'+currentRecord.id).append("<td>"+currentRecord.id+"<br/><button class='btn' title='In Zwischenablage kopieren' data-clipboard-text=''>Bestell Info <img src='../img/clippy.svg' width='16'/></button></td>");
+            $('#ausgaben table').append("<tr id='"+currentRecord.id+"'>");
+//alert(coins(currentRecord));
+            $('#'+currentRecord.id).append("<td>"+coins(currentRecord)+currentRecord.id+"<br/><button class='btn' title='In Zwischenablage kopieren' data-clipboard-text=''>Bestell Info <img src='../img/clippy.svg' width='16'/></button></td>");
             $('#'+currentRecord.id).append("<td>"+render(currentRecord.auflage)+"</td>");
             $('#'+currentRecord.id).append("<td>"+render(currentRecord.erscheinungsinfo)+"</td>");
             if (render(currentRecord.produktSigel) == '') {
@@ -171,6 +172,11 @@ function isbnEingabe(n) {
             bestandsArray.push(currentRecord.bestand.length);
 
             $('#'+currentRecord.id+" button").attr("data-clipboard-text", bestellInfo(databaseText, currentRecord));
+
+            // invoke Zotero after COinS rebuild
+            var ev = document.createEvent('HTMLEvents');
+            ev.initEvent('ZoteroItemUpdated', true, true);
+            document.dispatchEvent(ev);
             
         });
 
@@ -210,13 +216,19 @@ function isbnEingabe(n) {
                 $('#ausgaben').html('<table border="1" width="100%" bgcolor="#f0e68c"></table>');
                 databaseText = 'BL-Nr.: ';
                 $.each(data.einzelaufnahmen, function(key, currentRecord) {
-                    $('#ausgaben table').append("<tr id='"+currentRecord.id+"'><td>"+currentRecord.id+"<br/><button class='btn' title='In Zwischenablage kopieren' data-clipboard-text=''>Bestell Info <img src='../img/clippy.svg' width='16'/></button></td>");
+                    $('#ausgaben table').append("<tr id='"+currentRecord.id+"'><td>"+coins(currentRecord)+currentRecord.id+"<br/><button class='btn' title='In Zwischenablage kopieren' data-clipboard-text=''>Bestell Info <img src='../img/clippy.svg' width='16'/></button></td>");
                     $('#'+currentRecord.id).append("<td>"+render(currentRecord.auflage)+"</td>");
                     $('#'+currentRecord.id).append("<td>"+render(currentRecord.erscheinungsinfo)+"</td>");
                     $('#'+currentRecord.id).append("<td>"+render(currentRecord.umfang)+"</td>");
                     $('#'+currentRecord.id).append("<td>"+renderBestandSWB(currentRecord.bestand)+"</td>");
                     
                     $('#'+currentRecord.id+" button").attr("data-clipboard-text", bestellInfo(databaseText, currentRecord));
+
+                    // invoke Zotero after COinS rebuild
+                    var ev = document.createEvent('HTMLEvents');
+                    ev.initEvent('ZoteroItemUpdated', true, true);
+                    document.dispatchEvent(ev);
+
                 });
                 
                 $('#links').append( renderLinks(data.links) );
