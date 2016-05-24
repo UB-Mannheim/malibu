@@ -30,5 +30,5 @@ RUN bash ./bnb/getBNBData.sh $PWD/bnb/BNBDaten
 COPY . .
 
 # Configure
-RUN mv isbn/conf.example.php isbn/conf.php
-RUN mv isbn/paketinfo.example.js isbn/paketinfo.js
+RUN mv isbn/conf.example.php isbn/conf.php && \
+    mv isbn/paketinfo.example.js isbn/paketinfo.js

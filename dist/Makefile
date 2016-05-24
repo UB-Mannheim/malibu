@@ -1,15 +1,15 @@
 HOSTPORT = 12345
 IMAGENAME = "malibu"
 
-.PHONY: docker run-docker
+.PHONY: docker docker-run docker-run-%
 
 docker:
 	docker build -t $(IMAGENAME) ..
 
-run-docker: docker
+docker-run: docker
 	@echo "Running 'malibu' container on port $(HOSTPORT)"
-	@echo "Open 'http://localhost:$(HOSTPORT)/isbn/suche.html' to access it"
-	docker run --rm -it -p $(HOSTPORT):80 "$(IMAGENAME)"
+	@echo "Open 'http://localhost:$(HOSTPORT)/malibu/isbn/suche.html' to access it"
+	docker run --rm -it -p $(HOSTPORT):80 "$(IMAGENAME)" $(DOCKER_COMMAND)
 
-run-docker-bash: docker
-	docker run --rm -it -p $(HOSTPORT):80 "$(IMAGENAME)" bash
+docker-run-%:
+	$(MAKE) docker-run DOCKER_COMMAND=$*
