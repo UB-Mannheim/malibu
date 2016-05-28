@@ -57,12 +57,12 @@ The docker image is available from Dockerhub as [ubma/malibu](https://hub.docker
 You can run it from the command line:
 
 ```
-docker --rm -p <host-port>:80 'ubma/malibu'
+docker run --rm -p <host-port>:80 'ubma/malibu'
 ```
 
 where `<host-port>` is the local port on the host machine on which you want to access malibu.
 
-For example `docker --rm -p 12345:80 'ubma/malibu` will make malibu available at [http://localhost:12345/malibu/isbn/suche.html](http://localhost:12345/malibu/isbn/suche.html).
+For example `docker run --rm -p 12345:80 'ubma/malibu` will make malibu available at [http://localhost:12345/malibu/isbn/suche.html](http://localhost:12345/malibu/isbn/suche.html).
 
 To rebuild the image or run a container with the current development version:
 
