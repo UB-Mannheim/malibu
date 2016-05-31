@@ -5,11 +5,15 @@
 [![license](https://img.shields.io/github/license/UB-Mannheim/malibu.svg?maxAge=2592000)](https://github.com/UB-Mannheim/malibu/blob/master/LICENSE)
 [![Docker Stars](https://img.shields.io/docker/pulls/ubma/malibu.svg?maxAge=2592000)](https://hub.docker.com/r/ubma/malibu/)
 
-## Summary ![en](http://bib.uni-mannheim.de/fileadmin/scripts/flag_en.jpeg)
+## Summary/Zusammenfassung
 
-**malibu** is a collection of lightweight web-based tools to work with
-bibliographic metadata from various sources on the web, aimed at supporting the
-workflows of subject librarians and acquisitions librarians.
+**malibu** ![en](img/flag_en.jpeg) is a collection of lightweight web-based tools to work with bibliographic metadata from various sources on the web, aimed at supporting the workflows of subject librarians and acquisitions librarians.
+
+**malibu** ![de](img/flag_de.jpeg) ist eine Sammlung von leichtgewichtigen, webbasierten Tools im Umfeld
+von bibliographischen Daten zur Unterstützung von Arbeitsabläufen, wie sie
+häufig in Bibliotheken bei den Fachreferaten und der Erwerbung auftreten.
+Hauptbestandteil ist ein Mashup zur ISBN-Suche und ein Recherchewerkzeug für die
+BNB weekly sowie weitere kleine Tools.
 
 The main components are
 
@@ -18,22 +22,20 @@ The main components are
 * a search tool for the British National Bibliography weekly updates
   ([Demo](http://data.bib.uni-mannheim.de/malibu/bnb/recherche.php)).
 
-## Online Demo
 
-To get an impression of the tools, try our [online demo installation](http://data.bib.uni-mannheim.de/services/).
+## Docker
 
-## Zusammenfassung ![de](http://bib.uni-mannheim.de/fileadmin/scripts/flag_de.jpeg)
+The docker image is available from Dockerhub as [ubma/malibu](https://hub.docker.com/r/ubma/malibu/).
 
-**malibu** ist eine Sammlung von leichtgewichtigen, webbasierten Tools im Umfeld
-von bibliographischen Daten zur Unterstützung von Arbeitsabläufen, wie sie
-häufig in Bibliotheken bei den Fachreferaten und der Erwerbung auftreten.
-Hauptbestandteil ist ein Mashup zur ISBN-Suche und ein Recherchewerkzeug für die
-BNB weekly sowie weitere kleine Tools.
+You can run it from the command line (provided that you have already [docker installed](https://docs.docker.com/engine/installation/)):
 
-Eine ausführliche Beschreibung sowie das Zusammenspiel mit dem [Autolink
-TIB/UB](http://www.tempelb.de/autolink-tibub/) Skript von Herrn Tempel kann in
-unserem Artikel [Literaturauswahl und -bestellung leichter
-gemacht](https://ub-madoc.bib.uni-mannheim.de/38826/) nachgelesen werden.
+```shell
+docker run -d --rm -p 12345:80 --name malibu-container 'ubma/malibu'
+```
+Then you find malibu by opening [http://localhost:12345/malibu/isbn/suche.html](http://localhost:12345/malibu/isbn/suche.html) with your browser (maybe replace localhost by the docker ip).
+
+More informations about how to install malibu on Debian systems and setting up a development version can be found in the [INSTALL.md](INSTALL.md).
+
 
 ## Copyright and License
 
@@ -44,14 +46,20 @@ Author: [Philipp Zumstein](https://github.com/zuphilip) (UB Mannheim)
 **malibu** is Free Software. You may use it under the terms of the GNU General
 Public License (GPL). See [LICENSE](./LICENSE) for details.
 
+## References
+
+See https://github.com/UB-Mannheim/malibu/wiki/Bibliografie
+
 ## Acknowledgements
 
 The tools are depending on some third party libraries and fonts:
 
-* yaz
-* jQuery (MIT License)
-* clipboard.js
+* [yaz](http://www.indexdata.com/phpyaz) ([Revised BSD](http://www.indexdata.com/licences/revised-bsd))
+* [jQuery](https://github.com/jquery/jquery) (MIT license)
+* [clipboard.js](https://github.com/zenorocha/clipboard.js/) (MIT license)
 * clippy.svg from https://github.com/github/octicons (SIL Font)
 
+Moreover, it is useful to use it in combination with the script
+* [Autolink TIB/UB](http://www.tempelb.de/autolink-tibub/)
 
 

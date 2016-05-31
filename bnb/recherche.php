@@ -41,7 +41,7 @@ Lesezeichen zu erstellen, z.B.
         Bestandsabgleich bei den ISBNs kann das
         <a href="http://wiki.bib.uni-mannheim.de/InterneSeiten/doku.php?id=anleitungen:utfa">Autolink Tool (Unterstützungstool für Fachreferatsarbeit)</a>
         genutzt werden (auf der Seite Greasemonkey
-        aktivieren <img src="Autolink.jpg" >).
+        aktivieren <img src="../img/Autolink.jpg" >).
 
         <h3>Schritt 1: DDC Auswählen</h3>
         Entweder können Sie die DDC anhand der Sachgruppen der DNB auswählen,
