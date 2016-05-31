@@ -5,7 +5,7 @@
 [![license](https://img.shields.io/github/license/UB-Mannheim/malibu.svg?maxAge=2592000)](https://github.com/UB-Mannheim/malibu/blob/master/LICENSE)
 [![Docker Stars](https://img.shields.io/docker/pulls/ubma/malibu.svg?maxAge=2592000)](https://hub.docker.com/r/ubma/malibu/)
 
-## Summary ![en](http://bib.uni-mannheim.de/fileadmin/scripts/flag_en.jpeg)
+## Summary :gb:
 
 **malibu** is a collection of lightweight web-based tools to work with
 bibliographic metadata from various sources on the web, aimed at supporting the
@@ -22,7 +22,7 @@ The main components are
 
 To get an impression of the tools, try our [online demo installation](http://data.bib.uni-mannheim.de/services/).
 
-## Zusammenfassung ![de](http://bib.uni-mannheim.de/fileadmin/scripts/flag_de.jpeg)
+## Zusammenfassung :de:
 
 **malibu** ist eine Sammlung von leichtgewichtigen, webbasierten Tools im Umfeld
 von bibliographischen Daten zur Unterstützung von Arbeitsabläufen, wie sie
