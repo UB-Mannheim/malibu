@@ -165,12 +165,9 @@ function renderSW(swObject) {
     return swArray.join(', ');
 }
 
-
-function bestellInfoFenster(databaseText, currentRecord) {
-    var kleinesfenster = window.open('','_blank', 'width=600,height=300,resizable=yes,status=no,menubar=yes,location=no,scrollbars=yes,toolbar=no');
-
-    var content = databaseText+currentRecord.id+"<br/>";//+bestellInfo(currentRecord)
-    content += 'ISBN: ' + render(currentRecord.isbn, ', ') + "<br/>\n";
+function bestellInfo(databaseText, currentRecord) {
+    var content = databaseText+currentRecord.id+"\n";
+    content += 'ISBN: ' + render(currentRecord.isbn, ', ') + "\n";
     content += render(currentRecord.titel) + ' ' + render(currentRecord.untertitel) + ' ' + render(currentRecord.autor);
     if (currentRecord.gesamttitel) {
         content += ' ( ' + render(currentRecord.gesamttitel) + ' )';
@@ -179,6 +176,10 @@ function bestellInfoFenster(databaseText, currentRecord) {
     content += '; ' + render(currentRecord.erscheinungsinfo)+ ' ' + render(currentRecord.hochschulvermerk);
     content += '; ' + render(currentRecord.umfang);
 
+    return content;
+}
+
+function coins(currentRecord) {
     // rudimentärer COinS Daten um beispielsweise Titel in Citavi, Zotero oder Mendeley zu speichern
     // und darüber Bestellungen zu verwalten:
     var coins = '<span class="Z3988" title="url_ver=Z39.88-2004&amp;ctx_ver=Z39.88-2004&amp;rft_val_fmt=info%3Aofi%2Ffmt%3Akev%3Amtx%3Abook';
@@ -189,14 +190,11 @@ function bestellInfoFenster(databaseText, currentRecord) {
     if (currentRecord.autor) { coins += '&amp;rft.au=' + encodeURIComponent(currentRecord.autor); }
     if (currentRecord.erscheinungsinfo) { coins += '&amp;rft.date=' + encodeURIComponent(currentRecord.erscheinungsinfo[2]); }
     coins += '"></span>';
-    
-    kleinesfenster.document.write('<html><head><title>BestellInfo zu ' + databaseText + ' ' + currentRecord.id + '</title></head><body>' + coins + content + '</body></html>');
 
-    kleinesfenster.document.close();
-    return false;
+    return coins;
 }
-
  
+
 function getParameterByName(name) {
 /*
  * Parameter als URL-Anhaenge werden direkt
