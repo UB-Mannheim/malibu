@@ -7,13 +7,13 @@
 
 ## Summary/Zusammenfassung
 
-**malibu** ![en](img/flag_en.jpeg) is a collection of lightweight web-based tools to work with bibliographic metadata from various sources on the web, aimed at supporting the workflows of subject librarians and acquisitions librarians.
-
 **malibu** ![de](img/flag_de.jpeg) ist eine Sammlung von leichtgewichtigen, webbasierten Tools im Umfeld
 von bibliographischen Daten zur Unterstützung von Arbeitsabläufen, wie sie
 häufig in Bibliotheken bei den Fachreferaten und der Erwerbung auftreten.
 Hauptbestandteil ist ein Mashup zur ISBN-Suche und ein Recherchewerkzeug für die
 BNB weekly sowie weitere kleine Tools.
+
+**malibu** ![en](img/flag_en.jpeg) is a collection of lightweight web-based tools to work with bibliographic metadata from various sources on the web, aimed at supporting the workflows of subject librarians and acquisitions librarians.
 
 The main components are
 
@@ -30,7 +30,7 @@ The docker image is available from Dockerhub as [ubma/malibu](https://hub.docker
 You can run it from the command line (provided that you have already [docker installed](https://docs.docker.com/engine/installation/)):
 
 ```shell
-docker run -d --rm -p 12345:80 --name malibu-container 'ubma/malibu'
+docker run --rm -p 12345:80 'ubma/malibu'
 ```
 Then you find malibu by opening [http://localhost:12345/malibu/isbn/suche.html](http://localhost:12345/malibu/isbn/suche.html) with your browser (maybe replace localhost by the docker ip).
 
