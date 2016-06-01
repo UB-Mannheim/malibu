@@ -2,7 +2,7 @@
 
 The easiest way should be to use the docker
 container as it is already described in the
-[README.md](README.md). This can be used for
+[README.md](README.md#docker). This can be used for
 testing also for production.
 
 However, there are alternatives ways to set
@@ -55,15 +55,6 @@ service apache2 restart
 
 ## Configurations for code development
 
-## Docker
-
-To rebuild the image or run a container with the current development version:
-
-```
-make -C dist docker
-make -C dist docker-run
-```
-
 ## Dev Server
 
 The `./dist/dev-server.sh` script will install the dependencies of malibu system-wide and start
@@ -75,3 +66,13 @@ To run the dev server:
 ```
 bash ./dist/dev-server.sh
 ```
+
+## Docker
+
+To rebuild the image or run a container with the current development version:
+
+```
+make -C dist docker
+make -C dist docker-run
+```
+
