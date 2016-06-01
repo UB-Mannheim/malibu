@@ -1,21 +1,23 @@
 # Install Notes
 
-There are three ways to run the malibu application
+The easiest way should be to use the docker
+container as it is already described in the
+[README.md](README.md#docker). This can be used for
+testing also for production.
 
-* [On an Apache httpd server](#apache)
-* [Using docker](#docker)
-* [Using a standalone server](#dev-server) (only for development)
+However, there are alternatives ways to set
+it up on Debian without docker and how you can set up a
+an environment for code development.
 
-## Apache
 
- * Sever: Apache with PHP, jQuery library
- * Client: Javascript enabled
+* [Server configuration](#server-configuration)
+* [Configuration for code development](#configuration-for-code-development)
 
-### bnb
 
-We included `getBNBData.sh` as a cronjob, which runs every Saturday, at 10 am (010**6).
+## Server configuration
 
-### isbn
+General remark for the bnb service: We included `getBNBData.sh` as a cronjob, which runs every Saturday, at 10 am (010**6).
+
 
 ### For Debian 7 (Apache 2.2)
 You need the php library <a href="http://php.net/manual/en/book.yaz.php">yaz</a> on the server. For Debian 7 (Apache 2.2):
@@ -50,26 +52,8 @@ ln -s ../../mods-available/yaz.ini 20-yaz.ini
 service apache2 restart
 ```
 
-## Docker
 
-The docker image is available from Dockerhub as [ubma/malibu](https://hub.docker.com/r/ubma/malibu/).
-
-You can run it from the command line:
-
-```
-docker run --rm -p <host-port>:80 'ubma/malibu'
-```
-
-where `<host-port>` is the local port on the host machine on which you want to access malibu.
-
-For example `docker run --rm -p 12345:80 'ubma/malibu` will make malibu available at [http://localhost:12345/malibu/isbn/suche.html](http://localhost:12345/malibu/isbn/suche.html).
-
-To rebuild the image or run a container with the current development version:
-
-```
-make -C dist docker
-make -C dist docker-run
-```
+## Configurations for code development
 
 ## Dev Server
 
@@ -82,3 +66,13 @@ To run the dev server:
 ```
 bash ./dist/dev-server.sh
 ```
+
+## Docker
+
+To rebuild the image or run a container with the current development version:
+
+```
+make -C dist docker
+make -C dist docker-run
+```
+
