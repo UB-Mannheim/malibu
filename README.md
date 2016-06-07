@@ -7,13 +7,13 @@
 
 ## Summary/Zusammenfassung
 
-**malibu** ![de](img/flag_de.jpeg) ist eine Sammlung von leichtgewichtigen, webbasierten Tools im Umfeld
+**malibu** ![de](https://raw.githubusercontent.com/UB-Mannheim/malibu/master/img/flag_de.jpeg) ist eine Sammlung von leichtgewichtigen, webbasierten Tools im Umfeld
 von bibliographischen Daten zur Unterstützung von Arbeitsabläufen, wie sie
 häufig in Bibliotheken bei den Fachreferaten und der Erwerbung auftreten.
 Hauptbestandteil ist ein Mashup zur ISBN-Suche und ein Recherchewerkzeug für die
 BNB weekly sowie weitere kleine Tools.
 
-**malibu** ![en](img/flag_en.jpeg) is a collection of lightweight web-based tools to work with bibliographic metadata from various sources on the web, aimed at supporting the workflows of subject librarians and acquisitions librarians.
+**malibu** ![en](https://raw.githubusercontent.com/UB-Mannheim/malibu/master/img/flag_en.jpeg) is a collection of lightweight web-based tools to work with bibliographic metadata from various sources on the web, aimed at supporting the workflows of subject librarians and acquisitions librarians.
 
 The main components are
 
