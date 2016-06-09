@@ -25,7 +25,9 @@ The main components are
 
 ## Docker
 
-The docker image is available from Dockerhub as [ubma/malibu](https://hub.docker.com/r/ubma/malibu/).
+The docker image is available from Dockerhub as [ubma/malibu](https://hub.docker.com/r/ubma/malibu/):
+
+[![Docker image](http://dockeri.co/image/ubma/malibu)](http://dockeri.co/image/ubma/malibu)
 
 You can run it from the command line (provided that you have already [docker installed](https://docs.docker.com/engine/installation/)):
 
