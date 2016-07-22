@@ -135,10 +135,11 @@ function isbnEingabe(n) {
     // Bestandsabgleich für die UB Mannheim
     // (wird ohne entspechende php-Datei ignoriert)
     // ist aber anpassbar: 
-    var url = "isbn2MANholdings.php?isbn=" + suchString;
+    var url = "man-sru.php?isbn=" + suchString + "&format=holdings";
     $.get(url, function(data){
-        var pattern = /<div>Holdings in UB Mannheim: ([^\$\n\<]*)/;
+        var pattern = /<div>Bestand der UB Mannheim: (.*)</;
         var holdingsMAN = pattern.exec( data );
+
         if (holdingsMAN) {
              $('#bestandsabgleich').append('<br/><div style="background-color:#ffbbbb">Bestand der UB Mannheim: ' + holdingsMAN[1] + '(<a href="'+url+'" onclick="return toggleHidden()">Details</a>)<div id="detailsText" style="display: none;" class="hidden"><br/></div></div>');
         }
