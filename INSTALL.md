@@ -3,15 +3,17 @@
 The easiest way should be to use the docker
 container as it is already described in the
 [README.md](README.md#docker). This can be used for
-testing also for production.
-
-However, there are alternatives ways to set
+testing also for production. However, there are alternatives ways to set
 it up on Debian without docker and how you can set up a
 an environment for code development.
 
-
 * [Server configuration](#server-configuration)
-* [Configuration for code development](#configuration-for-code-development)
+  * [For Debian 7 (Apache 2.2)](#for-debian-7-apache-22)
+  * [For Debian 8 (Apache 2.4)](#for-debian-8-apache-24)
+* [Initializing and Costumizing](#initializing-and-costumizing)
+* [Configuration for code development](#configurations-for-code-development)
+  * [Dev Server](#dev-server)
+  * [Docker](#docker)
 
 
 ## Server configuration
@@ -52,10 +54,19 @@ ln -s ../../mods-available/yaz.ini 20-yaz.ini
 service apache2 restart
 ```
 
+## Initializing and Costumizing
+
+Some steps have to be performed after the server configuration and 
+before the first start:
+
+1. Clone the repository or download all files
+2. Download [jQuery 2.1.1](https://code.jquery.com/jquery-2.1.1.min.js) into `isbn` directory
+3. Copy `isbn/conf.example.php` to`isbn/conf.php` and costumize the values
+4. Copy `isbn/paketinfo.example.js` to `isbn/paketinfo.js` and costumize the values
 
 ## Configurations for code development
 
-## Dev Server
+### Dev Server
 
 The `./dist/dev-server.sh` script will install the dependencies of malibu system-wide and start
 a server on port `8090`. The purpose is to create a working development
@@ -67,7 +78,7 @@ To run the dev server:
 bash ./dist/dev-server.sh
 ```
 
-## Docker
+### Docker
 
 To rebuild the image or run a container with the current development version:
 
