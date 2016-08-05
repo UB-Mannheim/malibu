@@ -18,9 +18,6 @@ an environment for code development.
 
 ## Server configuration
 
-General remark for the bnb service: We included `getBNBData.sh` as a cronjob, which runs every Saturday, at 10 am (010**6).
-
-
 ### For Debian 7 (Apache 2.2)
 You need the php library <a href="http://php.net/manual/en/book.yaz.php">yaz</a> on the server. For Debian 7 (Apache 2.2):
 
@@ -63,6 +60,10 @@ before the first start:
 2. Download [jQuery 2.1.1](https://code.jquery.com/jquery-2.1.1.min.js) into `isbn` directory
 3. Copy `isbn/conf.example.php` to`isbn/conf.php` and costumize the values
 4. Copy `isbn/paketinfo.example.js` to `isbn/paketinfo.js` and costumize the values
+
+Moroever, for the BNB data you have to run the script `getBNBData.sh`, which we
+included as a cronjob, which runs every Saturday, at 10 am (010**6).
+
 
 ## Configurations for code development
 
