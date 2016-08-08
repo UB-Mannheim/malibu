@@ -67,6 +67,16 @@ included as a cronjob, which runs every Saturday, at 10 am (010**6).
 
 ## Configurations for code development
 
+### Docker
+
+The easiest way for developing/changing code on linux or windows is to use the same docker image
+from Dockerhub and additionally mount the current malibu directory into docker:
+```
+docker run -d -p 12345:80 -v `pwd`:/var/www/html/malibu-dev ubma/malibu
+```
+The development version of malibu can then be accessed at [http://localhost:12345/malibu-dev/isbn/suche.html](http://localhost:12345/malibu-dev/isbn/suche.html)
+(maybe you have to replace localhost with the docker ip).
+
 ### Dev Server
 
 The `./dist/dev-server.sh` script will install the dependencies of malibu system-wide and start
@@ -79,7 +89,7 @@ To run the dev server:
 bash ./dist/dev-server.sh
 ```
 
-### Docker
+### Makefile
 
 To rebuild the image or run a container with the current development version:
 
