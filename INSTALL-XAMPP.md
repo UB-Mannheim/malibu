@@ -17,7 +17,7 @@ XAMPP.
  extension=php_yaz.dll
  ```
  and also check that `extension=php_openssl.dll` is activated.
- 8. Copy `isbn/conf.example.php` to `isbn/conf.php` and copy `isbn/paketinfo.example.js` to `isbn/paketinfo.js` and costumize the values
+ 8. Copy `isbn\conf.example.php` to `isbn\conf.php` and copy `isbn\paketinfo.example.js` to `isbn\paketinfo.js` and costumize the values
  9. Start XAMPP
  10. Open `localhost/malibu` in your browser
 
