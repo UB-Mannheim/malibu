@@ -12,9 +12,9 @@ an environment for code development.
   * [For Debian 8 (Apache 2.4)](#for-debian-8-apache-24)
 * [Initializing and Costumizing](#initializing-and-costumizing)
 * [Configuration for code development](#configurations-for-code-development)
-  * [Dev Server](#dev-server)
   * [Docker](#docker)
-
+  * [Dev Server](#dev-server)
+  * [Makefile](#makefile)
 
 ## Server configuration
 
