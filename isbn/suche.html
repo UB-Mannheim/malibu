@@ -141,7 +141,7 @@ function isbnEingabe(n) {
         var holdingsMAN = pattern.exec( data );
 
         if (holdingsMAN) {
-             $('#bestandsabgleich').append('<br/><div style="background-color:#ffbbbb">Bestand der UB Mannheim: ' + holdingsMAN[1] + '(<a href="'+url+'" onclick="return toggleHidden()">Details</a>)<div id="detailsText" style="display: none;" class="hidden"><br/></div></div>');
+             $('#bestandsabgleich').append('<br/><div style="background-color:#ffbbbb">Bestand der UB Mannheim: ' + holdingsMAN[1] + ' (<a href="'+url+'" onclick="return toggleHidden()">Details</a>)<div id="detailsText" style="display: none;" class="hidden"><br/></div></div>');
         }
         //TODO alles hier effizienter und besser machen (aber vorerst funktioniert es:-)
         $( "#detailsText" ).load( url.replace(/ /g, '+')+" table" );
