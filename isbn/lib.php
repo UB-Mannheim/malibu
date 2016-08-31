@@ -129,17 +129,19 @@ function cleanUp($outputMap)
     }
     if (is_array($outputMap['sw'])) {
         foreach ($outputMap['sw'] as $index => $value) {
+            $affixes = array('11|', '1|', '|', '(DE-588)');//the order is important here
             if (is_string($value)) {
-                /* e.g.
+                /* e.g. $value $index = ...
                 "Haustiere": "4023819-2",
                 "Anatomie": "4001895-7",
                 "Physiologie": "4045981-0",
                 "Lehrbuch": true
                 */
-                $outputMap['sw'][$index] = trim(str_replace('(DE-588)', '', $value));
+                $value = trim(str_replace($affixes, '', $value));
+                $outputMap['sw'][$index] = $value;
             }
             if (is_int($index)) {
-                /* e.g.
+                /* e.g. $value = ...
                 "  4023819-2           Haustiere"
                 "  4001895-7           Anatomie"
                 "  4045981-0           Physiologie"
@@ -148,10 +150,19 @@ function cleanUp($outputMap)
                 if (preg_match('/^\s*([0123456789Xx-]+)\s+(\S.*)$/', $value, $treffer)) {
                     $outputMap['sw'][ $treffer[2] ] = $treffer[1];
                 } else {
-                    $value = trim(str_replace('|', '', str_replace('1|', '', $value)));
+                    $value = trim(str_replace($affixes, '', $value));
                     $outputMap['sw'][ $value ] = true;
                 }
                 unset($outputMap['sw'][ $index ]);
+            }
+            if (is_string($index) && is_bool($value)) {
+                /* e.g.
+                $index = "11|Comic"
+                $value = true
+                */
+                unset($outputMap['sw'][ $index ]);
+                $indexNew = trim(str_replace($affixes, '', $index));
+                $outputMap['sw'][ $indexNew ] = $value;
             }
         }
     }
