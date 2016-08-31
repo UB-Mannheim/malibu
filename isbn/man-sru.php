@@ -175,7 +175,13 @@ if (!isset($_GET['format'])) {
         //echo $contentSWB;
         if (strpos($contentSWB, "Es wurde nichts gefunden")===false) {
             $nhits = substr_count($contentSWB, 'class="hit"');
-            echo '<div>Bestand der UB Mannheim: SWB sagt ja (<a href="' . $urlSWB . '" target="_blank">' . $nhits/2 .' hits</a>)</div>';
+            if ($nhits !== 0) {//multiple results
+                $nhits = $nhits/2;
+            } else {//single result
+                $nhits = substr_count($contentSWB, 'class="Z3988"');
+            }
+            echo '<div>Bestand der UB Mannheim: SWB sagt ja (<a href="' . $urlSWB . '" target="_blank">' . $nhits .' Resultat(e)</a>)</div>';
+            
         } else {
             echo 'Es wurde nichts gefunden';
         }
