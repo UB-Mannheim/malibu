@@ -187,10 +187,10 @@ function isbnEingabe(n) {
         });
 
         $('#bestand'+"SWB").append(bestandsArray.join("+"));
-        $('#rvk'+'SWB').append( renderRVK(data.rvk) );
+        $('#rvk'+'SWB').html( renderRVK(data.rvk) );
         $('#rvk'+'SWB a').each( addBenennung );
-        $('#ddc'+'SWB').append( renderDDC(data.ddc) );
-        $('#sw'+'SWB').append( renderSW(data.sw) ); 
+        $('#ddc'+'SWB').html( renderDDC(data.ddc) );
+        $('#sw'+'SWB').html( renderSW(data.sw) ); 
         
         if(data.produktSigel && data.produktSigel.length>0) {
             $('#pda').append( renderPS(data.produktSigel) );
@@ -249,10 +249,10 @@ function isbnEingabe(n) {
     $.each(andereVerbuende, function(index, verbund){
         $.getJSON(verbund.toLowerCase()+".php"+query+"&format=json", function(data){
             
-            $('#rvk'+verbund).append( renderRVK(data.rvk) );
+            $('#rvk'+verbund).html( renderRVK(data.rvk) );
             $('#rvk'+verbund+' a').each( addBenennung );
-            $('#ddc'+verbund).append( renderDDC(data.ddc) );
-            $('#sw'+verbund).append( renderSW(data.sw) );
+            $('#ddc'+verbund).html( renderDDC(data.ddc) );
+            $('#sw'+verbund).html( renderSW(data.sw) );
             $('#links').append( renderLinks(data.links) );
             if (data.dnbNr.length>0) {
                 $('#links').append( renderLinks( [ "http://d-nb.info/"+data.dnbNr[0] ] ) );
@@ -272,6 +272,7 @@ function isbnEingabe(n) {
         });
     });
     
+	//sometimes the table cells are not correctly rendered if empty
     $('td:empty').each( function() { $(this).html('&nbsp;'); });
 }
 //-->
