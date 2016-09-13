@@ -102,6 +102,7 @@ if (!isset($_GET['format'])) {
     $outputXml = simplexml_load_string($outputString);
     $avaNodes = $outputXml->xpath('//datafield[@tag="AVA"]');
     $aveNodes = $outputXml->xpath('//datafield[@tag="AVE"]');
+    $size = strlen($outputString);
     if ($avaNodes) {
         echo "<table>\n";
         $bestand = [];
@@ -169,6 +170,12 @@ if (!isset($_GET['format'])) {
         echo "</table>\n";
         echo "<hr/>\n";
         echo '<div>Bestand der UB Mannheim: E</div>';
+    } else if ($size > 100) {
+        //if the isbn is not found, then the $outputString is a minimal xml document
+        //of size 48, for larger size something might be found...
+        $urlMAN = 'man-sru.php?isbn=' . $suchStringSWB;
+        echo '<div>Bestand der UB Mannheim: eventuell da (' . $size . ")</div>\n";
+        echo '<table><tr><td><a href="' . $urlMAN . '" taget="_blank">See SRU Result</a></td></tr></table>';
     } else {
         $urlSWB='http://swb.bsz-bw.de/DB=2.1/SET=11/TTL=2/CMD?ACT=SRCHM&ACT0=SRCH&IKT0=2135&TRM0=%60180%60&ACT1=*&IKT1=1016&TRM1=' . $suchStringSWB;
         $contentSWB = utf8_decode(file_get_contents($urlSWB));
