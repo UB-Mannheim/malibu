@@ -180,7 +180,7 @@ if (!isset($_GET['format'])) {
             } else {//single result
                 $nhits = substr_count($contentSWB, 'class="Z3988"');
             }
-            echo '<div>Bestand der UB Mannheim: SWB sagt ja (<a href="' . $urlSWB . '" target="_blank">' . $nhits .' Resultat(e)</a>)</div>';
+            echo '<div>Bestand der UB Mannheim: SWB sagt ja (' . $nhits .' Treffer)</div>';
             
         } else {
             echo 'Es wurde nichts gefunden';
