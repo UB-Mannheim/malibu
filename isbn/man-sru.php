@@ -34,10 +34,10 @@ if (isset($_GET['ppn'])) {
 /*
 Explain SRU
 
-https://eu01.alma.exlibrisgroup.com/view/sru/49MAN_INST?version=1.2&operation=explain
+https://uni-mannheim.alma.exlibrisgroup.com/view/sru/49MAN_INST?version=1.2&operation=explain
 */
 
-$urlBase = 'https://eu01.alma.exlibrisgroup.com/view/sru/49MAN_INST?version=1.2&operation=searchRetrieve&recordSchema=marcxml&query=';
+$urlBase = 'https://uni-mannheim.alma.exlibrisgroup.com/view/sru/49MAN_INST?version=1.2&operation=searchRetrieve&recordSchema=marcxml&query=';
 //$urlSuffix = '+sortBy+alma.title/sort.descending';
 
 if (isset($_GET['isbn'])) {
