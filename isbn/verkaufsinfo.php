@@ -79,7 +79,7 @@ if (!isset($_GET['isbn13']) && !isset($_GET['isbn10'])) {
 }
 
 
-$urlAmazon = 'http://www.amazon.de/dp/' . $n10;
+$urlAmazon = 'https://www.amazon.de/dp/' . $n10;
 $headerAmazon = get_headers($urlAmazon, 1);//$headerAmazon[0] is a String, e.g. HTTP/1.1 404 NotFound ; HTTP/1.1 200 OK
 $foundOnAmazon = !strpos($headerAmazon[0], '404 NotFound');
 $docAmazon = new DOMDocument();

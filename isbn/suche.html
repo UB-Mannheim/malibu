@@ -20,6 +20,11 @@ body { font-family:  Arial, Verdana, sans-serif; }
 </style>
 <script src="jquery-2.1.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/clipboard.js/1.5.10/clipboard.min.js"></script>
+<script type="text/javascript">
+if (typeof jQuery == 'undefined') {
+    alert("jQuery wurde nicht gefunden");
+}
+</script>
 <script src="rendering.js"></script>
 <script src="paketinfo.js"></script>
 <script type="text/javascript">
@@ -130,12 +135,13 @@ function isbnEingabe(n) {
     // Bestandsabgleich für die UB Mannheim
     // (wird ohne entspechende php-Datei ignoriert)
     // ist aber anpassbar: 
-    var url = "isbn2MANholdings.php?isbn=" + suchString;
+    var url = "man-sru.php?isbn=" + suchString + "&format=holdings";
     $.get(url, function(data){
-        var pattern = /<div>Holdings in UB Mannheim: ([^\$\n\<]*)/;
+        var pattern = /<div>Bestand der UB Mannheim: (.*)</;
         var holdingsMAN = pattern.exec( data );
+
         if (holdingsMAN) {
-             $('#bestandsabgleich').append('<br/><div style="background-color:#ffbbbb">Bestand der UB Mannheim: ' + holdingsMAN[1] + '(<a href="'+url+'" onclick="return toggleHidden()">Details</a>)<div id="detailsText" style="display: none;" class="hidden"><br/></div></div>');
+             $('#bestandsabgleich').append('<br/><div style="background-color:#ffbbbb">Bestand der UB Mannheim: ' + holdingsMAN[1] + ' (<a href="'+url+'" onclick="return toggleHidden()">Details</a>)<div id="detailsText" style="display: none;" class="hidden"><br/></div></div>');
         }
         //TODO alles hier effizienter und besser machen (aber vorerst funktioniert es:-)
         $( "#detailsText" ).load( url.replace(/ /g, '+')+" table" );
@@ -181,10 +187,10 @@ function isbnEingabe(n) {
         });
 
         $('#bestand'+"SWB").append(bestandsArray.join("+"));
-        $('#rvk'+'SWB').append( renderRVK(data.rvk) );
+        $('#rvk'+'SWB').html( renderRVK(data.rvk) );
         $('#rvk'+'SWB a').each( addBenennung );
-        $('#ddc'+'SWB').append( renderDDC(data.ddc) );
-        $('#sw'+'SWB').append( renderSW(data.sw) ); 
+        $('#ddc'+'SWB').html( renderDDC(data.ddc) );
+        $('#sw'+'SWB').html( renderSW(data.sw) ); 
         
         if(data.produktSigel && data.produktSigel.length>0) {
             $('#pda').append( renderPS(data.produktSigel) );
@@ -243,10 +249,10 @@ function isbnEingabe(n) {
     $.each(andereVerbuende, function(index, verbund){
         $.getJSON(verbund.toLowerCase()+".php"+query+"&format=json", function(data){
             
-            $('#rvk'+verbund).append( renderRVK(data.rvk) );
+            $('#rvk'+verbund).html( renderRVK(data.rvk) );
             $('#rvk'+verbund+' a').each( addBenennung );
-            $('#ddc'+verbund).append( renderDDC(data.ddc) );
-            $('#sw'+verbund).append( renderSW(data.sw) );
+            $('#ddc'+verbund).html( renderDDC(data.ddc) );
+            $('#sw'+verbund).html( renderSW(data.sw) );
             $('#links').append( renderLinks(data.links) );
             if (data.dnbNr.length>0) {
                 $('#links').append( renderLinks( [ "http://d-nb.info/"+data.dnbNr[0] ] ) );
@@ -266,6 +272,7 @@ function isbnEingabe(n) {
         });
     });
     
+	//sometimes the table cells are not correctly rendered if empty
     $('td:empty').each( function() { $(this).html('&nbsp;'); });
 }
 //-->
