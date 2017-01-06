@@ -42,12 +42,11 @@ define('GBV_ELEMENTSET',    'f');
 
 
 //HEBIS = Hessisches BibliotheksInformationsSystem
-//http://www.hebis.de/de/1service/z3950/z39_zugang_index.php
-define('HEBIS_URL',         'tolk.hebis.de:20211/hebis');
-define('HEBIS_USER',        '');//TODO look up
-define('HEBIS_PASSWORD',    '');//TODO look up
+//http://www.hebis.de/de/1service/z3950/z3950_index.php
+//http://www.hebis.de/de/1service/z3950/z3950_zugang_neu2016.php
+define('HEBIS_URL',         'tolk.hebis.de:22000/hebis');
 define('HEBIS_SYNTAX',      'marc21');
-define('HEBIS_ELEMENTSET',  'F');
+define('HEBIS_ELEMENTSET',  'xf');
 
 
 //NEBIS
