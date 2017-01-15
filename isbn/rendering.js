@@ -153,7 +153,7 @@ function renderBestandSWB(bestandArray, id) {
 
 
 function renderSW(swObject) {
-    swArray = [];
+    var swArray = [];
     $.each(swObject, function(key, value) {
         if(typeof value == 'string') {
             var swUrl = 'http://d-nb.info/gnd/' + value + '/about/html';
@@ -205,7 +205,7 @@ function getParameterByName(name) {
     name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
     var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
         results = regex.exec(location.search);
-    return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+    return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
 }
 
  
