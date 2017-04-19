@@ -1,0 +1,27 @@
+# Run php/apache in a container and map current malibu directory to access it from localhost
+# (this may be handy for developing)
+# https://github.com/UB-Mannheim/malibu/
+# 
+# USAGE:
+# $ git clone https://github.com/UB-Mannheim/malibu.git
+# $ docker build -t malibu-dev -f Docker-dev .
+# $ docker run -d -p 12345:80 -v `pwd`:/var/www/html/malibu malibu-dev
+# 
+
+FROM php:apache
+
+ENV JQUERY 2.1.1
+
+RUN apt-get update && apt-get install -y yaz libyaz4-dev php5-dev php-pear wget unzip
+
+RUN pecl install yaz
+RUN docker-php-ext-enable yaz
+
+# Download also the jQuery library into the malibu directory:
+# https://code.jquery.com/jquery-2.1.1.min.js
+
+# Copy and rename
+#   isbn/conf.example.php -> isbn/conf.php
+#   isbn/paketinfo.example.js -> isbn/paketinfo.js
+
+# BNBData are currently not supported natively
