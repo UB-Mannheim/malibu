@@ -5,7 +5,7 @@ BNB_DATADIR="$1"
 # BNB_DATADIR="/var/www/Tools/BNBDaten"
 BNB_DATADIR="${BNB_DATADIR:-/var/www/Tools/BNBDaten}"
 mkdir -pv "$BNB_DATADIR"
-cd "$BNB_DATADIR"
+cd "$BNB_DATADIR" || exit
 
 wget -r -np -l 1 -A zip "http://www.bl.uk/bibliographic/bnbrdfxml.html"
 
