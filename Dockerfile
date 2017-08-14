@@ -7,7 +7,7 @@
 
 FROM php:apache
 
-ENV JQUERY 2.1.1
+ENV JQUERY 3.2.1
 
 RUN apt-get update && apt-get install -y yaz libyaz4-dev php5-dev php-pear wget unzip
 

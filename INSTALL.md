@@ -57,12 +57,12 @@ Some steps have to be performed after the server configuration and
 before the first start:
 
 1. Clone the repository or download all files
-2. Download [jQuery 2.1.1](https://code.jquery.com/jquery-2.1.1.min.js) into `isbn` directory
+2. Download [jQuery 3.2.1](https://code.jquery.com/jquery-3.2.1.min.js) into `isbn` directory
 3. Copy `isbn/conf.example.php` to`isbn/conf.php` and costumize the values
 4. Copy `isbn/paketinfo.example.js` to `isbn/paketinfo.js` and costumize the values
 
 Moroever, for the BNB data you have to run the script `getBNBData.sh`, which we
-included as a cronjob, which runs every Saturday, at 10 am (010**6).
+included as a cronjob, which runs every Saturday, at 10 am `(010**6)`.
 
 
 ## Configurations for code development

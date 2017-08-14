@@ -1,7 +1,7 @@
 #!/bin/bash
 
 DIR="$(dirname "$(readlink -f "$0")")"
-JQUERY_VERSION="2.1.1"
+JQUERY_VERSION="3.2.1"
 
 # Use php.ini in this directory
 export PHP_INI_SCAN_DIR=$DIR
