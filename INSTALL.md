@@ -57,7 +57,7 @@ Some steps have to be performed after the server configuration and
 before the first start:
 
 1. Clone the repository or download all files
-2. Download [jQuery 3.2.1](https://code.jquery.com/jquery-3.2.1.min.js) into `isbn` directory
+2. Download [jQuery 3.2.1](https://code.jquery.com/jquery-3.2.1.min.js) and [clipboard.js 1.7.1](https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js) into `isbn` directory
 3. Copy `isbn/conf.example.php` to`isbn/conf.php` and costumize the values
 4. Copy `isbn/paketinfo.example.js` to `isbn/paketinfo.js` and costumize the values
 
