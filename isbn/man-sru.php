@@ -38,7 +38,6 @@ https://uni-mannheim.alma.exlibrisgroup.com/view/sru/49MAN_INST?version=1.2&oper
 */
 
 $urlBase = 'https://uni-mannheim.alma.exlibrisgroup.com/view/sru/49MAN_INST?version=1.2&operation=searchRetrieve&recordSchema=marcxml&query=';
-//$urlSuffix = '+sortBy+alma.title/sort.descending';
 
 if (isset($_GET['isbn'])) {
     $n = trim($_GET['isbn']);
@@ -46,12 +45,13 @@ if (isset($_GET['isbn'])) {
     $suchString = 'alma.all=' . implode('+OR+alma.all=', $nArray);
     $suchStringSWB = implode(' or ', $nArray);
 }
-$result = file_get_contents($urlBase . $suchString);
+$filteredSuchString = 'alma.mms_tagSuppressed=false+AND+(' . $suchString . ')';
+$result = file_get_contents($urlBase . $filteredSuchString);
 
 if ($result === false) {
     header('HTTP/1.1 400 Bad Request');
     echo "Verbindung zu SRU-Schnittstelle fehlgeschlagen\n";
-    var_dump($urlBase . $suchString . $urlSuffix);
+    var_dump($urlBase . $filteredSuchString);
     exit;
 }
 
