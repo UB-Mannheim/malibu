@@ -63,7 +63,7 @@ $doc->preserveWhiteSpace = false;
 @$doc->loadHTML($result);
 $xpath = new DOMXPath($doc);
 
-$records = $xpath->query("//records/record/recorddata/record");//beachte: kein CamelCase sondern alles klein schreiben
+$records = $xpath->query("//records/record/recorddata/record"); //beachte: kein CamelCase sondern alles klein schreiben
 
 $outputString = "<?xml version=\"1.0\"?>\n";
 $outputString .= "<collection>\n";
@@ -71,10 +71,10 @@ $outputArray = [];
 
 foreach ($records as $record) {
 
-    $outputString .=  $doc->saveXML($record);
+    $outputString .= $doc->saveXML($record);
     array_push($outputArray, $doc->saveXML($record));
 }
-$outputString .=  "</collection>";
+$outputString .= "</collection>";
 
 
 $map = $standardMarcMap;
@@ -84,12 +84,12 @@ $map['sw']['additional'] = './subfield[@code="z"]';
 if (!isset($_GET['format'])) {
     header('Content-type: text/xml');
     echo $outputString;
-} else if ($_GET['format']=='json') {
+} else if ($_GET['format'] == 'json') {
     $outputXml = simplexml_load_string($outputString);
 
     $outputMap = performMapping($map, $outputXml);
     $outputIndividualMap = [];
-    for ($j=0; $j<count($outputArray); $j++) {
+    for ($j = 0; $j<count($outputArray); $j++) {
         $outputXml = simplexml_load_string($outputArray[$j]);
         $outputSingleMap = performMapping($map, $outputXml);
         array_push($outputIndividualMap, $outputSingleMap);
