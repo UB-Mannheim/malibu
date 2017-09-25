@@ -8,7 +8,7 @@ XAMPP.
 
  1. Install [XAMPP](https://www.apachefriends.org/), e.g. in the folder `C:\xampp\`
  2. Clone malibu in the `htdocs` subfolder
- 3. Download [jQuery](https://code.jquery.com/jquery-3.2.1.min.js) and [clipboard.js 1.7.1](https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js) and place them in `.\htdocs\malibu\isbn`
+ 3. Download [jQuery](https://code.jquery.com/jquery-3.2.1.min.js) and [clipboard.js](https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js) and place them in `.\htdocs\malibu\isbn`
  4. Install [`yaz`](http://www.indexdata.com/yaz) for windows and make sure that the `bin` directory of `YAZ` is part of the [PATH environment variable](https://cloud.githubusercontent.com/assets/5199995/17752243/2fcc2c92-64cb-11e6-915e-02879865ed8f.png).
  5. Download [`php_yaz.dll`](http://ftp.indexdata.dk/pub/phpyaz/windows/) (and possibly the other dll's) from IndexData
  6. Copy `php_yaz.dll` (and possibly the other dll's) into `.\php\ext`
