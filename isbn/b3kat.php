@@ -98,7 +98,7 @@ if (!isset($_GET['format'])) {
     $outputXml = simplexml_load_string($outputString);
     $outputMap = performMapping($map, $outputXml);
     $outputIndividualMap = [];
-    for ($j=0; $j<count($outputArray); $j++) {
+    for ($j = 0; $j < count($outputArray); $j++) {
         $outputXml = simplexml_load_string($outputArray[$j]);
         $outputSingleMap = performMapping($map, $outputXml);
         array_push($outputIndividualMap, $outputSingleMap);

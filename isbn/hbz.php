@@ -41,7 +41,7 @@ if (isset($_GET['ppn'])) {
 if (isset($_GET['isbn'])) {
     $n = trim($_GET['isbn']);
     $nArray = explode(",", $n);
-    if (count($nArray)>1) {
+    if (count($nArray) > 1) {
         //mehrere ISBNs, z.B. f @or @or @attr 1=7 "9783937219363" @attr 1=7 "9780521369107" @attr 1=7 "9780521518147"
         //Anfuehrungsstriche muessen demaskiert werden, egal ob String mit ' gemacht wird
         $suchString = str_repeat("@or ", count($nArray) - 1) . '@attr 1=7 \"' . implode('\" @attr 1=7 \"', $nArray) . '\"';
@@ -64,7 +64,7 @@ $outputString = "<?xml version=\"1.0\"?>\n";
 $outputString .= "<datei>\n";
 $outputArray = [];
 
-for ($p = 1; $p<=yaz_hits($id); $p++) {
+for ($p = 1; $p <= yaz_hits($id); $p++) {
     $record = yaz_record($id, $p, "render;charset=iso5426,utf8"); //render;charset=iso5426,utf8
     $error = yaz_error($id);
     if (!empty($error)) {
@@ -78,7 +78,7 @@ for ($p = 1; $p<=yaz_hits($id); $p++) {
     $recordContent .= printLine(substr($recordArray[0], 24));
 
 
-    for ($j = 1; $j<count($recordArray); $j++) {
+    for ($j = 1; $j < count($recordArray); $j++) {
         $recordContent .= printLine($recordArray[$j]);
     }
 
@@ -101,7 +101,7 @@ if (!isset($_GET['format'])) {
     $outputXml = simplexml_load_string($outputString);
     $outputMap = performMapping($map, $outputXml);
     $outputIndividualMap = [];
-    for ($j = 0; $j<count($outputArray); $j++) {
+    for ($j = 0; $j < count($outputArray); $j++) {
         $outputXml = simplexml_load_string($outputArray[$j]);
         $outputSingleMap = performMapping($map, $outputXml);
         array_push($outputIndividualMap, $outputSingleMap);

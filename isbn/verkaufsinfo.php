@@ -153,11 +153,11 @@ if ($foundOnGoogle) {
     $jsonGoogle = json_decode($contentGoogle);
 
     if (property_exists($jsonGoogle, 'items')) {
-        for ($j = 0; $j<count($jsonGoogle->items); $j++) {
+        for ($j = 0; $j < count($jsonGoogle->items); $j++) {
             //die Suche welche durch die URL $urlGoogle ausgeführt wird, liefert auch falsche Ergebnisse (welche die ISBN nur in einer angehängten URL enthalten --> darum muss man hier nochmals genau filtern
             $volumeInfo = $jsonGoogle->items[$j]->volumeInfo;
             if ($volumeInfo && property_exists($volumeInfo, "industryIdentifiers")) {
-                for ($k = 0; $k<count($volumeInfo->industryIdentifiers); $k++) {
+                for ($k = 0; $k < count($volumeInfo->industryIdentifiers); $k++) {
                     if ($volumeInfo->industryIdentifiers[$k]->identifier == $n13 || $volumeInfo->industryIdentifiers[$k]->identifier == $n13) {
                         $urlGoogle = $volumeInfo->infoLink;
                         //Bild von Google

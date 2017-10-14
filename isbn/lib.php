@@ -248,7 +248,7 @@ function printMabContent($content)
     $tf = "\xE2\x80\xA1"; //Teilfeldtrennzeichen
     if (strpos($content, $tf) !== false) {
         $feldArray = explode($tf, $content);
-        for ($l = 1; $l<count($feldArray); $l++) {
+        for ($l = 1; $l < count($feldArray); $l++) {
             $feldArray[$l] = htmlspecialchars($feldArray[$l], ENT_XML1);
         }
         return implode('<tf/>', $feldArray);
