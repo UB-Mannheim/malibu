@@ -229,14 +229,14 @@ function printLine($line)
         $ind = substr($line, 3, 1);
         $inhalt = substr($line, 4);
         if (strstr($inhalt, "\x1f")) {
-            $lineArray =  explode("\x1f", $inhalt);
+            $lineArray = explode("\x1f", $inhalt);
             $output .= "<feld nr='$nr' ind='$ind'>\n";
             for ($k = 1; $k < count($lineArray); $k++) {
-                    $output .= '<uf code="'.substr($lineArray[$k], 0, 1).'">'.printMabContent(substr($lineArray[$k], 1)).'</uf>'."\n";
+                    $output .= '<uf code="' . substr($lineArray[$k], 0, 1) . '">' . printMabContent(substr($lineArray[$k], 1)) . '</uf>' . "\n";
             }
             $output .= "</feld>";
         } else {
-            $output .= '<feld nr="'.$nr.'" ind="'.$ind.'">'.printMabContent($inhalt).'</feld>'."\n";
+            $output .= '<feld nr="' . $nr . '" ind="' . $ind . '">' . printMabContent($inhalt) . '</feld>' . "\n";
         }
     }
     return $output;
