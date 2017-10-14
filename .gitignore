@@ -2,5 +2,6 @@
 /isbn/paketinfo.js
 /isbn/temp
 /isbn/jquery*.js
+/isbn/clipboard.min.js
 /bnb/BNBDaten/*
 /dist/phpcs.phar
