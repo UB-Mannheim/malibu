@@ -56,7 +56,7 @@ function isbn13($z)
 
 if (isset($_GET['isbn10'])) {
     global $n10, $n13;
-    $n10 = trim($_GET['isbn10']);//fuer Amazon
+    $n10 = trim($_GET['isbn10']); //fuer Amazon
     if (strlen($n10) != 10) {
         header('HTTP/1.1 400 Bad Request');
         exit("ISBN war nicht 10-stellig!");
@@ -65,7 +65,7 @@ if (isset($_GET['isbn10'])) {
 }
 if (isset($_GET['isbn13'])) {
     global $n10, $n13;
-    $n13 = trim($_GET['isbn13']);//fuer Google
+    $n13 = trim($_GET['isbn13']); //fuer Google
     if (strlen($n13) != 13) {
         header('HTTP/1.1 400 Bad Request');
         exit("ISBN war nicht 13-stellig!<br/>");
@@ -80,18 +80,18 @@ if (!isset($_GET['isbn13']) && !isset($_GET['isbn10'])) {
 
 
 $urlAmazon = 'https://www.amazon.de/dp/' . $n10;
-$headerAmazon = get_headers($urlAmazon, 1);//$headerAmazon[0] is a String, e.g. HTTP/1.1 404 NotFound ; HTTP/1.1 200 OK
+$headerAmazon = get_headers($urlAmazon, 1); //$headerAmazon[0] is a String, e.g. HTTP/1.1 404 NotFound ; HTTP/1.1 200 OK
 $foundOnAmazon = !strpos($headerAmazon[0], '404 NotFound');
 $docAmazon = new DOMDocument();
 
 if ($foundOnAmazon) {
-    libxml_use_internal_errors(true);//HTML5 erzeugt Warnings beim Einlesen, aber die Option beseitigt dies
+    libxml_use_internal_errors(true); //HTML5 erzeugt Warnings beim Einlesen, aber die Option beseitigt dies
     $docAmazon->loadHTMLFile($urlAmazon);
     libxml_use_internal_errors(false);
     //$contentAmazon = $docAmazon->saveHTML();
 
     //Bild von Amazon
-    foreach (["imgBlkFront", "main-image-nonjs", "original-main-image" ] as $id) {
+    foreach (["imgBlkFront", "main-image-nonjs", "original-main-image"] as $id) {
         if ($docAmazon->getElementById($id) && $docAmazon->getElementById($id)->getAttribute('src') !== '') {
             $cover = $docAmazon->getElementById($id)->getAttribute('src');
             $coverOrigin = $urlAmazon;
@@ -117,7 +117,7 @@ if ($foundOnAmazon) {
         //..."buyingPrice":79.99,"ASIN":"3830493665"...
         if (preg_match('/"buyingPrice":(.*),"ASIN":"' . $n10 . '"/', $hiddenItemData, $match)) {
             preg_match('/"currencyCode":"([^"]*)"/', $hiddenItemData, $descriptionCurrency);
-            $price =  $match[1] . ' ' . $descriptionCurrency[1];
+            $price = $match[1] . ' ' . $descriptionCurrency[1];
             $priceOrigin = $urlAmazon;
         }
     } else if ($docAmazon->getElementById('buyNewSection')) {
@@ -153,28 +153,28 @@ if ($foundOnGoogle) {
     $jsonGoogle = json_decode($contentGoogle);
 
     if (property_exists($jsonGoogle, 'items')) {
-        for ($j=0; $j<count($jsonGoogle->items); $j++) {
+        for ($j = 0; $j < count($jsonGoogle->items); $j++) {
             //die Suche welche durch die URL $urlGoogle ausgeführt wird, liefert auch falsche Ergebnisse (welche die ISBN nur in einer angehängten URL enthalten --> darum muss man hier nochmals genau filtern
             $volumeInfo = $jsonGoogle->items[$j]->volumeInfo;
             if ($volumeInfo && property_exists($volumeInfo, "industryIdentifiers")) {
-                for ($k=0; $k<count($volumeInfo->industryIdentifiers); $k++) {
+                for ($k = 0; $k < count($volumeInfo->industryIdentifiers); $k++) {
                     if ($volumeInfo->industryIdentifiers[$k]->identifier == $n13 || $volumeInfo->industryIdentifiers[$k]->identifier == $n13) {
                         $urlGoogle = $volumeInfo->infoLink;
                         //Bild von Google
                         if (!isset($cover) && property_exists($volumeInfo, 'imageLinks') && property_exists($volumeInfo->imageLinks, 'thumbnail')) {
-                            $cover = $volumeInfo->imageLinks->thumbnail ;
+                            $cover = $volumeInfo->imageLinks->thumbnail;
                             $coverOrigin = $urlGoogle;
                         }
 
                         //Beschreibung von Google
                         if (!isset($description) && property_exists($volumeInfo, 'description')) {
-                            $description = $volumeInfo->description ;
+                            $description = $volumeInfo->description;
                             $descriptionOrigin = $urlGoogle;
                         }
 
                         //Bewertung von Google
                         if (!isset($rating) && property_exists($volumeInfo, 'averageRating')) {
-                            $rating = $volumeInfo->averageRating . ' von 5 (' . $volumeInfo->ratingsCount . ' Ratings)' ;
+                            $rating = $volumeInfo->averageRating . ' von 5 (' . $volumeInfo->ratingsCount . ' Ratings)';
                             $ratingOrigin = $urlGoogle;
                         }
                     }
@@ -201,7 +201,7 @@ echo '<tr><td>';
 
 //Cover anzeigen
 if (isset($cover)) {
-    echo '<a href="'. $coverOrigin .'" target="_blank"><img src="' . $cover . '"/></a><br />';
+    echo '<a href="' . $coverOrigin . '" target="_blank"><img src="' . $cover . '"/></a><br />';
 }
 //Direktlinks zu Amazon, GoogleBooks
 echo '<a href="' . $urlAmazon . '" target="_blank">AmazonDE</a> ; <a href="http://www.amazon.com/dp/' . $n10 . '" target="_blank">AmazonCOM</a> ; <a href="' . $urlGoogle . '" target="_blank">GoogleBooks</a>';
@@ -221,7 +221,7 @@ if (isset($price)) {
 }
 //Bewertung
 if (isset($rating)) {
-    echo '<a href="' . $ratingOrigin . '" target="_blank">' . $rating  . '</a><br/>';
+    echo '<a href="' . $ratingOrigin . '" target="_blank">' . $rating . '</a><br/>';
 }
 
 echo '</td></tr></table>';

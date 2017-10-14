@@ -25,7 +25,7 @@ echo "<form action=\"showText.php\" method=\"post\">\n";
 
 if (isset($_POST['text'])) {
     $n = $_POST['text'];
-    echo '<textarea  name="text" cols="100" rows="20">'.$n.'</textarea>';
+    echo '<textarea  name="text" cols="100" rows="20">' . $n . '</textarea>';
     echo "<br/>\n";
     if (isset($_POST['nl2br'])) {
         echo '<input type="checkbox" name="nl2br" value="choose" checked>Neue Zeile durch entsprechendes HTML ersetzen';
@@ -45,9 +45,9 @@ echo '</form>';
 echo "<h2>Ausgabe</h2>";
 if (isset($n)) {
     if (isset($_POST['nl2br'])) {
-        echo "<div id=\"anzeige\">".nl2br($n)."</div>";
+        echo "<div id=\"anzeige\">" . nl2br($n) . "</div>";
     } else {
-        echo "<div id=\"anzeige\">".$n."</div>";
+        echo "<div id=\"anzeige\">" . $n . "</div>";
     }
 }
 

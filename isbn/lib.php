@@ -35,7 +35,7 @@ $standardMarcMap = array(
     'gesamttitel' => '//datafield[@tag="490"]',
     'hochschulvermerk' => '//datafield[@tag="502"]/subfield',
     'auflage' => '//datafield[@tag="250"]/subfield[@code="a"]',
-    'erscheinungsinfo' => '//datafield[@tag="260" or tag="270" or @tag="263" or @tag="264"]/subfield',//264 for BL added
+    'erscheinungsinfo' => '//datafield[@tag="260" or tag="270" or @tag="263" or @tag="264"]/subfield', //264 for BL added
     'umfang' => '//datafield[@tag="300"]/subfield',
     'links' => '//datafield[@tag="856" and @ind1="4"]/subfield[@code="u"]',
     'bestand' => '//datafield[@tag="LOK" and contains(subfield[@code="0"], "852")]/subfield[@code="a"]',
@@ -46,8 +46,8 @@ $standardMarcMap = array(
         'value' => './subfield[@code="a" or @code="t"]',
         'additional' => './subfield[@code="9"]',
         'key' => './subfield[@code="0" and contains(text(), "(DE-588)")]'
-     ),
-     'produktSigel' => '//datafield[@tag="912" and not(@ind2="7")]/subfield[@code="a"]'
+        ),
+        'produktSigel' => '//datafield[@tag="912" and not(@ind2="7")]/subfield[@code="a"]'
 );
 
 $standardMabMap = array(
@@ -100,7 +100,7 @@ function performMapping($map, $outputXml)
                     if ($additional) {
                         $additionalText = getValues($additional[0]);
                         if (strpos($additionalText, ':') == 1) {
-                            $additionalText = substr($additionalText,2);
+                            $additionalText = substr($additionalText, 2);
                         }
                         $valueText = $valueText . ' <' . $additionalText . '>';
                     }
@@ -129,7 +129,7 @@ function cleanUp($outputMap)
     }
     if (is_array($outputMap['sw'])) {
         foreach ($outputMap['sw'] as $index => $value) {
-            $affixes = array('11|', '1|', '|', '(DE-588)');//the order is important here
+            $affixes = array('11|', '1|', '|', '(DE-588)'); //the order is important here
             if (is_string($value)) {
                 /* e.g. $value $index = ...
                 "Haustiere": "4023819-2",
@@ -148,21 +148,21 @@ function cleanUp($outputMap)
                 "  |Lehrbuch"
                 */
                 if (preg_match('/^\s*([0123456789Xx-]+)\s+(\S.*)$/', $value, $treffer)) {
-                    $outputMap['sw'][ $treffer[2] ] = $treffer[1];
+                    $outputMap['sw'][$treffer[2]] = $treffer[1];
                 } else {
                     $value = trim(str_replace($affixes, '', $value));
-                    $outputMap['sw'][ $value ] = true;
+                    $outputMap['sw'][$value] = true;
                 }
-                unset($outputMap['sw'][ $index ]);
+                unset($outputMap['sw'][$index]);
             }
             if (is_string($index) && is_bool($value)) {
                 /* e.g.
                 $index = "11|Comic"
                 $value = true
                 */
-                unset($outputMap['sw'][ $index ]);
+                unset($outputMap['sw'][$index]);
                 $indexNew = trim(str_replace($affixes, '', $index));
-                $outputMap['sw'][ $indexNew ] = $value;
+                $outputMap['sw'][$indexNew] = $value;
             }
         }
     }
@@ -182,7 +182,7 @@ function cleanUp($outputMap)
     }
     if (is_array($outputMap['ddc'])) {
         foreach ($outputMap['ddc'] as $i => $value) {
-            $outputMap['ddc'][$i] = preg_replace('/[^\d\.]/', '', $value);//str_replace('|', '', str_replace('/', '', $value));
+            $outputMap['ddc'][$i] = preg_replace('/[^\d\.]/', '', $value); //str_replace('|', '', str_replace('/', '', $value));
         }
     }
     if (array_key_exists('oclcNr', $outputMap) && is_array($outputMap['oclcNr'])) {
@@ -232,7 +232,7 @@ function printLine($line)
             $lineArray =  explode("\x1f", $inhalt);
             $output .= "<feld nr='$nr' ind='$ind'>\n";
             for ($k = 1; $k < count($lineArray); $k++) {
-                 $output .= '<uf code="'.substr($lineArray[$k], 0, 1).'">'.printMabContent(substr($lineArray[$k], 1)).'</uf>'."\n";
+                    $output .= '<uf code="'.substr($lineArray[$k], 0, 1).'">'.printMabContent(substr($lineArray[$k], 1)).'</uf>'."\n";
             }
             $output .= "</feld>";
         } else {
@@ -245,9 +245,9 @@ function printLine($line)
 
 function printMabContent($content)
 {
-    $tf = "\xE2\x80\xA1";//Teilfeldtrennzeichen
+    $tf = "\xE2\x80\xA1"; //Teilfeldtrennzeichen
     if (strpos($content, $tf) !== false) {
-        $feldArray =  explode($tf, $content);
+        $feldArray = explode($tf, $content);
         for ($l = 1; $l < count($feldArray); $l++) {
             $feldArray[$l] = htmlspecialchars($feldArray[$l], ENT_XML1);
         }
