@@ -29,7 +29,7 @@
 include 'lib.php';
 
 $id = yaz_connect(HEBIS_URL);
-yaz_syntax($id, HEBIS_SYNTAX);//
+yaz_syntax($id, HEBIS_SYNTAX); //
 yaz_range($id, 1, 10);
 yaz_element($id, HEBIS_ELEMENTSET); //
 
@@ -43,7 +43,7 @@ if (isset($_GET['isbn'])) {
     if (count($nArray) > 1) {
         //mehrere ISBNs, z.B. f @or @or @attr 1=7 "9783937219363" @attr 1=7 "9780521369107" @attr 1=7 "9780521518147"
         //Anfuehrungsstriche muessen demaskiert werden, egal ob String mit ' gemacht wird
-        $suchString = str_repeat("@or ", count($nArray)-1) . '@attr 1=7 \"' . implode('\" @attr 1=7 \"', $nArray) . '\"';
+        $suchString = str_repeat("@or ", count($nArray) - 1) . '@attr 1=7 \"' . implode('\" @attr 1=7 \"', $nArray) . '\"';
         yaz_search($id, "rpn", $suchString);
     } else {
         yaz_search($id, "rpn", '@attr 5=100 @attr 1=7 "' . $n . '"');
@@ -55,7 +55,7 @@ yaz_wait();
 $error = yaz_error($id);
 if (!empty($error)) {
     echo "Error Number: " . yaz_errno($id);
-    echo "Error Description: " . $error ;
+    echo "Error Description: " . $error;
     echo "Additional Error Information: " . yaz_addinfo($id);
 }
 
@@ -64,13 +64,13 @@ $outputString .= "<collection>\n";
 $outputArray = [];
 
 for ($p = 1; $p <= yaz_hits($id); $p++) {
-    $record = yaz_record($id, $p, "xml");//Umwandlung in XML
+    $record = yaz_record($id, $p, "xml"); //Umwandlung in XML
     //namespace löschen
     $record = str_replace('xmlns="http://www.loc.gov/MARC21/slim"', '', $record);
-    $outputString .=  $record;
+    $outputString .= $record;
     array_push($outputArray, $record);
 }
-$outputString .=  "</collection>";
+$outputString .= "</collection>";
 yaz_close($id);
 
 $map = $standardMarcMap;
@@ -80,7 +80,7 @@ $map['bestand'] = '//datafield[@tag="924"]/subfield[@code="b"]';
 if (!isset($_GET['format'])) {
     header('Content-type: text/xml');
     echo $outputString;
-} else if ($_GET['format']=='json') {
+} else if ($_GET['format'] == 'json') {
     $outputXml = simplexml_load_string($outputString);
     $outputMap = performMapping($map, $outputXml);
     $outputIndividualMap = [];

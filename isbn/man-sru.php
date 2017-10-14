@@ -62,7 +62,7 @@ $doc->preserveWhiteSpace = false;
 @$doc->loadHTML($result);
 $xpath = new DOMXPath($doc);
 
-$records = $xpath->query("//records/record/recorddata/record");//beachte: kein CamelCase sondern alles klein schreiben
+$records = $xpath->query("//records/record/recorddata/record"); //beachte: kein CamelCase sondern alles klein schreiben
 
 $outputString = "<?xml version=\"1.0\"?>\n";
 $outputString .= "<collection>\n";
@@ -70,10 +70,10 @@ $outputArray = [];
 
 foreach ($records as $record) {
 
-    $outputString .=  $doc->saveXML($record);
+    $outputString .= $doc->saveXML($record);
     array_push($outputArray, $doc->saveXML($record));
 }
-$outputString .=  "</collection>";
+$outputString .= "</collection>";
 
 
 $map = $standardMarcMap;
@@ -82,7 +82,7 @@ $map['bestand'] = '//datafield[@tag="AVA"]/subfield[@code="b"]';
 if (!isset($_GET['format'])) {
     header('Content-type: text/xml');
     echo $outputString;
-} else if ($_GET['format']=='json') {
+} else if ($_GET['format'] == 'json') {
     $outputXml = simplexml_load_string($outputString);
 
     $outputMap = performMapping($map, $outputXml);
@@ -97,7 +97,7 @@ if (!isset($_GET['format'])) {
 
     header('Content-type: application/json');
     echo json_encode($outputMap, JSON_PRETTY_PRINT);
-} else if ($_GET['format']=='holdings') {
+} else if ($_GET['format'] == 'holdings') {
     echo "<html>\n<head>\n	<title>Bestand UB Mannheim zu ISBN-Suche</title>\n	<meta http-equiv='content-type' content='text/html; charset=UTF-8' />\n	<style type='text/css'>body { font-family:  Arial, Verdana, sans-serif; }</style>\n</head>\n<body>\n";
     $outputXml = simplexml_load_string($outputString);
     $avaNodes = $outputXml->xpath('//datafield[@tag="AVA"]');
@@ -149,7 +149,7 @@ if (!isset($_GET['format'])) {
 
         echo '<div>Bestand der UB Mannheim: ';
         foreach ($bestand as $loc => $n) {
-            echo $n . "x" . $loc .  ", ";
+            echo $n . "x" . $loc . ", ";
         }
         if ($aveNodes) {
             echo "E";
@@ -177,17 +177,17 @@ if (!isset($_GET['format'])) {
         echo '<div>Bestand der UB Mannheim: eventuell da (' . $size . ")</div>\n";
         echo '<table><tr><td><a href="' . $urlMAN . '" taget="_blank">See SRU Result</a></td></tr></table>';
     } else {
-        $urlSWB='http://swb.bsz-bw.de/DB=2.1/SET=11/TTL=2/CMD?ACT=SRCHM&ACT0=SRCH&IKT0=2135&TRM0=%60180%60&ACT1=*&IKT1=1016&TRM1=' . str_replace(" ", "+", $suchStringSWB);
+        $urlSWB = 'http://swb.bsz-bw.de/DB=2.1/SET=11/TTL=2/CMD?ACT=SRCHM&ACT0=SRCH&IKT0=2135&TRM0=%60180%60&ACT1=*&IKT1=1016&TRM1=' . str_replace(" ", "+", $suchStringSWB);
         $contentSWB = utf8_decode(file_get_contents($urlSWB));
         //echo $contentSWB;
-        if (strpos($contentSWB, "Es wurde nichts gefunden")===false) {
+        if (strpos($contentSWB, "Es wurde nichts gefunden") === false) {
             $nhits = substr_count($contentSWB, 'class="hit"');
             if ($nhits !== 0) {//multiple results
-                $nhits = $nhits/2;
+                $nhits = $nhits / 2;
             } else {//single result
                 $nhits = substr_count($contentSWB, 'class="Z3988"');
             }
-            echo '<div>Bestand der UB Mannheim: SWB sagt ja (' . $nhits .' Treffer)</div>';
+            echo '<div>Bestand der UB Mannheim: SWB sagt ja (' . $nhits . ' Treffer)</div>';
             
         } else {
             echo 'Es wurde nichts gefunden';
