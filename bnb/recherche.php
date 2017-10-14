@@ -214,7 +214,7 @@ Lesezeichen zu erstellen, z.B.
             $mapDate = array(3242 => "08/05/2013", 3241 => "01/05/2013", 3240 => "24/04/2013", 3239 => "17/04/2013", 3238 => "10/04/2013", 3237 => "03/04/2013", 3236 => "20/03/2013", 3231 => "13/02/2013");
 
             $files = glob('BNBDaten/*.rdf');
-            usort($files, function($a, $b) {
+            usort($files, function ($a, $b) {
                 return $a < $b;
             });
             echo "<table>";
