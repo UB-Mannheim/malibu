@@ -10,6 +10,7 @@ an environment for code development.
 * [Server configuration](#server-configuration)
   * [For Debian 7 (Apache 2.2)](#for-debian-7-apache-22)
   * [For Debian 8 (Apache 2.4)](#for-debian-8-apache-24)
+  * [For Debian 9 (Apache 2.4 and PHP 7.0)](#for-debian-9-apache-24-and-php-70)
 * [Initializing and Costumizing](#initializing-and-costumizing)
 * [Configuration for code development](#configurations-for-code-development)
   * [Docker](#docker)
@@ -41,9 +42,9 @@ You need the php library <a href="http://php.net/manual/en/book.yaz.php">yaz</a>
 ; priority=20
 extension=yaz.so
 ```
-* create a symbolic link 
+* create a symbolic link
 ```sh
-cd /etc/php5/apache2/conf.d 
+cd /etc/php5/apache2/conf.d
 ln -s ../../mods-available/yaz.ini 20-yaz.ini
 ```
 * restart Apache2
@@ -51,9 +52,30 @@ ln -s ../../mods-available/yaz.ini 20-yaz.ini
 service apache2 restart
 ```
 
+### For Debian 9 (Apache 2.4 and PHP 7.0)
+You need the php library <a href="http://php.net/manual/en/book.yaz.php">yaz</a> on the server.
+For Debian 9 (Apache 2.4, PHP 7.0):
+
+* <code>apt-get install yaz libyaz4-dev php-dev php-pear</code> (maybe you already have some packages)
+* <code>pecl install yaz</code>
+* create new file `/etc/php/php7.0/mods-available/yaz.ini` and add
+```sh
+; configuration for php YAZ module
+; priority=20
+extension=yaz.so
+```
+* enable the YAZ module
+```sh
+phpenmod yaz
+```
+* restart Apache2 server
+```sh
+systemctl restart apache2
+```
+
 ## Initializing and Costumizing
 
-Some steps have to be performed after the server configuration and 
+Some steps have to be performed after the server configuration and
 before the first start:
 
 1. Clone the repository or download all files
