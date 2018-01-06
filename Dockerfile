@@ -10,10 +10,9 @@ FROM php:apache
 ENV JQUERY 3.2.1
 ENV CLIPBOARD 1.7.1
 
-RUN apt-get update && apt-get install -y yaz libyaz4-dev php-dev php-pear wget unzip
-
-RUN pecl install yaz
-RUN docker-php-ext-enable yaz
+RUN apt-get update && apt-get install -y yaz libyaz4-dev wget unzip \
+    && pecl install yaz \
+    && docker-php-ext-enable yaz
 
 RUN mkdir malibu
 WORKDIR malibu
