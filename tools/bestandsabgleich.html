@@ -27,7 +27,11 @@ function check(index, value) {
 		if (holdingsMAN && value) {
 			$('#query-'+index).append(render(holdingsMAN[1], value));
 		} else {
-			$('#query-'+index).append('-');
+			if (document.getElementById("mitISBN").checked) {
+				$('#query-'+index).append(value + ' FEHLT MAN');
+			} else {
+				$('#query-'+index).append('0');
+			}
 		}
 		// Statusanzeige aktualisieren
 		var status = parseInt($('#total').text())-$('#ausgabe div:empty').length;
@@ -36,6 +40,9 @@ function check(index, value) {
 }
 
 function render(result, isbn) {
+	if (document.getElementById("mitISBN").checked) {
+		result = isbn + ' ' + result;
+	}
 	if (document.getElementById("mitLink").checked) {
 		return '<a href="../isbn/suche.html?isbn=' + isbn + '" target="_blank">' + result + '</a>';
 	} else {
@@ -57,6 +64,7 @@ function render(result, isbn) {
 <form>
 <textarea id="isbnListe" cols="100" rows="20"></textarea><br/>
 <input type="checkbox" name="verlinken" value="Bike" id="mitLink"> Mit Link 
+<input type="checkbox" name="verlinken" id="mitISBN"> Mit ISBN 
 <input type="button" value="Bestand prüfen" onclick='listeEingabe();' />
 </form>
 
