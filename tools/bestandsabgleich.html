@@ -21,22 +21,26 @@ function listeEingabe() {
 
 function check(index, value) {
 	$('#ausgabe').append('<div id="query-' + index + '" data-isbn="' + value + '"></div>');
-	$.get("../isbn/man-sru.php?format=holdings&isbn="+value, function(data) {
-		var pattern = /<div>Bestand der UB Mannheim: (.*)</;
-		var holdingsMAN = pattern.exec(data);
-		if (holdingsMAN && value) {
-			$('#query-'+index).append(render(holdingsMAN[1], value));
-		} else {
-			if (document.getElementById("mitISBN").checked) {
-				$('#query-'+index).append(value + ' FEHLT MAN');
+	var numberOfDigits = value.replace(/\D/g, '').length;
+	if (numberOfDigits>=9) {
+		$.get("../isbn/man-sru.php?format=holdings&isbn="+value, function(data) {
+			var pattern = /<div>Bestand der UB Mannheim: (.*)</;
+			var holdingsMAN = pattern.exec(data);
+			if (holdingsMAN && value) {
+				$('#query-'+index).append(render(holdingsMAN[1], value));
 			} else {
-				$('#query-'+index).append('0');
+				if (document.getElementById("mitISBN").checked) {
+					$('#query-'+index).append(render(' FEHLT MAN', value));
+				} else {
+					$('#query-'+index).append(render('0', value));
+				}
 			}
-		}
-		// Statusanzeige aktualisieren
-		var status = parseInt($('#total').text())-$('#ausgabe div:empty').length;
-		$('#status').html(status);
-	});
+			updateStatus();
+		});
+	} else {
+		$('#query-'+index).append('KEINE ISBN');
+		updateStatus();
+	}
 }
 
 function render(result, isbn) {
@@ -48,6 +52,12 @@ function render(result, isbn) {
 	} else {
 		return result;
 	}
+}
+
+// Statusanzeige aktualisieren
+function updateStatus() {
+	var status = parseInt($('#total').text())-$('#ausgabe div:empty').length;
+	$('#status').html(status);
 }
 //-->
 </script>
