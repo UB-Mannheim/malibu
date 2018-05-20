@@ -64,8 +64,8 @@ function renderSigel(sigelArray){
 //die Funktion hier aufgeruft wird.
 function addBenennung(index, element) {
     var className = $(element).attr('class');
-    //z.B. http://rvk.uni-regensburg.de/api/json/ancestors/SU+680?jsonp=wrapper
-    var rvkApi = 'http://rvk.uni-regensburg.de/api/json/ancestors/' + className.replace('-', '+') + '?jsonp=?';
+    //z.B. https://rvk.uni-regensburg.de/api/json/ancestors/SU+680?jsonp=wrapper
+    var rvkApi = 'https://rvk.uni-regensburg.de/api/json/ancestors/' + className.replace('-', '+') + '?jsonp=?';
     $.getJSON(rvkApi, function(json) {
         if (json.node.ancestor) {//Benennung des Knoten + Benennung des Vorfahrens
             $('.'+className).attr("title", json.node.benennung + ' <-- ' + json.node.ancestor.node.benennung);
