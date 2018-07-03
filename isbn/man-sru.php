@@ -55,7 +55,10 @@ if ($result === false) {
     exit;
 }
 
+// Delete namespaces such that we don't need to specify them
+// in every xpath query.
 $result = str_replace(' xmlns:xs="http://www.w3.org/2001/XMLSchema"', '', $result);
+$result = str_replace(' xmlns="http://www.loc.gov/MARC21/slim"', '', $result);
 
 $doc = new DOMDocument();
 $doc->preserveWhiteSpace = false;
