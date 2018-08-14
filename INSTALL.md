@@ -56,9 +56,9 @@ service apache2 restart
 You need the php library <a href="http://php.net/manual/en/book.yaz.php">yaz</a> on the server.
 For Debian 9 (Apache 2.4, PHP 7.0):
 
-* <code>apt-get install yaz libyaz4-dev php-dev php-pear</code> (maybe you already have some packages)
+* <code>apt-get install yaz libyaz4-dev php-dev php-pear libapache2-mod-php</code> (maybe you already have some packages)
 * <code>pecl install yaz</code>
-* create new file `/etc/php/php7.0/mods-available/yaz.ini` and add
+* create new file `/etc/php/7.0/mods-available/yaz.ini` and add
 ```sh
 ; configuration for php YAZ module
 ; priority=20
