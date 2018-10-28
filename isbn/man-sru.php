@@ -183,15 +183,12 @@ if (!isset($_GET['format'])) {
         $urlSWB = 'http://swb.bsz-bw.de/DB=2.1/SET=11/TTL=2/CMD?ACT=SRCHM&ACT0=SRCH&IKT0=2135&TRM0=%60180%60&ACT1=*&IKT1=1016&TRM1=' . str_replace(" ", "+", $suchStringSWB);
         $contentSWB = utf8_decode(file_get_contents($urlSWB));
         //echo $contentSWB;
-        if (strpos($contentSWB, "Es wurde nichts gefunden") === false) {
-            $nhits = substr_count($contentSWB, 'class="hit"');
-            if ($nhits !== 0) {//multiple results
-                $nhits = $nhits / 2;
-            } else {//single result
-                $nhits = substr_count($contentSWB, 'class="Z3988"');
-            }
-            echo '<div>Bestand der UB Mannheim: SWB sagt ja (' . $nhits . ' Treffer)</div>';
-            
+        $nhits = substr_count($contentSWB, 'class="hit"');
+        $ncoins = substr_count($contentSWB, 'class="Z3988"');
+        if ($nhits>0) {//multiple results
+            echo '<div>Bestand der UB Mannheim: SWB sagt ja (<a href="' . $urlSWB . '" target="_blank">' . $nhits/2 . ' Treffer</a>)</div>';
+        } else if ($ncoins>0) {//single result
+            echo '<div>Bestand der UB Mannheim: SWB sagt ja (<a href="' . $urlSWB . '" target="_blank">Einzeltreffer mit ' . $ncoins . ' COinS</a>)</div>';
         } else {
             echo 'Es wurde nichts gefunden';
         }
