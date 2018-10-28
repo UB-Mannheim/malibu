@@ -110,10 +110,10 @@ function ppnEingabe(ppn, verbund) {
 //mögliche Werte für n:
 // - eine 13-stellige ISBN, z.B. 9783830493662
 // - eine 10-stellige ISBN, z.B. 3830493665
-// - mehrere ISBNs getrennt durch ein Komma, z.B. 9783830493662,3830493665
+// - mehrere ISBNs getrennt durch ein Komma oder Semikolon, z.B. 9783830493662,3830493665
 // - mehrere ISBNs getrennt durch "or" und ggf. Leerzeichen, z.B. 9783830493662 or 3830493665
 function isbnEingabe(n) {
-    n = n.replace(/or/gi, ',').replace(/\s*/g, '');
+    n = n.replace(/or/gi, ',').replace(/;/g, ',').replace(/\s*/g, '');
     var query="?isbn="+n;
     
     var nArray = n.split(',');

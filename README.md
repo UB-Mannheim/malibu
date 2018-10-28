@@ -11,16 +11,17 @@
 von bibliographischen Daten zur Unterstützung von Arbeitsabläufen, wie sie
 häufig in Bibliotheken bei den Fachreferaten und der Erwerbung auftreten.
 Hauptbestandteil ist ein Mashup zur ISBN-Suche und ein Recherchewerkzeug für die
-BNB weekly sowie weitere kleine Tools.
+BNB weekly sowie weitere kleine Tools wie etwa ein Tool für den Bestandsabgleich bei der Eingabe einer Liste von ISBNs.
 
 **malibu** ![en](https://raw.githubusercontent.com/UB-Mannheim/malibu/master/img/flag_en.jpeg) is a collection of lightweight web-based tools to work with bibliographic metadata from various sources on the web, aimed at supporting the workflows of subject librarians and acquisitions librarians.
 
 The main components are
 
 * a mashup of various library and bookseller data on books by ISBN
-  ([Demo](http://data.bib.uni-mannheim.de/malibu/isbn/suche.html)) and
+  ([Demo](http://data.bib.uni-mannheim.de/malibu/isbn/suche.html)),
 * a search tool for the British National Bibliography weekly updates
-  ([Demo](http://data.bib.uni-mannheim.de/malibu/bnb/recherche.php)).
+  ([Demo](http://data.bib.uni-mannheim.de/malibu/bnb/recherche.php)) and
+* a possibility to check for a list of isbn the holdings in the library ([Demo which is configured for Mannheim University Library](http://data.bib.uni-mannheim.de/malibu/tools/bestandsabgleich.html)).
 
 
 ## Docker
@@ -41,7 +42,7 @@ More informations about how to install malibu on Debian systems and setting up a
 
 ## Copyright and License
 
-Copyright (c) 2013 – 2016 Universitätsbibliothek Mannheim
+Copyright (c) 2013 – 2018 Universitätsbibliothek Mannheim
 
 Author: [Philipp Zumstein](https://github.com/zuphilip) (UB Mannheim)
 
