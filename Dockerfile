@@ -14,8 +14,7 @@ RUN apt-get update && apt-get install -y yaz libyaz4-dev wget unzip \
     && pecl install yaz \
     && docker-php-ext-enable yaz
 
-RUN mkdir malibu
-WORKDIR malibu
+WORKDIR /malibu
 RUN mkdir isbn
 
 # From the best practices: you should use curl or wget instead of ADD
