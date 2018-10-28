@@ -185,9 +185,9 @@ if (!isset($_GET['format'])) {
         //echo $contentSWB;
         $nhits = substr_count($contentSWB, 'class="hit"');
         $ncoins = substr_count($contentSWB, 'class="Z3988"');
-        if ($nhits>0) {//multiple results
-            echo '<div>Bestand der UB Mannheim: SWB sagt ja (<a href="' . $urlSWB . '" target="_blank">' . $nhits/2 . ' Treffer</a>)</div>';
-        } else if ($ncoins>0) {//single result
+        if ($nhits > 0) {//multiple results
+            echo '<div>Bestand der UB Mannheim: SWB sagt ja (<a href="' . $urlSWB . '" target="_blank">' . $nhits / 2 . ' Treffer</a>)</div>';
+        } else if ($ncoins > 0) {//single result
             echo '<div>Bestand der UB Mannheim: SWB sagt ja (<a href="' . $urlSWB . '" target="_blank">Einzeltreffer mit ' . $ncoins . ' COinS</a>)</div>';
         } else {
             echo 'Es wurde nichts gefunden';
