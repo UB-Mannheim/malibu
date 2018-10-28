@@ -24,7 +24,7 @@ RUN curl -o "isbn/clipboard.min.js" "https://cdnjs.cloudflare.com/ajax/libs/clip
 
 # Download BNB data
 COPY ./bnb/getBNBData.sh ./bnb/getBNBData.sh
-RUN bash ./bnb/getBNBData.sh $PWD/bnb/BNBDaten
+RUN bash bnb/getBNBData.sh "$PWD/bnb/BNBDaten"
 
 # Copy the complete directory structure sans entries in .dockerignore
 COPY . .
