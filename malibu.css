@@ -158,6 +158,12 @@ hr {
 
 }
 
+#ChangeDesignButton:hover {
+  
+  cursor: pointer; 
+  
+}
+
 
 
 /* SUCHFELDER UND BUTTONS */
@@ -311,8 +317,6 @@ input:active, input:focus, select:active, select:focus {
 
 .verbuendeUeber {
 
-  border-top: 1px solid #fff !important;
-  border-radius: 4px;
   background-color: #34373e;
 
 }
