@@ -187,7 +187,7 @@ function isbnEingabe(n) {
             $('#titel').append(data["isbn"].join(", ")+"<br/>");
         }
         
-        $('#ausgaben').html('<table border="1" width="100%"></table>');
+        $('#ausgaben').html('<table id="ausgabenTable" width="100%"></table>');
         databaseText = 'SWB-Nr.: ';
         var bestandsArray = [];
         $.each(data.einzelaufnahmen, function(key, currentRecord) {
@@ -428,11 +428,8 @@ function isbnEingabe(n) {
 </div>
 
 
-<!--<br/> luis -->
-
-
-
-<div id='status'> <!--  style="background-color:#F0F0F0" luis -->
+	
+<div id='status'>
 </div>
 
 </body>
