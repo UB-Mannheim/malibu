@@ -19,6 +19,9 @@ Unterstützungstool für Fachreferatsarbeit
 <style type="text/css">
 body { font-family:  Arial, Verdana, sans-serif; }
 </style>
+	
+<link id="stylesheet" href="FachrefTool.css" type="text/css" rel="stylesheet">	
+	
 <script src="jquery-3.2.1.min.js"></script>
 <script src="clipboard.min.js"></script>
 <script type="text/javascript">
@@ -35,6 +38,29 @@ function toggleHidden() {
 }
 </script>
 <script type="text/javascript">
+
+	
+	
+function ChangeDesign() {
+
+    if ( !!(document.getElementById("stylesheet")) ) {
+
+        document.getElementById("stylesheet").href = "FachrefTool_light.css";
+        document.getElementById("stylesheet").id = "stylesheetLight";
+        document.getElementById("ChangeDesignButton").innerHTML = "Dark";
+
+    } else {
+
+      document.getElementById("stylesheetLight").href = "FachrefTool.css";
+      document.getElementById("stylesheetLight").id = "stylesheet";
+      document.getElementById("ChangeDesignButton").innerHTML = "Light";
+
+    }
+
+}
+	
+	
+	
 <!--
 
 $(document).ready(function(){
@@ -282,36 +308,57 @@ function isbnEingabe(n) {
 </head>
 <body>    
     
-<h1>Unterstützungstool für Fachreferatsarbeit</h1>
+	<h1><span id="h1small">Unterstützungstool für</span><br>Fachreferatsarbeit<hr></h1>
 
 <a href="https://github.com/UB-Mannheim/malibu" target="_blank"><img style="position: absolute; top: 0; right: 0; border: 0;" src="../img/fork-github.png" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_green_007200.png"></a>
 
-<table><tr><td>
-<form id="formIsbn" name='formular'  action="#">
-ISBN: <input id="eingabeIsbn" type="text" size="30" maxlength="30">
-<input id="submitIsbn" type="submit" value="Submit">
-</form></td><td><form id="formPpn" name='formular'  action="#">&nbsp; &nbsp; &nbsp; 
-ID: <input id="eingabePpn" type="text" size="30" maxlength="30">
-<input type="radio" name="eingabeVerbund" value="SWB" checked>SWB
+<table id="Suchzeile"><tr>
+
+
+
+<td id="idTD"><form id="formPpn" name='formular'  action="#">&nbsp; &nbsp; &nbsp;
+
+<input id="eingabePpn" type="text" size="20" maxlength="30" placeholder="id...">
+<select>
+  <option type="radio" name="eingabeVerbund" value="SWB" checked>SWB
+  <option type="radio" name="eingabeVerbund" value="GBV">GBV
+  <option type="radio" name="eingabeVerbund" value="B3KAT">B3KAT
+  <option type="radio" name="eingabeVerbund" value="HEBIS">HEBIS
+  <option type="radio" name="eingabeVerbund" value="HBZ">HBZ
+  <option type="radio" name="eingabeVerbund" value="SWISS">SWISS
+  <option type="radio" name="eingabeVerbund" value="OBVSG">OBVSG
+</select>
+<!--<input type="radio" name="eingabeVerbund" value="SWB" checked>SWB
 <input type="radio" name="eingabeVerbund" value="GBV">GBV
 <input type="radio" name="eingabeVerbund" value="B3KAT">B3KAT
 <input type="radio" name="eingabeVerbund" value="HEBIS">HEBIS
 <input type="radio" name="eingabeVerbund" value="HBZ">HBZ
 <input type="radio" name="eingabeVerbund" value="SWISS">SWISS
-<input type="radio" name="eingabeVerbund" value="OBVSG">OBVSG
-<input type="submit" value="Submit">
+<input type="radio" name="eingabeVerbund" value="OBVSG">OBVSG-->
+<input class="button" type="submit" value="Submit">
 </form>
-</td>  
-<td>&nbsp; &nbsp; &nbsp; <a href="http://wiki.bib.uni-mannheim.de/InterneSeiten/doku.php?id=anleitungen:anleitungen_und_formulare#fachreferenten" target="_blank" title="Internes Wiki -> Unterstützungstool für Fachreferatsarbeit">Hilfe</a></td>
-</tr></table> 
- 
+</td>
 
 
+
+<td id="isbnTD">
+<form id="formIsbn" name='formular'  action="#">
+<input id="eingabeIsbn" type="text" size="40" maxlength="30" placeholder="isbn..." autofocus>
+<input class="button" id="submitIsbn" type="submit" value="Submit">
+</form></td>
+
+
+
+<td id="idTD">&nbsp; &nbsp; &nbsp;
+  <a href="http://wiki.bib.uni-mannheim.de/InterneSeiten/doku.php?id=anleitungen:anleitungen_und_formulare#fachreferenten" target="_blank" title="Internes Wiki -> Unterstützungstool für Fachreferatsarbeit">Hilfe</a>
+  &nbsp; &nbsp; &nbsp;<p onclick="ChangeDesign();" id="ChangeDesignButton">Light</p>
+</td>
+</tr></table>
 
 <div id='titel'>
 </div>
 
-
+<div id="Abstand">
 <div id='verkaufsinfo'>
 </div>
 
@@ -325,47 +372,46 @@ ID: <input id="eingabePpn" type="text" size="30" maxlength="30">
 </div>
 
 <table id="verbuende" border="1" width="100%">
-    <tr>
-        <th>&nbsp;</th>
+    <tr class="verbuendeUeber">
+        <th id="verbuendeUeberLinks">&nbsp;</th>
         <th>RVK-Notation</th>
         <th>DDC-Notation</th>
-        <th>Schlagwörter</th>
+        <th id="verbuendeUeberRechts">Schlagwörter</th>
     </tr>
-    <tr>
+    <tr class="verbuendeReiheWhite">
         <td><div id="sucheSWB">SWB</div><div id="bestandSWB"></div></td>
         <td id="rvkSWB"></td>
         <td id="ddcSWB"></td>
         <td id="swSWB"></td>
     </tr>
-    <tr>
+    <tr class="verbuendeReiheGrey">
         <td><span id="sucheB3KAT">B3Kat</span> (Link zu BVB)<div id="bestandB3KAT"></div></td>
         <td id="rvkB3KAT"></td>
         <td id="ddcB3KAT"></td>
         <td id="swB3KAT"></td>
-    <tr>
+    <tr class="verbuendeReiheWhite">
         <td><div id="sucheHBZ">HBZ</div><div id="bestandHBZ"></div></td>
         <td id="rvkHBZ"></td>
         <td id="ddcHBZ"></td>
         <td id="swHBZ"></td>
-    <tr>
+    <tr class="verbuendeReiheGrey">
         <td><div id="sucheHEBIS">HEBIS</div><div id="bestandHEBIS"></div></td>
         <td id="rvkHEBIS"></td>
         <td id="ddcHEBIS"></td>
         <td id="swHEBIS"></td>
-    <tr>
+    <tr class="verbuendeReiheWhite">
         <td><div id="sucheGBV">GBV</div><div id="bestandGBV"></div></td>
         <td id="rvkGBV"></td>
         <td id="ddcGBV"></td>
         <td id="swGBV"></td>
     </tr>
-	<tr>
+	<tr class="verbuendeReiheGrey">
         <td><div id="sucheSWISS">swissbib</div><div id="bestandSWISS"></div></td>
         <td id="rvkSWISS"></td>
         <td id="ddcSWISS"></td>
         <td id="swSWISS"></td>
     </tr>
-    </tr>
-        <tr>
+    <tr class="verbuendeReiheWhite">
         <td><div id="sucheOBVSG">OBVSG</div><div id="bestandOBVSG"></div></td>
         <td id="rvkOBVSG"></td>
         <td id="ddcOBVSG"></td>
@@ -373,14 +419,20 @@ ID: <input id="eingabePpn" type="text" size="30" maxlength="30">
     </tr>
 </table>
 
-
 <div id='weiteres'>
 </div>
 
 <div id='links'>
 </div>
 
-<br/><div id='status' style="background-color:#F0F0F0">
+</div>
+
+
+<!--<br/> luis -->
+
+
+
+<div id='status'> <!--  style="background-color:#F0F0F0" luis -->
 </div>
 
 </body>
