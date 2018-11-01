@@ -160,6 +160,12 @@ hr {
 
 }
 
+#ChangeDesignButton:hover {
+  
+  cursor: pointer; 
+  
+}
+
 
 
 /* SUCHFELDER UND BUTTONS */
