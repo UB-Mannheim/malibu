@@ -20,7 +20,7 @@ Unterstützungstool für Fachreferatsarbeit
 body { font-family:  Arial, Verdana, sans-serif; }
 </style>
 	
-<link id="stylesheet" href="FachrefTool.css" type="text/css" rel="stylesheet">	
+<link id="stylesheet" href="malibu.css" type="text/css" rel="stylesheet">	
 	
 <script src="jquery-3.2.1.min.js"></script>
 <script src="clipboard.min.js"></script>
@@ -45,13 +45,13 @@ function ChangeDesign() {
 
     if ( !!(document.getElementById("stylesheet")) ) {
 
-        document.getElementById("stylesheet").href = "FachrefTool_light.css";
+        document.getElementById("stylesheet").href = "malibu_light.css";
         document.getElementById("stylesheet").id = "stylesheetLight";
         document.getElementById("ChangeDesignButton").innerHTML = "Dark";
 
     } else {
 
-      document.getElementById("stylesheetLight").href = "FachrefTool.css";
+      document.getElementById("stylesheetLight").href = "malibu.css";
       document.getElementById("stylesheetLight").id = "stylesheet";
       document.getElementById("ChangeDesignButton").innerHTML = "Light";
 
