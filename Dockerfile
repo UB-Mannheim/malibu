@@ -14,8 +14,7 @@ RUN apt-get update && apt-get install -y yaz libyaz4-dev wget unzip \
     && pecl install yaz \
     && docker-php-ext-enable yaz
 
-RUN mkdir malibu
-WORKDIR malibu
+WORKDIR /malibu
 RUN mkdir isbn
 
 # From the best practices: you should use curl or wget instead of ADD
@@ -25,7 +24,7 @@ RUN curl -o "isbn/clipboard.min.js" "https://cdnjs.cloudflare.com/ajax/libs/clip
 
 # Download BNB data
 COPY ./bnb/getBNBData.sh ./bnb/getBNBData.sh
-RUN bash ./bnb/getBNBData.sh $PWD/bnb/BNBDaten
+RUN bash bnb/getBNBData.sh "$PWD/bnb/BNBDaten"
 
 # Copy the complete directory structure sans entries in .dockerignore
 COPY . .
