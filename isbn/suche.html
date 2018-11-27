@@ -20,6 +20,7 @@ Unterstützungstool für Fachreferatsarbeit
 body { font-family:  Arial, Verdana, sans-serif; }
 </style>
 	
+<!-- Stylesheet mit Link, damit per JS eindeutig zugegriffen werden kann -->
 <link id="stylesheet" href="malibu.css" type="text/css" rel="stylesheet">	
 	
 <script src="jquery-3.2.1.min.js"></script>
@@ -40,19 +41,28 @@ function toggleHidden() {
 <script type="text/javascript">
 
 	
-	
+
+//Funktion für Tauschen des Stylesheets
 function ChangeDesign() {
 
+    //Falls id "stylesheet" vergeben
     if ( !!(document.getElementById("stylesheet")) ) {
 
+	//Tausche stylesheet-Verknüpfung und füge neue id hinzu (für Light Design)
         document.getElementById("stylesheet").href = "malibu_light.css";
         document.getElementById("stylesheet").id = "stylesheetLight";
+	    
+	//Tausche den Text im Button für Designwechsel
         document.getElementById("ChangeDesignButton").innerHTML = "Dark";
 
+    //Falls nicht id "stylesheet" vergeben (also id "stylesheetLight")
     } else {
 
+      //Tausche stylesheet-Verknüpfung und füge neue id hinzu (für Dark Design)
       document.getElementById("stylesheetLight").href = "malibu.css";
       document.getElementById("stylesheetLight").id = "stylesheet";
+	    
+      //Tausche den Text im Button für Designwechsel
       document.getElementById("ChangeDesignButton").innerHTML = "Light";
 
     }
