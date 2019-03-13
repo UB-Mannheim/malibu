@@ -71,12 +71,6 @@ h1 {
 
 }
 
-#h1small {
-
-  font-size: 0.5em;
-  color: #222429;
-
-}
 
 hr {
 
@@ -326,7 +320,7 @@ input, select {
 
 }
 
-.verbuendeReiheGrey {
+#verbuende tr:nth-child(2n+3) {
 
   background-color: #F1EDEB;
 
