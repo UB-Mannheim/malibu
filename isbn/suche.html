@@ -75,7 +75,7 @@ $(document).ready(function(){
         $('#eingabePpn').val(getParameterByName("ppn"));
         $('#eingabeIsbn').val('');
         if (getParameterByName("verbund")) {
-            $("input[name='eingabeVerbund'][value='"+getParameterByName('verbund')+"']").prop('checked', true);
+            $("option[name='eingabeVerbund'][value='"+getParameterByName('verbund')+"']").prop('checked', true);
             ppnEingabe(getParameterByName("ppn"),getParameterByName("verbund"));
         } else {
             ppnEingabe(getParameterByName("ppn"),"SWB");//Wird als Default-Wert gesetzt
@@ -92,7 +92,7 @@ $(document).ready(function(){
     //Aktion bei PPN Form:
     $('#formPpn').on('submit',function(){
         var parameter = $('#eingabePpn').val();
-        var parameter2 = $('input[name=\'eingabeVerbund\']:checked').val();
+        var parameter2 = $('option[name=\'eingabeVerbund\']:checked').val();
         window.location = "suche.html?ppn=" + parameter + "&verbund=" + parameter2;
         return false;//damit sollte die eigentlich submit action ignoriert werden
     });
