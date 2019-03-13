@@ -59,11 +59,11 @@ function ChangeDesign() {
 $(document).ready(function(){
     var clipboard = new Clipboard(".btn");
     clipboard.on('success', function(e) {
-        showNotification('In die Zwischenablage kopiert!', 'black', 'white');
+        showNotification('In die Zwischenablage kopiert!', '#8A4B08', 'white');
         //e.clearSelection();
     });
     clipboard.on('error', function(e) {
-        showNotification('Jetzt Cmd+C zum Kopieren drücken!', 'black', 'white');
+        showNotification('Jetzt Cmd+C zum Kopieren drücken!', '#8A4B08', 'white');
     });
 
     //Damit werden die Variablen ueber HTML ausgewertet (so wie GET Variablen in PHP)
@@ -101,9 +101,9 @@ $(document).ready(function(){
 
 
 function showNotification(message, bcolor, color) {
-    var $notification = $("<span>")
+    var $notification = $("<span id='notificaton'>")
       .appendTo('body')
-      .html('<p>' + message + '</p>')
+      .html('<p style="color: '+color+';">' + message + '</p>')
       .css('position', 'fixed')
       .css('top', '0')
       .css('display', 'block')

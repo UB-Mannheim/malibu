@@ -92,6 +92,9 @@ hr {
 }
 
 
+#notificaton {
+  padding: 16px;
+}
 
 
 
@@ -344,7 +347,7 @@ input, select {
 /* text-decoration entfernen, RVK und Schlagwörter fett für Orientierung */
 #verbuende * {
 
-  text-decoration: none;
+  /*text-decoration: none;*/
 
 }
 
