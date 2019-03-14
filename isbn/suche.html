@@ -143,7 +143,7 @@ function isbnEingabe(n) {
     var suchString = n.replace(/,/g, ' or ');
     $('#status').append("Gesucht wurden ISBN " + suchString);
     $('#suche'+'SWB').html('<a href="http://swb.bsz-bw.de/DB=2.1/SET=1/TTL=1/CMD?ACT=SRCHA&IKT=1016&SRT=YOP&TRM='+suchString+'" target="_blank">SWB</a>');
-    $('#suche'+'GBV').html('<a href="http://gso.gbv.de/DB=2.1/SET=1/TTL=1/CMD?ACT=SRCHA&IKT=1016&SRT=YOP&TRM='+suchString+'" target="_blank">GBV</a>');
+    $('#suche'+'K10PLUS').html('<a href="https://kxp.k10plus.de/DB=2.1/DB=2.1/SET=1/TTL=1/CMD?ACT=SRCHA&IKT=7&SRT=YOP&TRM='+suchString+'" target="_blank">K10PLUS (GVK)</a>');
     $('#suche'+'HEBIS').html('<a href="http://cbsopac.rz.uni-frankfurt.de/DB=2.1/SET=1/TTL=1/CMD?ACT=SRCHA&IKT=6015&SRT=YOP&TRM='+nArray[0]+'" target="_blank">HEBIS</a>');
     $('#suche'+'B3KAT').html('<a href="https://opacplus.bib-bvb.de/TouchPoint_touchpoint/start.do?Query=-1%3D%22' + nArray[0] + '%22&Language=De&SearchProfile=" target="_blank">B3KAT</a>');
     $('#suche'+'HBZ').html('<a href="http://okeanos-www.hbz-nrw.de/F/?FUNC=find-c&CCL_TERM=+IBN=%28'+nArray[0]+'" target="_blank">HBZ</a>');
@@ -181,7 +181,7 @@ function isbnEingabe(n) {
         }
         
         $('#ausgaben').html('<table id="ausgabenTable" border="1" width="100%"></table>');
-        databaseText = 'SWB-Nr.: ';
+        databaseText = 'K10plusPPN: ';
         var bestandsArray = [];
         $.each(data.einzelaufnahmen, function(key, currentRecord) {
             $('#ausgaben table').append("<tr id='"+currentRecord.id+"'>");
@@ -265,7 +265,7 @@ function isbnEingabe(n) {
     });
     
     
-    var andereVerbuende = ["GBV", "HEBIS", "B3KAT", "HBZ", "SWISS", "OBVSG"];
+    var andereVerbuende = ["K10PLUS", "HEBIS", "B3KAT", "HBZ", "SWISS", "OBVSG"];
     $.each(andereVerbuende, function(index, verbund){
         $.getJSON(verbund.toLowerCase()+".php"+query+"&format=json", function(data){
             
@@ -311,8 +311,8 @@ function isbnEingabe(n) {
             <form id="formPpn" name='formular'  action="#">&nbsp; &nbsp; &nbsp;
                 <input id="eingabePpn" type="text" size="20" maxlength="30" placeholder="id...">
                 <select>
-                    <option type="radio" name="eingabeVerbund" value="SWB" checked>SWB
-                    <option type="radio" name="eingabeVerbund" value="GBV">GBV
+                    <option type="radio" name="eingabeVerbund" value="K10PLUS">K10PLUS
+                    <option type="radio" name="eingabeVerbund" value="SWB">SWB
                     <option type="radio" name="eingabeVerbund" value="B3KAT">B3KAT
                     <option type="radio" name="eingabeVerbund" value="HEBIS">HEBIS
                     <option type="radio" name="eingabeVerbund" value="HBZ">HBZ
@@ -366,6 +366,12 @@ function isbnEingabe(n) {
         <td id="ddcSWB"></td>
         <td id="swSWB"></td>
     </tr>
+	<tr>
+        <td><div id="sucheK10PLUS">K10PLUS (GVK)</div><div id="bestandK10PLUS"></div></td>
+        <td id="rvkK10PLUS"></td>
+        <td id="ddcK10PLUS"></td>
+        <td id="swK10PLUS"></td>
+    </tr>
     <tr>
         <td><span id="sucheB3KAT">B3Kat</span> (Link zu BVB)<div id="bestandB3KAT"></div></td>
         <td id="rvkB3KAT"></td>
@@ -381,12 +387,6 @@ function isbnEingabe(n) {
         <td id="rvkHEBIS"></td>
         <td id="ddcHEBIS"></td>
         <td id="swHEBIS"></td>
-    <tr>
-        <td><div id="sucheGBV">GBV</div><div id="bestandGBV"></div></td>
-        <td id="rvkGBV"></td>
-        <td id="ddcGBV"></td>
-        <td id="swGBV"></td>
-    </tr>
 	<tr>
         <td><div id="sucheSWISS">swissbib</div><div id="bestandSWISS"></div></td>
         <td id="rvkSWISS"></td>
