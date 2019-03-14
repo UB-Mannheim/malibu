@@ -14,13 +14,9 @@ Hell #F1EDEB
 /***** ALLGEMEINE EINSTELLUNGEN *****/
 
 body {
-
   margin: 0;
-
   font-family:  Arial, Verdana, sans-serif;
-
   background-color: #fff;
-
 }
 
 
@@ -28,12 +24,9 @@ body {
 /* RESET */
 
 * {
-
-margin: 0;
-padding: 0;
-
-color: #222429;
-
+  margin: 0;
+  padding: 0;
+  color: #222429;
 }
 
 
@@ -41,15 +34,11 @@ color: #222429;
 /* PADDING FÜR SEKTIONEN */
 
 #Abstand {
-
-    padding: 0em 10em;
-
+  padding: 0em 10em;
 }
 
 #ausgaben, #pda, #bestandsabgleich div, #weiteres, #links, #status, #titel, #verkaufsinfo {
-
   padding: 1em 0em;
-
 }
 
 
@@ -62,27 +51,23 @@ h1 {
 
   margin: 0;
   padding: 1em 0em;
-
   text-align: center;
   font-weight: lighter;
   text-transform: uppercase;
-
   color: #222429;
 
 }
 
 
 hr {
-
+  
   width: 7em;
   margin: auto;
   margin-top: 1em;
-
   border: none;
   height: 1px;
-
   background-color: #222429;
-
+  
 }
 
 
@@ -95,21 +80,16 @@ hr {
 /***** ELEMENTE *****/
 
 .button  {
-
-    border: 1px solid #222429;
-    border-radius: 4px;
-
-    color: #222429;
-    background-color: transparent;
-
+  border: 1px solid #222429;
+  border-radius: 4px;
+  color: #222429;
+  background-color: transparent;
 }
 
 .button:hover {
-
-    border-color: #F1EDEB;
-    color: #F1EDEB;
-    background-color: #34373e;
-
+  border-color: #F1EDEB;
+  color: #F1EDEB;
+  background-color: #34373e;
 }
 
 
@@ -117,15 +97,13 @@ hr {
 /***** SUCHZEILE *****/
 
 #Suchzeile {
-
+  
   width: 100%;
   padding: 1em 5em;
   border: none;
-
   text-align: center;
-
   background-color: #F1EDEB;
-
+  
 }
 
 #isbnTD {
@@ -146,12 +124,10 @@ hr {
 /* HILFE UND DESIGN-CHANGE */
 
 #Suchzeile a, #Suchzeile p {
-
+  
   display: inline;
-
   font-weight: bold;
   text-decoration: none;
-
   color: #222429;
 
 }
@@ -165,11 +141,10 @@ hr {
 /* SUCHFELDER UND BUTTONS */
 
 input, select {
-
+  
   padding: 0.4em;
   border: 1px solid #222429;
   border-radius: 4px;
-
   color: #222429;
 
 }
@@ -181,19 +156,14 @@ input, select {
 /***** ERGEBNIS | TITEL *****/
 
 #titel {
-
   text-align: center;
   color: #F1EDEB;
-
   background-color: #34373e;
-
 }
 
 #titel b, #titel i {
-
   font-size: 1.5em;
   color: #F1EDEB;
-
 }
 
 
@@ -203,16 +173,12 @@ input, select {
 /***** VERKAUFSINFOS *****/
 
 #verkaufsinfo td {
-
   line-height: 1.4em;
-
 }
 
 #verkaufsinfo td:nth-child(2) {
-
   padding: 0em 1.5em 0em 0.5em;
   /*text-align: justify;*/
-
 }
 
 
@@ -222,34 +188,26 @@ input, select {
 /***** VERSCHIEDENE AUSGABEN *****/
 
 #ausgaben table {
-
+  
   border-collapse: collapse;
   border: none;
   border-top: 2px solid #34373e;
   border-bottom: 2px solid #34373e;
-
+  
 }
 
-#ausgabenTable tr:nth-child(2), #ausgabenTable tr:nth-child(4), #ausgabenTable tr:nth-child(6), #ausgabenTable tr:nth-child(8),
-#ausgabenTable tr:nth-child(10), #ausgabenTable tr:nth-child(12), #ausgabenTable tr:nth-child(14), #ausgabenTable tr:nth-child(16), #ausgabenTable tr:nth-child(18) {
-
+#ausgabenTable tr:nth-child(even) {
     background-color: #F1EDEB;
-
 }
 
 #ausgaben td {
-
   padding: 0.5em;
   border: none;
-
   text-align: left;
-
 }
 
 #ausgaben td:first-of-type {
-
   text-align: center;
-
 }
 
 
@@ -257,33 +215,26 @@ input, select {
 /* AUSGABEN BUTTONS */
 
 #ausgaben .btn {
-
+  
   border: 1px solid;
   border-radius: 4px;
   padding: 0.3em;
-
   background-color: #fff;
-
+  
 }
 
 #ausgaben .btn, #ausgaben .btn * {
-
   display: inline;
-
 }
 
 #ausgaben .btn:hover {
-
   cursor: pointer;
   box-shadow: inset 0em 0em 0.2em;
-
 }
 
 #ausgaben .btn img {
-
   height: 1em;
   width: auto;
-
 }
 
 
@@ -303,51 +254,37 @@ input, select {
 }
 
 #verbuende * {
-
   border: none;
-
 }
 
 .verbuendeUeber {
-
   background-color: #34373e;
-
 }
 
 .verbuendeUeber * {
-
   color: #F1EDEB;
-
 }
 
 #verbuende tr:nth-child(2n+3) {
-
   background-color: #F1EDEB;
-
 }
 
 #verbuende td, #verbuende th {
-
   padding: 0.5em;
-
 }
 
 #verbuende th {
-
   padding-bottom: 1em;
-
 }
 
 /* text-decoration entfernen, RVK und Schlagwörter fett für Orientierung */
 #verbuende * {
-
   /*text-decoration: none;*/
-
 }
 
 #rvkB3KAT, #rvkHBZ, #rvkGBV, #rvkHEBIS, #rvkOBVSG, #rvkSWB, #rvkSWISS,
 #swB3KAT, #swHBZ, #swGBV, #swHEBIS, #swOBVSG, #swSWB, #swSWISS {
-
+  
   font-weight: bold;
 
 }
@@ -359,10 +296,8 @@ input, select {
 /***** LINKS *****/
 
 #links {
-
   line-height: 1.5em;
   text-align: center;
-
 }
 
 
@@ -372,10 +307,7 @@ input, select {
 /***** STATUS *****/
 
 #status {
-
   text-align: center;
-
   color: #222429;
   background-color: #F1EDEB;
-
 }
