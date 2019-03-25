@@ -120,7 +120,7 @@ function ppnEingabe(ppn, verbund) {
             var isbnString = data['isbn'].join(",");
             isbnEingabe(isbnString);
         } else {
-            $('#status').append('Keine zugehörige ISBN gefunden! vgl. <a href="' + verbund+'.php?ppn='+ppn+'">Details</a>');
+            $('#status').append('Keine zugehörige ISBN gefunden! (<a href="' + verbund+'.php?ppn='+ppn+'">Daten zum Titel</a>). Ohne ISBN ist aber keine Suche möglich.';
         }
     });
 }
