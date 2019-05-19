@@ -141,7 +141,7 @@ function renderLinks(linkArray) {
 
 function renderBestandSWB(bestandArray, id) {
     var bibArray = $.map(bestandArray, function(sigel) {
-        if (sigel == "180") {
+        if (sigel === "180") {
             return '<span style="border:2px solid red">180</span>';
         } else {
             return sigel;
@@ -149,6 +149,19 @@ function renderBestandSWB(bestandArray, id) {
     });
     var outputString = "Insgesamt "+bibArray.length+" Bibliotheken im <a href='http://swb.bsz-bw.de/DB=2.1/PPNSET?PPN="+id+"&INDEXSET=21' target='_blank'>SWB</a> mit Bestand: "+bibArray.join(", ");
     return outputString;
+}
+
+
+//Einfache Ersetzung von einigen speziellen Zeichen
+//zur Darstellung als Text in HTML. Insbesondere bei
+//Homonymzusätzen.
+function htmlEscape(str) {
+    return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
 }
 
 
@@ -216,9 +229,9 @@ function isbn10(z) {
  * eine 10-stellige ISBN oder eine 13-
  * stellige ISBN sein muss.
  */
-    if (z.length == 13) {
+    if (z.length === 13) {
         var t = ( z.substr(3, 1) + 2 * z.substr(4, 1) + 3 * z.substr(5, 1) + 4 * z.substr(6, 1) + 5 * z.substr(7, 1) + 6 * z.substr(8, 1) + 7 * z.substr(9, 1) + 8 * z.substr(10, 1) + 9 * z.substr(11, 1) ) % 11;
-        if (t == 10) {
+        if (t === 10) {
             t = 'X';
         }
         return z.substr(3, 9) + t;
@@ -235,23 +248,11 @@ function isbn13(z) {
  * stellige ISBN sein muss.
  */
     z = z.replace(/-/g, "").replace(/ /g, "").replace(/x/g, "X");
-    if (z.length == 10) {
+    if (z.length === 10) {
         z = '978' + z.substr(0, 9);
         var t = (10 - (( z.substr(0, 1) + 3 * z.substr(1, 1) + z.substr(2, 1) + 3 * z.substr(3, 1) + z.substr(4, 1) + 3 * z.substr(5, 1) + z.substr(6, 1) + 3 * z.substr(7, 1) + z.substr(8, 1) + 3 * z.substr(9, 1) + z.substr(10, 1) + 3 * z.substr(11, 1) ) % 10 )) % 10;
         return z + t;
     } else {
         return z;
     }
-}
-
-//Einfache Ersetzung von einigen speziellen Zeichen
-//zur Darstellung als Text in HTML. Insbesondere bei
-//Homonymzusätzen.
-function htmlEscape(str) {
-    return String(str)
-        .replace(/&/g, '&amp;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#39;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;');
 }
