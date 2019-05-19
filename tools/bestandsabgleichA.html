@@ -1,0 +1,120 @@
+<html>
+<head>
+<title>Bestandsabgleich</title>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+<style type="text/css">
+body { font-family:  Arial, Verdana, sans-serif; }
+</style>
+<script src="../isbn/jquery-3.2.1.min.js"></script>
+<script src="../isbn/clipboard.min.js"></script>
+<script type="text/javascript">
+<!--
+function listeEingabe() {
+	var isbnListe = $("#isbnListe").val();
+	$('#ausgabe').empty();
+	var isbnArray = isbnListe.split("\n");
+	$("#total").html(isbnArray.length);
+	$(isbnArray).each(function(index, value) {
+		check(index, value);
+	});
+}
+
+function check(index, value) {
+	$('#ausgabe').append('<div id="query-' + index + '" data-isbn="' + value + '"></div>');
+	var numberOfDigits = value.replace(/\D/g, '').length;
+	if (numberOfDigits>=9) {
+		var verbund = $("#verbund :selected").text();
+		var filter = $("#filter").val();
+		$.get("../isbn/" + verbund + ".php?format=json&isbn="+value, function(data) {
+			var bestand = [];
+			if (data.bestand && data.bestand.length > 0) {
+				bestand = data.bestand.filter(bib => RegExp("^" + filter + "$").test(bib));
+			}
+			if (bestand.length>0 && value) {
+				outputString = "VORHANDEN (" + bestand + ")";
+				$('#query-'+index).append(render(outputString, value));
+			} else {
+				if (document.getElementById("mitISBN").checked) {
+					$('#query-'+index).append(render(' FEHLT', value));
+				} else {
+					$('#query-'+index).append(render('0', value));
+				}
+			}
+			updateStatus();
+		});
+	} else {
+		$('#query-'+index).append('KEINE ISBN');
+		updateStatus();
+	}
+}
+
+function render(result, isbn) {
+	if (document.getElementById("mitISBN").checked) {
+		result = isbn + ' ' + result;
+	}
+	if (document.getElementById("mitLink").checked) {
+		return '<a href="../isbn/suche.html?isbn=' + isbn + '" target="_blank">' + result + '</a>';
+	} else {
+		return result;
+	}
+}
+
+// Statusanzeige aktualisieren
+function updateStatus() {
+	var status = parseInt($('#total').text())-$('#ausgabe div:empty').length;
+	$('#status').html(status);
+}
+//-->
+</script>
+
+</head>
+<body>
+
+<h1>Bestandsabgleich</h1>
+
+<p>Anhand einer Liste von ISBNs wird der Bestand einer Bibliothek geprüft und die Ergebnisse in der gleichen Reihenfolge wiedergegeben.</p>
+
+<h2>Eingabe</h2>
+
+<form>
+	<label>1. Verbund auswählen:</label>
+	<select id="verbund">
+		<option>k10plus</option>
+		<option>swb</option>
+		<option>gbv</option>
+		<option>b3kat</option>
+		<option>hebis</option>
+		<option>hbz</option>
+		<option>swiss</option>
+		<option>obvsg</option>
+	</select>
+	<p/>
+	<label>2. Nach Bibliothekssigel(n) filtern:</label>
+	<input id="filter" type="text" placeholder="z.B. 180">
+	(Eingabe von RegExp auch möglich, z.B. "21.*|180")
+	<p/>
+	<textarea id="isbnListe" cols="100" rows="20"></textarea><br/>
+	<input type="checkbox" name="verlinken" id="mitLink"> Mit Link 
+	<input type="checkbox" name="verlinken" id="mitISBN"> Mit ISBN 
+	<input type="button" value="Bestand prüfen" onclick='listeEingabe();' />
+</form>
+
+<h2>Ausgabe</h2>
+
+<p>Status: <span id="status">0</span> von <span id="total">0</span> ISBNs geprüft</p>
+
+<button class="btn" data-clipboard-target="#ausgabe">
+    In Zwischenablage kopieren 
+    <img src="../img/clippy.svg" alt="In Zwischenablage kopieren" width="16">
+</button>
+
+<div id='ausgabe' style='background-color:#F0F0F0'></div>
+
+
+
+<script type="text/javascript">
+new Clipboard('.btn');
+</script>
+
+</body>
+</html>
