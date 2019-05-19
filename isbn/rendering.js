@@ -147,7 +147,7 @@ function renderBestandSWB(bestandArray, id) {
             return sigel;
         }
     });
-    var outputString = "Insgesamt "+bibArray.length+" Bibliotheken im <a href='http://swb.bsz-bw.de/DB=2.1/PPNSET?PPN="+id+"&INDEXSET=1' target='_blank'>SWB</a> mit Bestand: "+bibArray.join(", ");
+    var outputString = "Insgesamt "+bibArray.length+" Bibliotheken im <a href='http://swb.bsz-bw.de/DB=2.1/PPNSET?PPN="+id+"&INDEXSET=21' target='_blank'>SWB</a> mit Bestand: "+bibArray.join(", ");
     return outputString;
 }
 

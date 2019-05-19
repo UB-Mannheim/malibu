@@ -44,7 +44,7 @@ $standardMarcMap = array(
     'sw' => array(
         'mainPart' => '//datafield[starts-with(@tag,"6") and (subfield[@code="2"]="gbv" or subfield[@code="2"]="gnd")]',
         'value' => './subfield[@code="a" or @code="t"]',
-        'additional' => './subfield[@code="9"]',
+        'additional' => './subfield[@code="9" or @code="g"]',
         'key' => './subfield[@code="0" and contains(text(), "(DE-588)")]'
         ),
         'produktSigel' => '//datafield[@tag="912" and not(@ind2="7")]/subfield[@code="a"]'
