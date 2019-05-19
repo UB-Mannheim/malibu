@@ -21,7 +21,9 @@ The main components are
   ([Demo](http://data.bib.uni-mannheim.de/malibu/isbn/suche.html)),
 * a search tool for the British National Bibliography weekly updates
   ([Demo](http://data.bib.uni-mannheim.de/malibu/bnb/recherche.php)) and
-* a possibility to check for a list of isbn the holdings in the library ([Demo which is configured for Mannheim University Library](http://data.bib.uni-mannheim.de/malibu/tools/bestandsabgleich.html)).
+* a possibility to check for a list of ISBNs the holdings in the library
+   - [Demo for the Mannheim University Library](http://data.bib.uni-mannheim.de/malibu/tools/bestandsabgleich.html)
+   - [General Demo](http://data.bib.uni-mannheim.de/malibu/tools/bestandsabgleichA.html)
 
 
 ## Docker
@@ -42,7 +44,7 @@ More informations about how to install malibu on Debian systems and setting up a
 
 ## Copyright and License
 
-Copyright (c) 2013 – 2018 Universitätsbibliothek Mannheim
+Copyright (c) 2013 – 2019 Universitätsbibliothek Mannheim
 
 Author: [Philipp Zumstein](https://github.com/zuphilip) (UB Mannheim)
 
