@@ -146,7 +146,7 @@ if ($foundOnAmazon) {
 
 $urlGoogle = "https://www.googleapis.com/books/v1/volumes?q=ISBN:$n13";
 $headerGoogle = get_headers($urlGoogle, 1);
-$foundOnGoogle = !strpos($headerGoogle[0], '404 NotFound');
+$foundOnGoogle = !strpos($headerGoogle[0], '404 NotFound') && !strpos($headerGoogle[0], '403 Forbidden');
 
 if ($foundOnGoogle) {
     $contentGoogle = file_get_contents($urlGoogle);
