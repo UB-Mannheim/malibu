@@ -37,7 +37,7 @@ function renderRVK(rvkArray) {
             // Die Klassenbezeichnung hier benützen wir später für das
             // dazuladen der Notationen im title-Attribute.
         }
-        return rvkArray.join(', ');
+        return rvkArray.sort().join(', ');
     }
 }
 function renderSigel(sigelArray){
