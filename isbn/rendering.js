@@ -175,7 +175,7 @@ function renderSW(swObject) {
             swArray.push(key);
         }
     });
-    return swArray.join(', ');
+    return swArray.join('; ');
 }
 
 function bestellInfo(databaseText, currentRecord) {
