@@ -4,6 +4,5 @@ DirectoryIndex suche.html
 
 # Zugriff auf config.php verbieten
 <files config.php>
-Order deny,allow
-deny from all
+  Require all denied
 </files>
