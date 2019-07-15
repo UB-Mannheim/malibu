@@ -46,7 +46,15 @@ if (isset($_GET['isbn'])) {
     $suchStringSWB = implode(' or ', $nArray);
 }
 $filteredSuchString = 'alma.mms_tagSuppressed=false+AND+(' . $suchString . ')';
-$result = file_get_contents($urlBase . $filteredSuchString);
+# work around ExLibris server configuration issue
+$contextOptions = [
+    'ssl' => [
+        'verify_peer' => true,
+        'ciphers' => 'DEFAULT@SECLEVEL=1',
+    ],
+];
+$context = stream_context_create($contextOptions);
+$result = file_get_contents($urlBase . $filteredSuchString, false, $context);
 
 if ($result === false) {
     header('HTTP/1.1 400 Bad Request');

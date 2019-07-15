@@ -20,7 +20,7 @@ an environment for code development.
 ## Server configuration
 
 ### For Debian 7 (Apache 2.2)
-You need the php library <a href="http://php.net/manual/en/book.yaz.php">yaz</a> on the server. For Debian 7 (Apache 2.2):
+You need the php library <a href="http://php.net/manual/en/book.yaz.php">yaz</a> on the server.
 
 1. <code>apt-get install yaz libyaz4-dev php5-dev php-pear</code> (maybe you have already some packages)
 2. <code>pecl install yaz</code>
@@ -32,7 +32,7 @@ which is configured by `extension_dir` in
 (e.g. <code>cp /usr/lib/php5/20090626/yaz.so /usr/lib/php5/20100525/yaz.so</code> in our case).
 
 ### For Debian 8 (Apache 2.4)
-You need the php library <a href="http://php.net/manual/en/book.yaz.php">yaz</a> on the server. For Debian 8 (Apache 2.4):
+You need the php library <a href="http://php.net/manual/en/book.yaz.php">yaz</a> on the server.
 
 * <code>apt-get install yaz libyaz4-dev php5-dev php-pear</code> (maybe you have already some packages)
 * <code>pecl install yaz</code>
@@ -54,11 +54,30 @@ service apache2 restart
 
 ### For Debian 9 (Apache 2.4 and PHP 7.0)
 You need the php library <a href="http://php.net/manual/en/book.yaz.php">yaz</a> on the server.
-For Debian 9 (Apache 2.4, PHP 7.0):
 
 * <code>apt-get install yaz libyaz4-dev php-dev php-pear libapache2-mod-php</code> (maybe you already have some packages)
 * <code>pecl install yaz</code>
 * create new file `/etc/php/7.0/mods-available/yaz.ini` and add
+```sh
+; configuration for php YAZ module
+; priority=20
+extension=yaz.so
+```
+* enable the YAZ module
+```sh
+phpenmod yaz
+```
+* restart Apache2 server
+```sh
+systemctl restart apache2
+```
+
+### For Debian 10 (Apache 2.4 and PHP 7.3)
+You need the php library <a href="http://php.net/manual/en/book.yaz.php">yaz</a> on the server.
+
+* <code>apt-get install yaz libyaz-dev php-dev php-pear libapache2-mod-php</code> (maybe you already have some packages)
+* <code>pecl install yaz</code>
+* create new file `/etc/php/7.3/mods-available/yaz.ini` and add
 ```sh
 ; configuration for php YAZ module
 ; priority=20
