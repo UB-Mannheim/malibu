@@ -1,0 +1,58 @@
+#!/usr/bin/env python3
+
+debug = False
+
+import io, os, re, requests, sys, time, zipfile
+from bs4 import BeautifulSoup
+
+maxretry = 3
+datadir = './BNBDaten' if len(sys.argv) < 2 else sys.argv[1]
+urlbase = 'https://www.bl.uk'
+urlpath = '/collection-metadata/new-bnb-records'
+
+if not os.path.exists(datadir):
+    os.makedirs(datadir)
+
+files = [ f.lower() for f in os.listdir(datadir) if f.lower().endswith('.rdf') ]
+page = requests.get(urlbase + urlpath)
+soup = BeautifulSoup(page.text, 'html.parser')
+
+links = soup.find_all('a', href=re.compile("bnbrdf"))
+if len(links) == 0:
+    print(page)
+    sys.exit(1)
+    
+for link in links:
+    zipurl = link.get('href')
+    if not zipurl.startswith('http'):
+        zipurl = urlbase + zipurl
+    
+    rdffile = re.sub(r'.*(bnbrdf_n\d+)\.zip.*', r'\1.rdf', zipurl, flags=re.I)
+    if not rdffile in files:
+        for retry in range(maxretry):
+            if debug: print("Downloading", rdffile, "from", zipurl, "retry", retry)
+            time.sleep(retry+1)
+            r = requests.get(zipurl)
+            try:
+                with zipfile.ZipFile(io.BytesIO(r.content)) as z:
+                    for f in z.infolist():
+                        name, date_time = f.filename, f.date_time
+                        name = os.path.join(datadir, name)
+                        with open(name, 'wb') as outfile:
+                            outfile.write(z.open(f).read())
+                        date_time = time.mktime(date_time + (0,0,-1))
+                        os.utime(name, (date_time, date_time))
+            except:
+                if debug:
+                    print("Caught exception while unzipping")
+                    print("Status code", r.status_code)
+                continue
+            if r.status_code != 200:
+                if debug: print("Status code", r.status_code)
+                continue
+            if r.headers['content-type'] != 'application/x-zip-compressed':
+                if debug: print("Content type", r.headers['content-type'])
+                continue
+            break
+        else:
+            print("Error downloading '%s'" % rdffile)
