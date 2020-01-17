@@ -102,8 +102,11 @@ before the first start:
 3. Copy `isbn/conf.example.php` to`isbn/conf.php` and costumize the values
 4. Copy `isbn/paketinfo.example.js` to `isbn/paketinfo.js` and costumize the values
 
-Moroever, for the BNB data you have to run the script `getBNBData.sh`, which we
-included as a cronjob, which runs every Saturday, at 10 am `(010**6)`.
+Moreover, for the retrieval of data from the British National Library, you should set up CRON to run the script `bnb/getBNBData` regularly:
+```sh
+# Update British National Library RDF files for malibu
+0 10 * * 6 /var/www/html/malibu/bnb/getBNBData /var/www/html/malibu/bnb/BNBDaten
+```
 
 
 ## Configurations for code development
