@@ -18,19 +18,19 @@ BNB weekly sowie weitere kleine Tools wie etwa ein Tool für den Bestandsabgleic
 The main components are
 
 * a mashup of various library and bookseller data on books by ISBN
-  ([Demo](http://data.bib.uni-mannheim.de/malibu/isbn/suche.html)),
+  ([Demo](https://data.bib.uni-mannheim.de/malibu/isbn/suche.html)),
 * a search tool for the British National Bibliography weekly updates
-  ([Demo](http://data.bib.uni-mannheim.de/malibu/bnb/recherche.php)) and
+  ([Demo](https://data.bib.uni-mannheim.de/malibu/bnb/recherche.php)) and
 * a possibility to check for a list of ISBNs the holdings in the library
-   - [Demo for the Mannheim University Library](http://data.bib.uni-mannheim.de/malibu/tools/bestandsabgleich.html)
-   - [General Demo](http://data.bib.uni-mannheim.de/malibu/tools/bestandsabgleichA.html)
+   - [Demo for the Mannheim University Library](https://data.bib.uni-mannheim.de/malibu/tools/bestandsabgleich.html)
+   - [General Demo](https://data.bib.uni-mannheim.de/malibu/tools/bestandsabgleichA.html)
 
 
 ## Docker
 
 The docker image is available from Dockerhub as [ubma/malibu](https://hub.docker.com/r/ubma/malibu/):
 
-[![Docker image](http://dockeri.co/image/ubma/malibu)](https://hub.docker.com/r/ubma/malibu/)
+[![Docker image](https://dockeri.co/image/ubma/malibu)](https://hub.docker.com/r/ubma/malibu/)
 
 You can run it from the command line (provided that you have already [docker installed](https://docs.docker.com/engine/installation/)):
 
@@ -59,7 +59,7 @@ See https://github.com/UB-Mannheim/malibu/wiki/Bibliografie
 
 The tools are depending on some third party libraries and fonts:
 
-* [yaz](http://www.indexdata.com/phpyaz) ([Revised BSD](http://www.indexdata.com/licences/revised-bsd))
+* [yaz](https://www.indexdata.com/resources/software/phpyaz/) ([Revised BSD](https://www.indexdata.com/resources/licenses/))
 * [jQuery](https://github.com/jquery/jquery) (MIT license)
 * [clipboard.js](https://github.com/zenorocha/clipboard.js/) (MIT license)
 * clippy.svg from https://github.com/github/octicons (SIL Font)
