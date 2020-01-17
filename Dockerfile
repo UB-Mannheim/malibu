@@ -17,8 +17,9 @@ RUN apt-get update \
 
 WORKDIR /var/www/html/malibu
 
-# Copy the complete directory structure sans entries in .dockerignore
-COPY . .
+# create minimal set of directories and files needed for retrieving external files
+RUN  mkdir isbn bnb
+COPY bnb/getBNBData bnb/getBNBData
 
 # From the best practices: you should use curl or wget instead of ADD
 # https://docs.docker.com/engine/userguide/eng-image/dockerfile_best-practices/#add-or-copy
@@ -26,7 +27,10 @@ RUN curl -o "isbn/jquery-${JQUERY}.min.js" "https://code.jquery.com/jquery-${JQU
 RUN curl -o "isbn/clipboard.min.js" "https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/${CLIPBOARD}/clipboard.min.js"
 
 # Download BNB data
-RUN python3 bnb/getBNBData "$PWD/bnb/BNBDaten"
+RUN chmod +x bnb/getBNBData && bnb/getBNBData "$PWD/bnb/BNBDaten"
+
+# Copy the complete directory structure sans entries in .dockerignore
+COPY . .
 
 # Configure
 RUN mv isbn/conf.example.php isbn/conf.php && \
