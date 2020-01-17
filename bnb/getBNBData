@@ -1,9 +1,20 @@
 #!/usr/bin/env python3
 
+# usage: getBNBData [target directory]
+#
+#        if the target directory is omitted, ./BNBDaten is used by default
+
 debug = False
 
-import io, os, re, requests, sys, time, zipfile
+import io
+import os
+import re
+import sys
+import time
+
 from bs4 import BeautifulSoup
+import requests
+import zipfile
 
 maxretry = 3
 datadir = './BNBDaten' if len(sys.argv) < 2 else sys.argv[1]
