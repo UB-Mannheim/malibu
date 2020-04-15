@@ -11,6 +11,7 @@ an environment for code development.
   * [For Debian 7 (Apache 2.2)](#for-debian-7-apache-22)
   * [For Debian 8 (Apache 2.4)](#for-debian-8-apache-24)
   * [For Debian 9 (Apache 2.4 and PHP 7.0)](#for-debian-9-apache-24-and-php-70)
+  * [For Debian 10 (Apache 2.4 and PHP 7.3)](#for-debian-10-apache-24-and-php-73)
 * [Initializing and Costumizing](#initializing-and-costumizing)
 * [Configuration for code development](#configurations-for-code-development)
   * [Docker](#docker)
