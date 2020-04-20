@@ -12,6 +12,7 @@ an environment for code development.
   * [For Debian 8 (Apache 2.4)](#for-debian-8-apache-24)
   * [For Debian 9 (Apache 2.4 and PHP 7.0)](#for-debian-9-apache-24-and-php-70)
   * [For Debian 10 (Apache 2.4 and PHP 7.3)](#for-debian-10-apache-24-and-php-73)
+  * [For UBUNTU 18.04 LTS (Apache 2.4 and PHP 7.4)](#for-ubuntu-1804-lts-apache-24-and-php-74)
 * [Initializing and Costumizing](#initializing-and-costumizing)
 * [Configuration for code development](#configurations-for-code-development)
   * [Docker](#docker)
@@ -93,6 +94,34 @@ phpenmod yaz
 systemctl restart apache2
 ```
 
+### For UBUNTU 18.04 LTS (Apache 2.4 and PHP 7.4)
+You need the php library <a href="http://php.net/manual/en/book.yaz.php">yaz</a> on the server.
+
+* <code>apt-get install yaz libyaz5-dev php-dev php-pear libapache2-mod-php</code> (maybe you already have some packages)
+
+Since the php-pear-Package installed via apt-get is to old (1.10.8) and an upgrade "pear upgrade PEAR" will fail, you should follow these additional steps to force an upgrade to pear 1.10.11, which is essential for compiling the Yaz-Module (yaz.so) for PHP 7.4 via pecl
+<code>
+sudo pear channel-update pear.php.net
+sudo pecl channel-update pecl.php.net
+sudo pear upgrade --force channel://pear.php.net/Archive_Tar-1.4.9 PEAR
+</code>
+Now, you can nearly follow the description for Debian 10 / PHP 7.3
+* <code>pecl install yaz</code>
+* create new file `/etc/php/7.4/mods-available/yaz.ini` and add
+```sh
+; configuration for php YAZ module
+; priority=20
+extension=yaz.so
+```
+* enable the YAZ module
+```sh
+phpenmod yaz
+```
+* restart Apache2 server
+```sh
+systemctl restart apache2
+```
+
 ## Initializing and Costumizing
 
 Some steps have to be performed after the server configuration and
@@ -142,4 +171,3 @@ To rebuild the image or run a container with the current development version:
 make -C dist docker
 make -C dist docker-run
 ```
-
