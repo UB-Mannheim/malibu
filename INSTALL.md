@@ -105,7 +105,7 @@ sudo pear channel-update pear.php.net
 sudo pecl channel-update pecl.php.net
 sudo pear upgrade --force channel://pear.php.net/Archive_Tar-1.4.9 PEAR
 </code>
-Now you can nearly follow the dicription for Debian 10 / PHP 7.3
+Now, you can nearly follow the description for Debian 10 / PHP 7.3
 * <code>pecl install yaz</code>
 * create new file `/etc/php/7.4/mods-available/yaz.ini` and add
 ```sh
