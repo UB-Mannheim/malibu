@@ -100,9 +100,11 @@ You need the php library <a href="http://php.net/manual/en/book.yaz.php">yaz</a>
 * <code>apt-get install yaz libyaz5-dev php-dev php-pear libapache2-mod-php</code> (maybe you already have some packages)
 
 Since the php-pear-Package installed via apt-get is to old (1.10.8) and an upgrade "pear upgrade PEAR" will fail, you should follow these additional steps to force an upgrade to pear 1.10.11, which is essential for compiling the Yaz-Module (yaz.so) for PHP 7.4 via pecl
-* sudo pear channel-update pear.php.net
-* sudo pecl channel-update pecl.php.net
-* sudo pear upgrade --force channel://pear.php.net/Archive_Tar-1.4.9 PEAR
+<code>
+sudo pear channel-update pear.php.net
+sudo pecl channel-update pecl.php.net
+sudo pear upgrade --force channel://pear.php.net/Archive_Tar-1.4.9 PEAR
+</code>
 Now you can nearly follow the dicription for Debian 10 / PHP 7.3
 * <code>pecl install yaz</code>
 * create new file `/etc/php/7.4/mods-available/yaz.ini` and add
