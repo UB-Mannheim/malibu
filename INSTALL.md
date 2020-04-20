@@ -12,7 +12,7 @@ an environment for code development.
   * [For Debian 8 (Apache 2.4)](#for-debian-8-apache-24)
   * [For Debian 9 (Apache 2.4 and PHP 7.0)](#for-debian-9-apache-24-and-php-70)
   * [For Debian 10 (Apache 2.4 and PHP 7.3)](#for-debian-10-apache-24-and-php-73)
-  * [For UBUNTU 18.04 LTS (Apache 2.4 and PHP 7.4)](#for-ubuntu-18.04-lts-apache-24-and-php-74)
+  * [For UBUNTU 18.04 LTS (Apache 2.4 and PHP 7.4)](#for-ubuntu-1804-lts-apache-24-and-php-74)
 * [Initializing and Costumizing](#initializing-and-costumizing)
 * [Configuration for code development](#configurations-for-code-development)
   * [Docker](#docker)
@@ -169,4 +169,3 @@ To rebuild the image or run a container with the current development version:
 make -C dist docker
 make -C dist docker-run
 ```
-
