@@ -143,7 +143,7 @@ function isbnEingabe(n) {
     var suchString = n.replace(/,/g, ' or ');
     $('#status').append("Gesucht wurden ISBN " + suchString);
     $('#suche'+'SWB').html('<a href="http://swb.bsz-bw.de/DB=2.1/SET=1/TTL=1/CMD?ACT=SRCHA&IKT=1007&TRM='+suchString+'" target="_blank">SWB</a>');
-    $('#suche'+'K10PLUS').html('<a href="https://kxp.k10plus.de/DB=2.1/SET=1/TTL=1/CMD?ACT=SRCHA&IKT=7&TRM='+suchString+'" target="_blank">K10PLUS (GVK)</a>');
+    $('#suche'+'K10PLUS').html('<a href="https://kxp.k10plus.de/DB=2.0/SET=1/TTL=1/CMD?ACT=SRCHA&IKT=7&TRM='+suchString+'" target="_blank">K10PLUS</a>');
     $('#suche'+'HEBIS').html('<a href="http://cbsopac.rz.uni-frankfurt.de/DB=2.1/SET=1/TTL=1/CMD?ACT=SRCHA&IKT=8520&TRM='+nArray[0]+'" target="_blank">HEBIS</a>');
     $('#suche'+'B3KAT').html('<a href="https://opacplus.bib-bvb.de/TouchPoint_touchpoint/start.do?Query=-1%3D%22' + nArray[0] + '%22&Language=De&SearchProfile=" target="_blank">B3KAT</a>');
     $('#suche'+'HBZ').html('<a href="http://okeanos-www.hbz-nrw.de/F/?FUNC=find-c&CCL_TERM=+IBN=%28'+nArray[0]+'" target="_blank">HBZ</a>');
@@ -366,8 +366,8 @@ function isbnEingabe(n) {
         <td id="ddcSWB"></td>
         <td id="swSWB"></td>
     </tr>
-	<tr>
-        <td><div id="sucheK10PLUS">K10PLUS (GVK)</div><div id="bestandK10PLUS"></div></td>
+    <tr>
+        <td><div id="sucheK10PLUS">K10PLUS</div><div id="bestandK10PLUS"></div></td>
         <td id="rvkK10PLUS"></td>
         <td id="ddcK10PLUS"></td>
         <td id="swK10PLUS"></td>

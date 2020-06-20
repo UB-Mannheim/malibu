@@ -20,33 +20,34 @@
  * k10plus?isbn=ISBN&format=json
  * k10plus?ppn=PPN&format=json
  *   Ausgabe erfolgt als JSON
+ * k10plus?swn=SWN
+ *   SWN ist die alte SWB PPN
  *
  * Sucht übergebene ISBN bzw. PPN im K10PLus-Katalog
  * und gibt maximal 10 Ergebnisse als MARCXML zurück
  * bzw. als JSON.
+ *
+ * Info zur SRU-Schnittstelle: https://wiki.k10plus.de/display/K10PLUS/SRU
  */
 
 include 'lib.php';
 
-if (isset($_GET['ppn'])) {
-    $ppn = trim($_GET['ppn']);
-    $suchString = 'pica.ppn=' . $ppn;
-    //TODO Können wir hier auch nach früheren SWB PPNs mitsuchen?
-}
-
-/*
-https://wiki.k10plus.de/display/K10PLUS/SRU
-
-http://sru.k10plus.de/gvk?version=1.1&operation=searchRetrieve&query=9781470435172&maximumRecords=10&recordSchema=marcxml
-*/
-
-$urlBase = 'http://sru.k10plus.de/gvk?version=1.1&operation=searchRetrieve&query=';
+$urlBase = 'https://sru.k10plus.de/opac-de-627?version=1.1&operation=searchRetrieve&query=';
 $urlSuffix = '&maximumRecords=10&recordSchema=marcxml';
 
 if (isset($_GET['isbn'])) {
     $n = trim($_GET['isbn']);
     $nArray = explode(",", $n);
-    $suchString = 'pica.isb=' . implode('+OR+pica.isb=', $nArray);
+    $suchString = 'pica.isb%3D' . implode('+OR+pica.isb=', $nArray);
+}
+if (isset($_GET['ppn'])) {
+    $ppn = trim($_GET['ppn']);
+    $suchString = 'pica.ppn%3D' . $ppn;
+}
+
+if (isset($_GET['swn'])) {
+    $ppn = trim($_GET['swn']); // alte SWB PPN
+    $suchString = 'pica.swn%3D' . $ppn;
 }
 
 $result = file_get_contents($urlBase . $suchString . $urlSuffix);
