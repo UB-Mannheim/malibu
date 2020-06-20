@@ -30,6 +30,12 @@ body {
 }
 
 
+/* BESUCHTE LINKS */
+
+a:visited {
+  color: #606060;
+}
+
 
 /* PADDING FÜR SEKTIONEN */
 
@@ -289,7 +295,9 @@ input, select {
 
 }
 
-
+.rvkError, .rvkError:visited {
+  color: red;
+}
 
 
 

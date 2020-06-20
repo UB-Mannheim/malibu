@@ -67,10 +67,15 @@ function addBenennung(index, element) {
     //z.B. https://rvk.uni-regensburg.de/api/json/ancestors/SU+680?jsonp=wrapper
     var rvkApi = 'https://rvk.uni-regensburg.de/api/json/ancestors/' + className.replace('-', '+') + '?jsonp=?';
     $.getJSON(rvkApi, function(json) {
-        if (json.node.ancestor) {//Benennung des Knoten + Benennung des Vorfahrens
-            $('.'+className).attr("title", json.node.benennung + ' <-- ' + json.node.ancestor.node.benennung);
-        } else {//Benennung des Knoten
-            $('.'+className).attr("title", json.node.benennung);
+        if ("node" in json) {
+            if (json.node.ancestor) {//Benennung des Knoten + Benennung des Vorfahrens
+                $('.'+className).attr("title", json.node.benennung + ' <-- ' + json.node.ancestor.node.benennung);
+            } else {//Benennung des Knoten
+                $('.'+className).attr("title", json.node.benennung);
+            }
+        } else if ("error-message" in json) {
+            $('.'+className).attr("title", "ERROR: "+json['error-message']);
+            $('.'+className).addClass("rvkError");
         }
     });
 }
