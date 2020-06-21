@@ -40,6 +40,35 @@ function toggleHidden() {
 </script>
 <script type="text/javascript">
 
+
+function aggregateRVK() {
+    var rvkNodes = $("#rvkSWB a, #rvkK10PLUS a, #rvkB3KAT a, #rvkHBZ a, #rvkHEBIS a, #rvkSWISS a, #rvkOBVSG a");
+    var frequencies = {};
+    var rvkExample = {};
+    for (let rvkNode of rvkNodes) {
+        let rvk = rvkNode.textContent;
+        frequencies[rvk] = frequencies[rvk] ? frequencies[rvk] + 1 : 1;
+        rvkExample[rvk] = rvkNode;
+    }
+    var rvkSorted = Object.keys(frequencies);
+    rvkSorted.sort(function(a, b) {
+        return (frequencies[b] - frequencies[a]);
+    });
+    $("#rvkaggregiert").html("");
+    for (let rvk of rvkSorted) {
+         $("#rvkaggregiert").append("<p>" + frequencies[rvk] + " x ");
+         $(rvkExample[rvk]).clone().appendTo("#rvkaggregiert");
+         $("#rvkaggregiert").append("</p><br/>");
+    }
+
+    document.getElementById("rvkAggregiertColumn").style = "";
+    document.getElementById("rvkColumn").style = "visibility: collapse";
+}
+
+function hideRVKAggregation() {
+    document.getElementById("rvkColumn").style = "";
+    document.getElementById("rvkAggregiertColumn").style = "visibility: collapse";
+}
 	
 
 //Funktion für Tauschen des Stylesheets
@@ -354,10 +383,17 @@ function isbnEingabe(n) {
 </div>
 
 <table id="verbuende" border="1" width="100%">
+    <colgroup>
+        <col id="verbundColumn">
+        <col id="rvkColumn">
+        <col id="rvkAggregiertColumn" style="visibility: collapse">
+        <col id="ddcColumn">
+        <col id="swColumn">
+    </colgroup>
     <tr class="verbuendeUeber">
         <th>&nbsp;</th>
-        <th>RVK-Notation  <a href="">&gt;&gt;&gt;</a></th>
-        <th><a href=" href="">&lt;&lt;&lt;</a>  RVK aggregiert</th>
+        <th>RVK-Notation  <a onclick="aggregateRVK()">&gt;&gt;&gt;</a></th>
+        <th><a onclick="hideRVKAggregation()">&lt;&lt;&lt;</a>  RVK aggregiert</th>
         <th>DDC-Notation</th>
         <th>Schlagwörter</th>
     </tr>
