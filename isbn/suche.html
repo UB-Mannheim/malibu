@@ -51,22 +51,21 @@ function aggregateRVK() {
         rvkExample[rvk] = rvkNode;
     }
     var rvkSorted = Object.keys(frequencies);
-    rvkSorted.sort(function(a, b) {
-        return (frequencies[b] - frequencies[a]);
-    });
+    rvkSorted.sort();
     $("#rvkaggregiert").html("");
     for (let rvk of rvkSorted) {
-         $("#rvkaggregiert").append(frequencies[rvk] + " x ");
-         $(rvkExample[rvk]).clone().appendTo("#rvkaggregiert");
-         let jsonstring = $("#rvkaggregiert a").last().attr("data-json");
+         
+         let jsonstring = $(rvkExample[rvk]).attr("data-json");
          if (jsonstring) {
-    	     let jsondata = JSON.parse(jsonstring);
+             let jsondata = JSON.parse(jsonstring);
              let treeconcepts = [];
+             let treenotations = [];
              let currentjson = jsondata;
              while (currentjson) {
                  if ("node" in currentjson) {
                      if ("benennung" in currentjson.node) {
-        	         treeconcepts.push(currentjson.node.benennung);
+                         treeconcepts.unshift(currentjson.node.benennung);
+                         treenotations.unshift(currentjson.node.notation);
                      }
                      if ("ancestor" in currentjson.node) {
                          currentjson = currentjson.node.ancestor;
@@ -77,9 +76,29 @@ function aggregateRVK() {
                      currentjson = null;
                  }
              }
-             $("#rvkaggregiert").append("<br/>" + treeconcepts.join("<br/> <--"));
+             var parent = $("#rvkaggregiert");
+             for (let i=0; i<treeconcepts.length; i++) {
+                 let node = treeconcepts[i];
+                 let notation = treenotations[i];
+                 let check = $("#rvkaggregiert div[title='" + notation + "']");
+                 if (check.length == 0) {
+                     if (i==0) {
+                         $("#rvkaggregiert").append("<br/>");
+                     }
+                     parent.append("<div title='" + notation + "'>" + "|+".repeat(i) + node + "</div>");
+                 }
+                 parent = $("#rvkaggregiert div[title='" + notation + "']");
+             }
+             
          }
-         $("#rvkaggregiert").append("</p><br/>");
+         if (rvkExample[rvk].classList.contains("rvkError")) {
+             parent = $("#rvkaggregiert");
+             parent.append("<br/>");
+         } else {
+              parent.append(": ");
+         }
+      	 parent.append("<b>" + frequencies[rvk] + " x </b>");
+         $(rvkExample[rvk]).clone().appendTo(parent);
     }
 
     document.getElementById("rvkAggregiertColumn").style = "";
