@@ -30,6 +30,12 @@ body {
 }
 
 
+/* BESUCHTE LINKS */
+
+a:visited {
+  color: #606060;
+}
+
 
 /* PADDING FÜR SEKTIONEN */
 
@@ -265,6 +271,10 @@ input, select {
   color: #F1EDEB;
 }
 
+.verbuendeUeber th {
+  text-align: left;
+}
+
 #verbuende tr:nth-child(2n+3) {
   background-color: #F1EDEB;
 }
@@ -289,7 +299,9 @@ input, select {
 
 }
 
-
+.rvkError, .rvkError:visited {
+  color: red;
+}
 
 
 
