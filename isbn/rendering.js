@@ -77,6 +77,7 @@ function addBenennung(index, element) {
             $('.'+className).attr("title", "ERROR: "+json['error-message']);
             $('.'+className).addClass("rvkError");
         }
+        $('.'+className).attr("data-json", JSON.stringify(json));
     });
 }
 

@@ -56,8 +56,29 @@ function aggregateRVK() {
     });
     $("#rvkaggregiert").html("");
     for (let rvk of rvkSorted) {
-         $("#rvkaggregiert").append("<p>" + frequencies[rvk] + " x ");
+         $("#rvkaggregiert").append(frequencies[rvk] + " x ");
          $(rvkExample[rvk]).clone().appendTo("#rvkaggregiert");
+         let jsonstring = $("#rvkaggregiert a").last().attr("data-json");
+         if (jsonstring) {
+    	     let jsondata = JSON.parse(jsonstring);
+             let treeconcepts = [];
+             let currentjson = jsondata;
+             while (currentjson) {
+                 if ("node" in currentjson) {
+                     if ("benennung" in currentjson.node) {
+        	         treeconcepts.push(currentjson.node.benennung);
+                     }
+                     if ("ancestor" in currentjson.node) {
+                         currentjson = currentjson.node.ancestor;
+                     } else {
+                         currentjson = null;
+                     }
+                 } else {
+                     currentjson = null;
+                 }
+             }
+             $("#rvkaggregiert").append("<br/>" + treeconcepts.join("<br/> <--"));
+         }
          $("#rvkaggregiert").append("</p><br/>");
     }
 
