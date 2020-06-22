@@ -301,7 +301,7 @@ input, select {
 }
 
 .rvkError, .rvkError:visited {
-  color: red;
+  color: darkred;
 }
 
 
