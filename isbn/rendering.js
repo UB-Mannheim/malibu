@@ -32,7 +32,7 @@ function renderRVK(rvkArray) {
     } else {
         for (var i=0; i<rvkArray.length; i++) {
             var rvk = rvkArray[i];
-            var rvkUrl = 'http://rvk.uni-regensburg.de/notation/' + rvk.replace(' ', '%20');
+            var rvkUrl = 'https://rvk.uni-regensburg.de/notation/' + rvk.replace(' ', '%20');
             rvkArray[i] = '<a href="' + rvkUrl + '" target="_blank" class="' + rvk.replace(' ', '-') + '">' + rvk + '</a>';
             // Die Klassenbezeichnung hier benützen wir später für das
             // dazuladen der Notationen im title-Attribute.
@@ -45,7 +45,7 @@ function renderSigel(sigelArray){
 	var trenner = ", ";
 	for (var i=0; i<sigelArray.length; i++) { 
 		if (sigelArray[i].startsWith("ZDB-")) { // render Sigel starting with ZDB- as links
-			sigelMitZDBAlsLinks += '<a href="http://sigel.staatsbibliothek-berlin.de/nc/suche/?isil='+ sigelArray[i] + '" '  + 'target="_blank">' + sigelArray[i] + '</a>';
+			sigelMitZDBAlsLinks += '<a href="https://sigel.staatsbibliothek-berlin.de/nc/suche/?isil='+ sigelArray[i] + '" '  + 'target="_blank">' + sigelArray[i] + '</a>';
 		} else { // render other Sigel normally
 			sigelMitZDBAlsLinks += sigelArray[i];
 		}
@@ -88,7 +88,7 @@ function renderDDC(ddcArray) {
         for (var i=0; i<ddcArray.length; i++) {
             var ddc = ddcArray[i];
             //var ddcUrl = 'http://dewey.info/class/' + ddc + '/';
-            var ddcUrl = 'http://deweysearchde.pansoft.de/webdeweysearch/executeSearch.html?lastScheduleRecord=' + ddc + '&lastTableRecord=&query=' + ddc;
+            var ddcUrl = 'https://deweysearchde.pansoft.de/webdeweysearch/executeSearch.html?lastScheduleRecord=' + ddc + '&lastTableRecord=&query=' + ddc;
             ddcArray[i] = '<a href="' + ddcUrl + '" target="_blank">' + ddc + '</a>';
         }
         return ddcArray.join(', ');
@@ -153,7 +153,7 @@ function renderBestandSWB(bestandArray, id) {
             return sigel;
         }
     });
-    var outputString = "Insgesamt "+bibArray.length+" Bibliotheken im <a href='http://swb.bsz-bw.de/DB=2.1/PPNSET?PPN="+id+"&INDEXSET=21' target='_blank'>SWB</a> mit Bestand: "+bibArray.join(", ");
+    var outputString = "Insgesamt "+bibArray.length+" Bibliotheken im <a href='https://swb.bsz-bw.de/DB=2.1/PPNSET?PPN="+id+"&INDEXSET=21' target='_blank'>SWB</a> mit Bestand: "+bibArray.join(", ");
     return outputString;
 }
 
@@ -175,7 +175,7 @@ function renderSW(swObject) {
     var swArray = [];
     $.each(swObject, function(key, value) {
         if(typeof value == 'string') {
-            var swUrl = 'http://d-nb.info/gnd/' + value + '/about/html';
+            var swUrl = 'https://d-nb.info/gnd/' + value + '/about/html';
             swArray.push('<a href="' + swUrl + '" target="_blank">' + htmlEscape(key) + '</a>');
         } else {
             swArray.push(key);
