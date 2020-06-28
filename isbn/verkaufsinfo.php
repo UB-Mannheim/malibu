@@ -130,7 +130,7 @@ if ($foundOnAmazon) {
         $ratingValue = $docAmazon->getElementById('acrPopover')->getAttribute('title');
         $numberOfReviews = $docAmazon->getElementById('acrCustomerReviewText')->textContent;
         $rating = $ratingValue . ' (' . $numberOfReviews . ')';
-        $ratingOrigin = 'http://www.amazon.de/product-reviews/' . $n10;
+        $ratingOrigin = 'https://www.amazon.de/product-reviews/' . $n10;
     } else if ($docAmazon->getElementById('revFMSR')) {
         $ratingValue = $docAmazon->getElementById('revFMSR')->getElementsByTagName('a')->item(0)->getAttribute('title');
         $textTotal = $docAmazon->getElementById('revFMSR')->textContent;
@@ -138,7 +138,7 @@ if ($foundOnAmazon) {
             $numberOfReviews = $treffer[0];
         }
         $rating = $ratingValue . ' (' . $numberOfReviews . ')';
-        $ratingOrigin = 'http://www.amazon.com/product-reviews/' . $n10;
+        $ratingOrigin = 'https://www.amazon.com/product-reviews/' . $n10;
     }
 
 }
@@ -186,7 +186,7 @@ if ($foundOnGoogle) {
 
 
 if (!isset($cover)) {
-    $urlOpenlibrary = 'http://covers.openlibrary.org/b/isbn/' . $n13 . '-M.jpg';
+    $urlOpenlibrary = 'https://covers.openlibrary.org/b/isbn/' . $n13 . '-M.jpg';
     $headerOpenlibrary = get_headers($urlOpenlibrary, 1);
     if (!strpos($headerOpenlibrary[0], '404 NotFound')) {
         $cover = $urlOpenlibrary;
@@ -204,7 +204,7 @@ if (isset($cover)) {
     echo '<a href="' . $coverOrigin . '" target="_blank"><img src="' . $cover . '"/></a><br />';
 }
 //Direktlinks zu Amazon, GoogleBooks
-echo '<a href="' . $urlAmazon . '" target="_blank">AmazonDE</a> ; <a href="http://www.amazon.com/dp/' . $n10 . '" target="_blank">AmazonCOM</a> ; <a href="' . $urlGoogle . '" target="_blank">GoogleBooks</a>';
+echo '<a href="' . $urlAmazon . '" target="_blank">AmazonDE</a> ; <a href="https://www.amazon.com/dp/' . $n10 . '" target="_blank">AmazonCOM</a> ; <a href="' . $urlGoogle . '" target="_blank">GoogleBooks</a>';
 
 echo '</td><td>';
 

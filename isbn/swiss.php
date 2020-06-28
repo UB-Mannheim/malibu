@@ -34,12 +34,12 @@ if (isset($_GET['ppn'])) {
 }
 
 /*
-http://sru.swissbib.ch/sru/search/defaultdb?query=
+https://sru.swissbib.ch/sru/search/defaultdb?query=
 +dc.identifier+%3D+978981-4447508+OR+dc.identifier+%3D+981444751
 &operation=searchRetrieve&recordSchema=info%3Asrw%2Fschema%2F1%2Fmarcxml-v1.1-light&maximumRecords=10&x-info-10-get-holdings=true&startRecord=0&recordPacking=XML&availableDBs=defaultdb&sortKeys=Submit+query
 */
 
-$urlBase = 'http://sru.swissbib.ch/sru/search/defaultdb?query=';
+$urlBase = 'https://sru.swissbib.ch/sru/search/defaultdb?query=';
 $urlSuffix = '&operation=searchRetrieve&recordSchema=info%3Asrw%2Fschema%2F1%2Fmarcxml-v1.1-light&maximumRecords=10&x-info-10-get-holdings=true&startRecord=0&recordPacking=XML&availableDBs=defaultdb&sortKeys=Submit+query';
 
 if (isset($_GET['isbn'])) {
@@ -48,7 +48,14 @@ if (isset($_GET['isbn'])) {
     $suchString = 'dc.identifier=' . implode('+OR+dc.identifier=', $nArray);
 }
 
-$result = file_get_contents($urlBase . $suchString . $urlSuffix);
+# work around server configuration issue
+$contextOptions = [
+    'ssl' => [
+        'verify_peer' => false,
+    ],
+];
+$context = stream_context_create($contextOptions);
+$result = file_get_contents($urlBase . $suchString . $urlSuffix, FALSE, $context);
 
 if ($result === false) {
     header('HTTP/1.1 400 Bad Request');

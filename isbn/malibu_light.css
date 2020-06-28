@@ -263,7 +263,7 @@ input, select {
   border: none;
 }
 
-.verbuendeUeber {
+.verbuendeUeber, .verbuendeUeber th {
   background-color: #34373e;
 }
 
@@ -275,7 +275,7 @@ input, select {
   text-align: left;
 }
 
-#verbuende tr:nth-child(2n+3) {
+#verbuende tr:nth-child(2n+3), #verbuende tr:nth-child(2n+3) td {
   background-color: #F1EDEB;
 }
 
@@ -287,20 +287,34 @@ input, select {
   padding-bottom: 1em;
 }
 
+#verbuende th button {
+  padding: 0.3em;
+  background: #34373e;
+  border: 1px solid;
+  border-radius: 4px;
+  border-color: white;
+  cursor: pointer;
+}
+
 /* text-decoration entfernen, RVK und Schlagwörter fett für Orientierung */
 #verbuende * {
   /*text-decoration: none;*/
 }
 
 #rvkB3KAT, #rvkHBZ, #rvkK10PLUS, #rvkHEBIS, #rvkOBVSG, #rvkSWB, #rvkSWISS,
-#swB3KAT, #swHBZ, #swK10PLUS, #swHEBIS, #swOBVSG, #swSWB, #swSWISS {
+#swB3KAT, #swHBZ, #swK10PLUS, #swHEBIS, #swOBVSG, #swSWB, #swSWISS, #rvkaggregiert a {
+
 
   font-weight: bold;
 
 }
 
+#rvkaggregiert {
+  background-color: white;
+}
+
 .rvkError, .rvkError:visited {
-  color: red;
+  color: darkred;
 }
 
 
