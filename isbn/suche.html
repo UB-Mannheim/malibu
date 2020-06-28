@@ -114,6 +114,90 @@ function hideRVKAggregation() {
 }
 	
 
+
+function aggregateDDC() {
+    var ddcNodes = $(".ddc a");
+    var frequencies = {};
+    var ddcExample = {};
+    for (let ddcNode of ddcNodes) {
+        let ddc = ddcNode.textContent;
+        frequencies[ddc] = frequencies[ddc] ? frequencies[ddc] + 1 : 1;
+        ddcExample[ddc] = ddcNode;
+    }
+    var ddcSorted = Object.keys(frequencies);
+    ddcSorted.sort();
+    $("#ddcaggregiert").html("");
+    for (let ddc of ddcSorted) {
+        $.ajax({
+            url: 'https://coli-conc.gbv.de/api/data?uri=http://dewey.info/class/' + ddc +'/e23/&properties=ancestors',
+            async: false,
+            dataType: 'json',
+            success: function (data) {
+                if (data.length > 0) {
+                    var foundMappings = [];
+                    $.ajax({
+                         url: 'https://coli-conc.gbv.de/api/mappings?from=http://dewey.info/class/' + ddc +'/e23/&toScheme=rvk',
+                         async: false,
+                         dataType: 'json',
+                         success: function (dataMapping) {
+                              if (dataMapping.length > 0) {
+                                  for (let mappingConcept of dataMapping[0].to.memberSet) {
+                                      foundMappings.push(mappingConcept.notation.join(" + "));
+                                   }
+                              }
+                        }
+                    });
+          
+                    let parent = $("#ddcaggregiert");
+                    let i = 0;
+                    for (let ancestor of data[0].ancestors) {
+                        let notation = ancestor.notation[0];
+                        if (notation.length < 2) continue;
+                        let label = ancestor.prefLabel.de;
+                        let check = $("#ddcaggregiert div[title='" + notation + "']");
+                        if (check.length == 0) {
+                            let prefix = "";
+                            if (i == 0) {
+                                $("#ddcaggregiert").append("<br/>");
+                            } else {
+                                prefix = '<span style="visibility: hidden">' + "∟".repeat(i-1) + '</span>∟';
+                            }
+                            parent.append("<div title='" + notation + "'>" + prefix + label + "</div>");
+                        }
+                        parent = $("#ddcaggregiert div[title='" + notation + "']");
+                        i++;
+                    }
+                    let name = data[0].prefLabel.de;
+                    let notation = data[0].notation[0];
+                    let freq = frequencies[notation];
+                    let prefix = '<span style="visibility: hidden">' + "∟".repeat(i-1) + '</span>∟';
+                    parent.append("<div title='" + notation + "'>" + prefix + name + ": " + freq + " x </div>");
+                    $(ddcExample[notation]).clone().appendTo($("#ddcaggregiert div[title='" + notation + "']"));
+                    if (foundMappings.length > 0) {
+                        $("#ddcaggregiert div[title='" + notation + "']").append(" → <b>" + renderRVK(foundMappings) + "</b>");
+                        $("#ddcaggregiert div[title='" + notation + "'] a[class]").each(addBenennung);
+                    }
+                } else {
+                    if ($("#ddcaggregaterest").length == 0) {
+                        $("#ddcaggregiert").append("<br/><br/><div id='ddcaggregaterest'>[Keine Benennung gefunden für folgende DDC-Stellen]</div>");
+                    }
+                    $("#ddcaggregaterest").append("<br/>" + frequencies[ddc] + " x ");
+                    $(ddcExample[ddc]).clone().appendTo($("#ddcaggregaterest"));
+                }
+            }
+        });
+    }
+
+    $(".ddc").attr("style", "display: none");
+    $(".ddcaggregiert").removeAttr("style");
+}
+
+function hideDDCAggregation() {
+    $(".ddc").removeAttr("style");
+    $(".ddcaggregiert").attr("style", "display: none");
+}
+
+
 //Funktion für Tauschen des Stylesheets
 function ChangeDesign() {
     //Falls id "stylesheet" vergeben
@@ -431,53 +515,56 @@ function isbnEingabe(n) {
         <col id="rvkColumn">
         <col id="rvkAggregiertColumn">
         <col id="ddcColumn">
+        <col id="ddcAggregiertColumn">
         <col id="swColumn">
     </colgroup>
     <tr class="verbuendeUeber">
         <th>&nbsp;</th>
         <th class="rvk">RVK-Notation  <button onclick="aggregateRVK()">⇲</button></th>
         <th class="rvkaggregiert" style="display: none"><button onclick="hideRVKAggregation()">⇱</button>  RVK aggregiert</th>
-        <th>DDC-Notation</th>
+        <th class="ddc">DDC-Notation  <button onclick="aggregateDDC()">⇲</button></th>
+        <th class="ddcaggregiert" style="display: none"><button onclick="hideDDCAggregation()">⇱</button>  DDC aggregiert</th>
         <th>Schlagwörter</th>
     </tr>
     <tr>
         <td><div id="sucheSWB">SWB</div><div id="bestandSWB"></div></td>
         <td id="rvkSWB" class="rvk"></td>
         <td id="rvkaggregiert" class="rvkaggregiert" rowspan="7" style="display: none"></td>
-        <td id="ddcSWB"></td>
+        <td id="ddcSWB" class="ddc"></td>
+        <td id="ddcaggregiert" class="ddcaggregiert" rowspan="7" style="display: none"></td>
         <td id="swSWB"></td>
     </tr>
     <tr>
         <td><div id="sucheK10PLUS">K10PLUS</div><div id="bestandK10PLUS"></div></td>
         <td id="rvkK10PLUS" class="rvk"></td>
-        <td id="ddcK10PLUS"></td>
+        <td id="ddcK10PLUS" class="ddc"></td>
         <td id="swK10PLUS"></td>
     </tr>
     <tr>
         <td><span id="sucheB3KAT">B3Kat</span> (Link zu BVB)<div id="bestandB3KAT"></div></td>
         <td id="rvkB3KAT" class="rvk"></td>
-        <td id="ddcB3KAT"></td>
+        <td id="ddcB3KAT" class="ddc"></td>
         <td id="swB3KAT"></td>
     <tr>
         <td><div id="sucheHBZ">HBZ</div><div id="bestandHBZ"></div></td>
         <td id="rvkHBZ" class="rvk"></td>
-        <td id="ddcHBZ"></td>
+        <td id="ddcHBZ" class="ddc"></td>
         <td id="swHBZ"></td>
     <tr>
         <td><div id="sucheHEBIS">HEBIS</div><div id="bestandHEBIS"></div></td>
         <td id="rvkHEBIS" class="rvk"></td>
-        <td id="ddcHEBIS"></td>
+        <td id="ddcHEBIS" class="ddc"></td>
         <td id="swHEBIS"></td>
 	<tr>
         <td><div id="sucheSWISS">swissbib</div><div id="bestandSWISS"></div></td>
         <td id="rvkSWISS" class="rvk"></td>
-        <td id="ddcSWISS"></td>
+        <td id="ddcSWISS" class="ddc"></td>
         <td id="swSWISS"></td>
     </tr>
     <tr>
         <td><div id="sucheOBVSG">OBVSG</div><div id="bestandOBVSG"></div></td>
         <td id="rvkOBVSG" class="rvk"></td>
-        <td id="ddcOBVSG"></td>
+        <td id="ddcOBVSG" class="ddc"></td>
         <td id="swOBVSG"></td>
     </tr>
 </table>
