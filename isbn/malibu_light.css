@@ -318,6 +318,11 @@ input, select {
 }
 
 
+/* Spezielle Notationen (nur UB Bayreuth) der Form R...592 markieren */
+.rvk a[class$="592"][class^="R"], .rvkaggregiert a[class$="592"][class^="R"] {
+  color: purple;
+}
+
 
 /***** LINKS *****/
 
