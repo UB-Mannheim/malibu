@@ -55,7 +55,7 @@ $contextOptions = [
     ],
 ];
 $context = stream_context_create($contextOptions);
-$result = file_get_contents($urlBase . $suchString . $urlSuffix, FALSE, $context);
+$result = file_get_contents($urlBase . $suchString . $urlSuffix, false, $context);
 
 if ($result === false) {
     header('HTTP/1.1 400 Bad Request');
