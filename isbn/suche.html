@@ -362,7 +362,7 @@ function isbnEingabe(n) {
             
         });
 
-        $('#bestand'+"SWB").append(bestandsArray.join("+"));
+        $('#bestand'+"SWB").append(bestandsArray.join(" + "));
         $('#rvk'+'SWB').html( renderRVK(data.rvk) );
         $('#rvk'+'SWB a').each( addBenennung );
         $('#ddc'+'SWB').html( renderDDC(data.ddc) );
@@ -441,7 +441,7 @@ function isbnEingabe(n) {
             for (var i=0; i<data.einzelaufnahmen.length; i++) {
                 bestandsListe.push(data.einzelaufnahmen[i].bestand.length);
             }
-            $('#bestand'+verbund).append(bestandsListe.join("+"));
+            $('#bestand'+verbund).append(bestandsListe.join(" + "));
             if(data.produktSigel && data.produktSigel.length>0) {
                 $('#pda').append( renderPS(data.produktSigel) );
             }
@@ -527,7 +527,7 @@ function isbnEingabe(n) {
         <th>Schlagwörter</th>
     </tr>
     <tr>
-        <td><div id="sucheSWB">SWB</div><div id="bestandSWB"></div></td>
+        <td><div id="sucheSWB">SWB</div><small><div id="bestandSWB"></div></small></td>
         <td id="rvkSWB" class="rvk"></td>
         <td id="rvkaggregiert" class="rvkaggregiert" rowspan="7" style="display: none"></td>
         <td id="ddcSWB" class="ddc"></td>
@@ -535,34 +535,34 @@ function isbnEingabe(n) {
         <td id="swSWB"></td>
     </tr>
     <tr>
-        <td><div id="sucheK10PLUS">K10PLUS</div><div id="bestandK10PLUS"></div></td>
+        <td><div id="sucheK10PLUS">K10PLUS</div><small><div id="bestandK10PLUS"></div></small></td>
         <td id="rvkK10PLUS" class="rvk"></td>
         <td id="ddcK10PLUS" class="ddc"></td>
         <td id="swK10PLUS"></td>
     </tr>
     <tr>
-        <td><span id="sucheB3KAT">B3Kat</span> (Link zu BVB)<div id="bestandB3KAT"></div></td>
+        <td><span id="sucheB3KAT">B3Kat</span> (Link zu BVB)<small><div id="bestandB3KAT"></div></small></td>
         <td id="rvkB3KAT" class="rvk"></td>
         <td id="ddcB3KAT" class="ddc"></td>
         <td id="swB3KAT"></td>
     <tr>
-        <td><div id="sucheHBZ">HBZ</div><div id="bestandHBZ"></div></td>
+        <td><div id="sucheHBZ">HBZ</div><small><div id="bestandHBZ"></div></small></td>
         <td id="rvkHBZ" class="rvk"></td>
         <td id="ddcHBZ" class="ddc"></td>
         <td id="swHBZ"></td>
     <tr>
-        <td><div id="sucheHEBIS">HEBIS</div><div id="bestandHEBIS"></div></td>
+        <td><div id="sucheHEBIS">HEBIS</div><small><div id="bestandHEBIS"></div></small></td>
         <td id="rvkHEBIS" class="rvk"></td>
         <td id="ddcHEBIS" class="ddc"></td>
         <td id="swHEBIS"></td>
 	<tr>
-        <td><div id="sucheSWISS">swissbib</div><div id="bestandSWISS"></div></td>
+        <td><div id="sucheSWISS">swissbib</div><small><div id="bestandSWISS"></div></small></td>
         <td id="rvkSWISS" class="rvk"></td>
         <td id="ddcSWISS" class="ddc"></td>
         <td id="swSWISS"></td>
     </tr>
     <tr>
-        <td><div id="sucheOBVSG">OBVSG</div><div id="bestandOBVSG"></div></td>
+        <td><div id="sucheOBVSG">OBVSG</div><small><div id="bestandOBVSG"></div></small></td>
         <td id="rvkOBVSG" class="rvk"></td>
         <td id="ddcOBVSG" class="ddc"></td>
         <td id="swOBVSG"></td>
