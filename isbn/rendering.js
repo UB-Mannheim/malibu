@@ -88,7 +88,8 @@ function renderDDC(ddcArray) {
         for (var i=0; i<ddcArray.length; i++) {
             var ddc = ddcArray[i];
             //var ddcUrl = 'http://dewey.info/class/' + ddc + '/';
-            var ddcUrl = 'https://deweysearchde.pansoft.de/webdeweysearch/executeSearch.html?lastScheduleRecord=' + ddc + '&lastTableRecord=&query=' + ddc;
+            //var ddcUrl = 'https://deweysearchde.pansoft.de/webdeweysearch/executeSearch.html?lastScheduleRecord=' + ddc + '&lastTableRecord=&query=' + ddc;
+            var ddcUrl = 'https://coli-conc.gbv.de/cocoda/app/?fromScheme=http%3A%2F%2Fdewey.info%2Fscheme%2Fedition%2Fe23%2F&toScheme=http%3A%2F%2Furi.gbv.de%2Fterminology%2Frvk%2F&from=http%3A%2F%2Fdewey.info%2Fclass%2F' + ddc + '%2Fe23%2F';
             ddcArray[i] = '<a href="' + ddcUrl + '" target="_blank">' + ddc + '</a>';
         }
         return ddcArray.join(', ');
