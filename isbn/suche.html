@@ -103,6 +103,7 @@ function aggregateRVK() {
       	 parent.append("<b>" + frequencies[rvk] + " x </b>");
          $(rvkExample[rvk]).clone().appendTo(parent);
     }
+    $("#rvkaggregiert").append("<br/><br/><small><img src='../img/flash.svg' height='15px' /> powered by <a href='https://rvk.uni-regensburg.de/api/'>RVK API</a></small>");
 
     $(".rvk").attr("style", "display: none");
     $(".rvkaggregiert").removeAttr("style");
@@ -187,6 +188,7 @@ function aggregateDDC() {
             }
         });
     }
+    $("#ddcaggregiert").append("<br/><br/><small><img src='../img/by-nc-nd.svg' /> by <a href='https://www.oclc.org/'>OCLC</a> <img src='../img/flash.svg' height='15px' /> powered by <a href='https://coli-conc.gbv.de/api/'>coli-conc API</a></small>");
 
     $(".ddc").attr("style", "display: none");
     $(".ddcaggregiert").removeAttr("style");
