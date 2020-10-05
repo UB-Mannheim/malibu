@@ -80,9 +80,18 @@ $outputString .= "<collection>\n";
 $outputArray = [];
 
 foreach ($records as $record) {
-
-    $outputString .= $doc->saveXML($record);
-    array_push($outputArray, $doc->saveXML($record));
+    // Filter out any other results which contain the ISBN but not in the 020 field
+    $foundMatch = false;
+    $foundIsbns = $xpath->query('.//datafield[@tag="020"]/subfield', $record);
+    foreach ($foundIsbns as $foundValue) {
+        if (in_array($foundValue->nodeValue, $nArray)) {
+            $foundMatch = true;
+        }
+    }
+    if ($foundMatch) {
+        $outputString .= $doc->saveXML($record);
+        array_push($outputArray, $doc->saveXML($record));
+    }
 }
 $outputString .= "</collection>";
 
