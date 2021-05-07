@@ -31,7 +31,7 @@ function check(index, value) {
 				bestand = data.bestand.filter(bib => RegExp("^" + filter + "$").test(bib));
 			}
 			if (bestand.length>0 && value) {
-				outputString = "VORHANDEN (" + bestand + ")";
+				let outputString = "VORHANDEN (" + bestand + ")";
 				$('#query-'+index).append(render(outputString, value));
 			} else {
 				if (document.getElementById("mitISBN").checked) {
