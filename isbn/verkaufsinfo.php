@@ -100,13 +100,25 @@ if ($foundOnAmazon) {
     }
 
     //Beschreibung von Amazon
-    if ($docAmazon->getElementById('bookDesc_override_CSS') && $docAmazon->getElementById('bookDesc_override_CSS')->nextSibling && $docAmazon->getElementById('bookDesc_override_CSS')->nextSibling->textContent !== '') {
-        $description = $docAmazon->getElementById('bookDesc_override_CSS')->nextSibling->textContent;
-        $descriptionOrigin = $urlAmazon;
-    } else if ($docAmazon->getElementById('postBodyPS')) {
+    if ($docAmazon->getElementById('bookDesc_override_CSS') && $docAmazon->getElementById('bookDesc_override_CSS')->nextSibling) {
+        $node = $docAmazon->getElementById('bookDesc_override_CSS');
+        // description is expected inside the next following tag named "noscript"
+        $i = 0;
+        while ($node && $i < 5) {
+            if ($node->nodeName == "noscript") {
+                $description = $node->textContent;
+                break;
+            }
+            $node = $node->nextSibling;
+	    $i++;
+	}
+	$descriptionOrigin = $urlAmazon;
+    }
+    if (empty($description) && $docAmazon->getElementById('postBodyPS')) {
         $description = $docAmazon->getElementById('postBodyPS')->textContent;
         $descriptionOrigin = $urlAmazon;
-    } else if ($docAmazon->getElementById('iframeContent')) {
+    }
+    if (empty($description) && $docAmazon->getElementById('iframeContent')) {
         $description = $docAmazon->getElementById('iframeContent')->textContent;
         $descriptionOrigin = $urlAmazon;
     }
