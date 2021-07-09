@@ -12,6 +12,7 @@ an environment for code development.
   * [For Debian 8 (Apache 2.4)](#for-debian-8-apache-24)
   * [For Debian 9 (Apache 2.4 and PHP 7.0)](#for-debian-9-apache-24-and-php-70)
   * [For Debian 10 (Apache 2.4 and PHP 7.3)](#for-debian-10-apache-24-and-php-73)
+  * [For Debian 11 (Apache 2.4 and PHP 7.4)](#for-debian-11-apache-24-and-php-74)
   * [For UBUNTU 18.04 LTS (Apache 2.4 and PHP 7.4)](#for-ubuntu-1804-lts-apache-24-and-php-74)
 * [Initializing and Costumizing](#initializing-and-costumizing)
 * [Configuration for code development](#configurations-for-code-development)
@@ -80,6 +81,40 @@ You need the php library <a href="http://php.net/manual/en/book.yaz.php">yaz</a>
 * <code>apt-get install yaz libyaz-dev php-dev php-pear libapache2-mod-php</code> (maybe you already have some packages)
 * <code>pecl install yaz</code>
 * create new file `/etc/php/7.3/mods-available/yaz.ini` and add
+```sh
+; configuration for php YAZ module
+; priority=20
+extension=yaz.so
+```
+* enable the YAZ module
+```sh
+phpenmod yaz
+```
+* restart Apache2 server
+```sh
+systemctl restart apache2
+```
+
+### For Debian 11 (Apache 2.4 and PHP 7.4)
+Basically the same as for Debian 10 BUT **yaz-config** is not available anymore, so the installation step <code>pecl install yaz</code> will fail.
+
+You need the php library <a href="http://php.net/manual/en/book.yaz.php">yaz</a> on the server.
+
+* <code>apt-get install yaz php-dev php-pear libapache2-mod-php7.4</code> (maybe you already have some packages)
+
+
+* <code>wget -O yaz.tar.gz http://pecl.php.net/get/yaz</code>
+* <code>tar -zxvf yaz.tar.gz</code>
+* <code>cd yaz-<version></code>
+* replace file `config.m4` with `extra/config.m4` from this repository
+* <code>phpize</code>
+* <code>./configure</code>
+* <code>make</code>
+* <code>make test</code>
+* <code>make install</code>
+
+
+* create new file `/etc/php/7.4/mods-available/yaz.ini` and add
 ```sh
 ; configuration for php YAZ module
 ; priority=20
