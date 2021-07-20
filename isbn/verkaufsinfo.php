@@ -80,8 +80,8 @@ if (!isset($_GET['isbn13']) && !isset($_GET['isbn10'])) {
 
 
 $urlAmazon = 'https://www.amazon.de/dp/' . $n10;
-$headerAmazon = get_headers($urlAmazon, 1); //$headerAmazon[0] is a String, e.g. HTTP/1.1 404 NotFound ; HTTP/1.1 200 OK
-$foundOnAmazon = !strpos($headerAmazon[0], '404 NotFound');
+$headerAmazon = get_headers($urlAmazon, 1); //$headerAmazon[0] is a String, e.g. HTTP/1.1 404 ; HTTP/1.1 200
+$foundOnAmazon = !strpos($headerAmazon[0], '404');
 $docAmazon = new DOMDocument();
 
 if ($foundOnAmazon) {
@@ -100,13 +100,25 @@ if ($foundOnAmazon) {
     }
 
     //Beschreibung von Amazon
-    if ($docAmazon->getElementById('bookDesc_override_CSS') && $docAmazon->getElementById('bookDesc_override_CSS')->nextSibling && $docAmazon->getElementById('bookDesc_override_CSS')->nextSibling->textContent !== '') {
-        $description = $docAmazon->getElementById('bookDesc_override_CSS')->nextSibling->textContent;
-        $descriptionOrigin = $urlAmazon;
-    } else if ($docAmazon->getElementById('postBodyPS')) {
+    if ($docAmazon->getElementById('bookDesc_override_CSS') && $docAmazon->getElementById('bookDesc_override_CSS')->nextSibling) {
+        $node = $docAmazon->getElementById('bookDesc_override_CSS');
+        // description is expected inside the next following tag named "noscript"
+        $i = 0;
+        while ($node && $i < 5) {
+            if ($node->nodeName == "noscript") {
+                $description = $node->textContent;
+                break;
+            }
+            $node = $node->nextSibling;
+	    $i++;
+	}
+	$descriptionOrigin = $urlAmazon;
+    }
+    if (empty($description) && $docAmazon->getElementById('postBodyPS')) {
         $description = $docAmazon->getElementById('postBodyPS')->textContent;
         $descriptionOrigin = $urlAmazon;
-    } else if ($docAmazon->getElementById('iframeContent')) {
+    }
+    if (empty($description) && $docAmazon->getElementById('iframeContent')) {
         $description = $docAmazon->getElementById('iframeContent')->textContent;
         $descriptionOrigin = $urlAmazon;
     }
