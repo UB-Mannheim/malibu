@@ -12,7 +12,7 @@ an environment for code development.
   * [For Debian 8 (Apache 2.4)](#for-debian-8-apache-24)
   * [For Debian 9 (Apache 2.4 and PHP 7.0)](#for-debian-9-apache-24-and-php-70)
   * [For Debian 10 (Apache 2.4 and PHP 7.3)](#for-debian-10-apache-24-and-php-73)
-  * [For UBUNTU 18.04 LTS (Apache 2.4 and PHP 7.4)](#for-ubuntu-1804-lts-apache-24-and-php-74)
+  * [For UBUNTU 18.04 LTS / 20.04 LTS (Apache 2.4 and PHP 7.4)](#for-ubuntu-1804-lts-apache-24-and-php-74)
 * [Initializing and Costumizing](#initializing-and-costumizing)
 * [Configuration for code development](#configurations-for-code-development)
   * [Docker](#docker)
@@ -94,19 +94,25 @@ phpenmod yaz
 systemctl restart apache2
 ```
 
-### For UBUNTU 18.04 LTS (Apache 2.4 and PHP 7.4)
+### For UBUNTU 18.04 LTS / 20.04 LTS (Apache 2.4 and PHP 7.4)
 You need the php library <a href="http://php.net/manual/en/book.yaz.php">yaz</a> on the server.
 
-* <code>apt-get install yaz libyaz5-dev php-dev php-pear libapache2-mod-php</code> (maybe you already have some packages)
+UBUNTU 18.04 LTS:
 
-Since the php-pear package installed via apt-get is to old (1.10.8) and an upgrade "pear upgrade PEAR" will fail, you should follow these additional steps to force an upgrade to pear 1.10.11, which is essential for compiling the Yaz-Module (yaz.so) for PHP 7.4 via pecl:
+* <code>sudo apt-get install yaz libyaz5-dev php-dev php-pear libapache2-mod-php</code> (maybe you already have some packages)
+
+UBUNTU 20.04 LTS (libyaz5-dev is no longer supported):
+
+* <code>sudo apt-get install yaz libyaz-dev php-dev php-pear libapache2-mod-php</code> (maybe you already have some packages)
+
+Since the php-pear package installed via the APT Package-Management is to old (1.10.9) and an upgrade "pear upgrade PEAR" will fail, you should follow these additional steps to force an upgrade to pear 1.10.11, which is essential for compiling the Yaz-Module (yaz.so) for PHP 7.4 via pecl:
 ```sh
 sudo pear channel-update pear.php.net
 sudo pecl channel-update pecl.php.net
 sudo pear upgrade --force channel://pear.php.net/Archive_Tar-1.4.9 PEAR
 ```
 Now, you can nearly follow the description for Debian 10 / PHP 7.3
-* <code>pecl install yaz</code>
+* <code>sudo pecl install yaz</code>
 * create new file `/etc/php/7.4/mods-available/yaz.ini` and add
 ```sh
 ; configuration for php YAZ module
@@ -115,11 +121,11 @@ extension=yaz.so
 ```
 * enable the YAZ module
 ```sh
-phpenmod yaz
+sudo phpenmod yaz
 ```
 * restart Apache2 server
 ```sh
-systemctl restart apache2
+sudo systemctl restart apache2
 ```
 
 ## Initializing and Costumizing
