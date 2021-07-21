@@ -83,9 +83,17 @@ foreach ($records as $record) {
     // Filter out any other results which contain the ISBN but not in the 020 field
     $foundMatch = false;
     $foundIsbns = $xpath->query('.//datafield[@tag="020"]/subfield', $record);
-    foreach ($foundIsbns as $foundValue) {
-        if (in_array($foundValue->nodeValue, $nArray)) {
-            $foundMatch = true;
+    foreach ($foundIsbns as $foundNode) {
+        $foundValue = $foundNode->nodeValue;
+        foreach ($nArray as $queryValue) {
+            $testString = str_replace("-", "", $queryValue);
+            if (strlen($testString) == 13) {
+                // Delete the 978-prefix and the check value at the end for ISBN13
+                $testString = substr($testString, 3, -1);
+            }
+            if (strpos(str_replace("-", "", $foundValue), $testString) !== false) {
+                $foundMatch = true;
+            }
         }
     }
     if ($foundMatch) {
