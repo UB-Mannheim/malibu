@@ -373,6 +373,22 @@ function isbnEingabe(n) {
         if(data.produktSigel && data.produktSigel.length>0) {
             $('#pda').append( renderPS(data.produktSigel) );
         }
+
+        var relationenText = "";
+        if(data.vorauflage && data.vorauflage.length>0) {
+            relationenText += "Vorauflage: " + renderRelationen(data.vorauflage);
+        }
+        if(data.folgeauflage && data.folgeauflage.length>0) {
+            relationenText += relationenText.length>0 ? " | " : "";
+            relationenText += "Folgeauflage: " + renderRelationen(data.folgeauflage);
+        }
+        if(data.andererelation && data.andererelation.length>0) {
+            relationenText += relationenText.length>0 ? " | " : "";
+            relationenText += "Andere Relation: " + renderRelationen(data.andererelation);
+        }
+        if(relationenText.length>0) {
+            $('#relationen').html(relationenText.trim());
+        }
         
         $('#links').append( renderLinks(data.links) );
         if (data.dnbNr.length>0) {
@@ -506,6 +522,9 @@ function isbnEingabe(n) {
 </div>
 
 <div id='bestandsabgleich'>
+</div>
+
+<div id='relationen'>
 </div>
 
 <div id='pda'>
