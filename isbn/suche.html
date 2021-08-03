@@ -290,7 +290,7 @@ function ppnEingabe(ppn, verbund) {
 // - mehrere ISBNs getrennt durch ein Komma oder Semikolon, z.B. 9783830493662,3830493665
 // - mehrere ISBNs getrennt durch "or" und ggf. Leerzeichen, z.B. 9783830493662 or 3830493665
 function isbnEingabe(n) {
-    n = n.replace(/or/gi, ',').replace(/;/g, ',').replace(/\s*/g, '');
+    n = n.replace(/–/g, '-').replace(/or/gi, ',').replace(/;/g, ',').replace(/\s*/g, '');
     var query="?isbn="+n;
     
     var nArray = n.split(',');
