@@ -46,8 +46,11 @@ $standardMarcMap = array(
         'value' => './subfield[@code="a" or @code="t"]',
         'additional' => './subfield[@code="9" or @code="g"]',
         'key' => './subfield[@code="0" and contains(text(), "(DE-588)")]'
-        ),
-        'produktSigel' => '//datafield[@tag="912" and not(@ind2="7")]/subfield[@code="a"]'
+    ),
+    'produktSigel' => '//datafield[@tag="912" and not(@ind2="7")]/subfield[@code="a"]',
+    'vorauflage' => '//datafield[@tag="780"]/subfield[@code="z"]',
+    'folgeauflage' => '//datafield[@tag="785"]/subfield[@code="z"]',
+    'andererelation' => '//datafield[@tag="787" or @tag="775"]/subfield[@code="z"]'
 );
 
 $standardMabMap = array(

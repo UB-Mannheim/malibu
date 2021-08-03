@@ -80,9 +80,29 @@ $outputString .= "<collection>\n";
 $outputArray = [];
 
 foreach ($records as $record) {
-
-    $outputString .= $doc->saveXML($record);
-    array_push($outputArray, $doc->saveXML($record));
+    // Filter out any other results which contain the ISBN but not in the 020 or 776 field
+    $foundMatch = false;
+    $foundIsbns = $xpath->query('.//datafield[@tag="020" or @tag="776"]/subfield', $record);
+    foreach ($foundIsbns as $foundNode) {
+        $foundValue = $foundNode->nodeValue;
+        foreach ($nArray as $queryValue) {
+            $testString = preg_replace('/[^0-9xX]/', '', $queryValue);
+            if (strlen($testString) == 13) {
+                // Delete the 978-prefix and the check value at the end for ISBN13
+                $testString = substr($testString, 3, -1);
+            } elseif (strlen($testString) == 10) {
+                // Delete check value at the end for ISBN10
+                $testString = substr($testString, 0, -1);
+            }
+            if (strpos(preg_replace('[^0-9xX]', '', $foundValue), $testString) !== false) {
+                $foundMatch = true;
+            }
+        }
+    }
+    if ($foundMatch) {
+        $outputString .= $doc->saveXML($record);
+        array_push($outputArray, $doc->saveXML($record));
+    }
 }
 $outputString .= "</collection>";
 

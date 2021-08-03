@@ -96,6 +96,20 @@ function renderDDC(ddcArray) {
     }
 }
 
+
+function renderRelationen(relationenArray) {
+    if (typeof relationenArray === 'string') {
+        return relationenArray;
+    } else {
+        for (var i=0; i<relationenArray.length; i++) {
+            var rel = relationenArray[i];
+            relationenArray[i] = '<a href="./suche.html?isbn=' + rel + '" target="_blank">' + rel + '</a>';
+        }
+        return relationenArray.join(', ');
+    }
+}
+
+
 var paketInfoMap = [];// kann um die lokalen Pakete ergänzt werden
 var overallPaketSigel = [];//alle bereits gefunden Sigel werden in einer Liste gespeichert
 
