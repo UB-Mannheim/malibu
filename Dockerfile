@@ -2,18 +2,20 @@
 # https://github.com/UB-Mannheim/malibu/
 # 
 # USAGE:
-# $ docker run -d --rm --port <local-port>:80 --name malibu-container malibu
+# $ docker run -d --rm -p <local-port>:80 --name malibu-container malibu
 # 
 
-FROM php:apache
+FROM php:7.3-apache-buster
 
-ENV JQUERY 3.2.1
-ENV CLIPBOARD 1.7.1
+ENV JQUERY 3.6.0
+ENV CLIPBOARD 2.0.8
 
 RUN apt-get update \
-    && apt-get install --no-install-recommends -y yaz libyaz4-dev wget unzip python3-bs4 python3-requests \
+    && apt-get install --no-install-recommends -y yaz libyaz-dev wget unzip python3-bs4 python3-requests \
     && pecl install yaz \
-    && docker-php-ext-enable yaz
+    && docker-php-ext-enable yaz \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /var/www/html/malibu
 
@@ -23,7 +25,7 @@ COPY bnb/getBNBData bnb/getBNBData
 
 # From the best practices: you should use curl or wget instead of ADD
 # https://docs.docker.com/engine/userguide/eng-image/dockerfile_best-practices/#add-or-copy
-RUN curl -o "isbn/jquery-${JQUERY}.min.js" "https://code.jquery.com/jquery-${JQUERY}.min.js"
+RUN curl -o "isbn/jquery.min.js" "https://cdnjs.cloudflare.com/ajax/libs/jquery/${JQUERY}/jquery.min.js"
 RUN curl -o "isbn/clipboard.min.js" "https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/${CLIPBOARD}/clipboard.min.js"
 
 # Download BNB data

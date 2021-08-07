@@ -1,7 +1,7 @@
 #!/bin/bash
 
 DIR="$(dirname "$(readlink -f "$0")")"
-JQUERY_VERSION="3.2.1"
+JQUERY_VERSION="3.6.0"
 
 # Use php.ini in this directory
 export PHP_INI_SCAN_DIR=$DIR
@@ -19,8 +19,8 @@ for pkg in "${PECL_PACKAGES[@]}";do
 done
 
 # Download jquery
-if [[ ! -r "isbn/jquery-${JQUERY_VERSION}.min.js" ]];then
-  wget -O "isbn/jquery-${JQUERY_VERSION}.min.js" "https://code.jquery.com/jquery-${JQUERY_VERSION}.min.js"
+if [[ ! -r "isbn/jquery.min.js" ]];then
+  wget -O "isbn/jquery.min.js" "https://cdnjs.cloudflare.com/ajax/libs/jquery/${JQUERY_VERSION}/jquery.min.js"
 fi
 
 # Create conf.php
