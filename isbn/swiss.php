@@ -40,7 +40,6 @@ https://slsp.ch/de/metadata
 */
 
 $urlBase = 'https://swisscovery.slsp.ch/view/sru/41SLSP_NETWORK?version=1.2&operation=searchRetrieve&recordSchema=marcxml&query=';
-
 if (isset($_GET['isbn'])) {
     $n = trim($_GET['isbn']);
     $nArray = preg_split("/\s*(or|,|;)\s*/i", $n);
@@ -53,6 +52,10 @@ $contextOptions = [
     'ssl' => [
         'verify_peer' => true,
         'ciphers' => 'DEFAULT@SECLEVEL=1',
+    ],
+    'http' => [
+	    'header' => 'Connection: close\r\n',
+	    'timeout' => 3,
     ],
 ];
 $context = stream_context_create($contextOptions);
