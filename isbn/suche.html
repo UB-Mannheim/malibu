@@ -305,7 +305,7 @@ function isbnEingabe(n) {
     $('#suche'+'HEBIS').html('<a href="http://cbsopac.rz.uni-frankfurt.de/DB=2.1/SET=1/TTL=1/CMD?ACT=SRCHA&IKT=8520&TRM='+nArray[0]+'" target="_blank">HEBIS</a>');
     $('#suche'+'B3KAT').html('<a href="https://opacplus.bib-bvb.de/TouchPoint_touchpoint/start.do?Query=-1%3D%22' + nArray[0] + '%22&Language=De&SearchProfile=" target="_blank">B3KAT</a>');
     $('#suche'+'HBZ').html('<a href="http://okeanos-www.hbz-nrw.de/F/?FUNC=find-c&CCL_TERM=+IBN=%28'+nArray[0]+'" target="_blank">HBZ</a>');
-    $('#suche'+'SWISS').html('<a href="https://swisscovery.slsp.ch/discovery/search?query=isbn,contains,'+nArray[0]+',AND&tab=41SLSP_NETWORK&search_scope=DN_and_CI&vid=41SLSP_NETWORK:VU1_UNION&mode=advanced&offset=0" target="_blank">SWISS</a>');
+    $('#suche'+'SWISS').html('<a href="https://swisscovery.slsp.ch/discovery/search?query=isbn,contains,'+nArray[0]+',AND&tab=41SLSP_NETWORK&search_scope=DN_and_CI&vid=41SLSP_NETWORK:VU1_UNION&mode=advanced&offset=0" target="_blank">swisscovery</a>');
     $('#suche'+'OBVSG').html('<a href="http://search.obvsg.at/primo_library/libweb/action/search.do?fn=search&ct=search&initialSearch=true&mode=Basic&tab=default_tab&indx=1&dum=true&srt=rank&vid=OBV&tb=t&vl%28freeText0%29='+nArray[0]+'" target="_blank">OBVSG</a>');
 
     
@@ -490,7 +490,7 @@ function isbnEingabe(n) {
                     <option type="radio" name="eingabeVerbund" value="B3KAT">B3KAT
                     <option type="radio" name="eingabeVerbund" value="HEBIS">HEBIS
                     <option type="radio" name="eingabeVerbund" value="HBZ">HBZ
-                    <option type="radio" name="eingabeVerbund" value="SWISS">SWISS
+                    <option type="radio" name="eingabeVerbund" value="SWISS">swisscovery
                     <option type="radio" name="eingabeVerbund" value="OBVSG">OBVSG
                 </select>
                 <input class="button" type="submit" value="Submit">
@@ -577,7 +577,7 @@ function isbnEingabe(n) {
         <td id="ddcHEBIS" class="ddc"></td>
         <td id="swHEBIS"></td>
 	<tr>
-        <td><div id="sucheSWISS">swissbib</div><small><div id="bestandSWISS"></div></small></td>
+        <td><div id="sucheSWISS">swisscovery</div><small><div id="bestandSWISS"></div></small></td>
         <td id="rvkSWISS" class="rvk"></td>
         <td id="ddcSWISS" class="ddc"></td>
         <td id="swSWISS"></td>
