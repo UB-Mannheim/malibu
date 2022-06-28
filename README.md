@@ -60,7 +60,7 @@ See https://github.com/UB-Mannheim/malibu/wiki/Bibliografie
 The tools are depending on some third party libraries and fonts:
 
 * [yaz](https://www.indexdata.com/resources/software/phpyaz/) ([Revised BSD](https://www.indexdata.com/resources/licenses/))
-* [jQuery](https://github.com/jquery/jquery) (MIT license)
+* [jQuery](https://github.com/jquery/jquery/) (MIT license)
 * [clipboard.js](https://github.com/zenorocha/clipboard.js/) (MIT license)
 * clippy.svg from https://github.com/github/octicons (SIL Font)
 

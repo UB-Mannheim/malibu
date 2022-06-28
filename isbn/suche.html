@@ -23,7 +23,7 @@ body { font-family:  Arial, Verdana, sans-serif; }
 <!-- Stylesheet mit Link, damit per JS eindeutig zugegriffen werden kann -->
 <link id="stylesheet" href="malibu_light.css" type="text/css" rel="stylesheet">	
 	
-<script src="jquery-3.6.0.min.js"></script>
+<script src="jquery.min.js"></script>
 <script src="clipboard.min.js"></script>
 <script type="text/javascript">
 if (typeof jQuery == 'undefined') {
@@ -215,7 +215,7 @@ function ChangeDesign() {
 	
 
 $(document).ready(function(){
-    var clipboard = new Clipboard(".btn");
+    var clipboard = new ClipboardJS(".btn");
     clipboard.on('success', function(e) {
         showNotification('In die Zwischenablage kopiert!', '#8A4B08', 'white');
         //e.clearSelection();
