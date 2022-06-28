@@ -278,7 +278,8 @@ function ppnEingabe(ppn, verbund) {
             var isbnString = data['isbn'].join(",");
             isbnEingabe(isbnString);
         } else {
-            $('#status').append('Keine zugehörige ISBN gefunden! (<a href="' + verbund+'.php?ppn='+ppn+'">Daten zum Titel</a>). Ohne ISBN ist aber keine Suche möglich.');
+            $('#status').append('Keine zugehörige ISBN gefunden! (<a>Daten zum Titel</a>). Ohne ISBN ist aber keine Suche möglich.');
+            $('#status a').attr('href', verbund + '.php?ppn=' + ppn)
         }
     });
 }
@@ -299,7 +300,7 @@ function isbnEingabe(n) {
     });
     
     var suchString = n.replace(/,/g, ' or ');
-    $('#status').append("Gesucht wurden ISBN " + suchString);
+    $('#status').text("Gesucht wurden ISBN " + suchString);
     $('#suche'+'SWB').html('<a href="http://swb.bsz-bw.de/DB=2.1/SET=1/TTL=1/CMD?ACT=SRCHA&IKT=1007&TRM='+suchString+'" target="_blank">SWB</a>');
     $('#suche'+'K10PLUS').html('<a href="https://kxp.k10plus.de/DB=2.0/SET=1/TTL=1/CMD?ACT=SRCHA&IKT=7&TRM='+suchString+'" target="_blank">K10PLUS</a>');
     $('#suche'+'HEBIS').html('<a href="http://cbsopac.rz.uni-frankfurt.de/DB=2.1/SET=1/TTL=1/CMD?ACT=SRCHA&IKT=8520&TRM='+nArray[0]+'" target="_blank">HEBIS</a>');
