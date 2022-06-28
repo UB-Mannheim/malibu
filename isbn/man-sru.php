@@ -94,7 +94,7 @@ foreach ($records as $record) {
                 // Delete check value at the end for ISBN10
                 $testString = substr($testString, 0, -1);
             }
-            if (strpos(preg_replace('[^0-9xX]', '', $foundValue), $testString) !== false) {
+            if (strpos(preg_replace('/[^0-9xX]/', '', $foundValue), $testString) !== false) {
                 $foundMatch = true;
             }
         }
