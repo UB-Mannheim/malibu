@@ -2,7 +2,7 @@
 /*
  * Source: https://github.com/UB-Mannheim/malibu/isbn
  *
- * Copyright (C) 2016 Universitätsbibliothek Mannheim
+ * Copyright (C) 2022 Universitätsbibliothek Mannheim
  *
  * Author:
  *    Philipp Zumstein <philipp.zumstein@bib.uni-mannheim.de>
@@ -15,88 +15,114 @@
  * obvsg.php?isbn=ISBN
  *   ISBN ist eine 10- bzw. 13-stellige ISBN mit/ohne Bindestriche/Leerzeichen
  *   ISBN kann ebenfalls eine Komma-separierte Liste von ISBNs sein
- * obvsg.php?ppn=PPN
- *   PPN ist die eine ID-Nummer des B3KAT
  * obvsg.php?isbn=ISBN&format=json
- * obvsg.php?ppn=PPN&format=json
- *   Ausgabe erfolgt als JSON
  *
- * Sucht übergebene ISBN bzw. PPN im OBVSG-Katalog
- * und gibt maximal 10 Ergebnisse als MABXML zurück
- * bzw. als JSON.
+ * Sucht übergebene ISBN bzw. PPN in der SRU-Schnittstelle von obvsg.at (OBV-LIT)
+ * und gibt maximal 10 Ergebnisse als MARCXML oder JSON zurück.
  */
 
 include 'lib.php';
 
-$id = yaz_connect(OBVSG_URL, array("user" => OBVSG_USER, "password" => OBVSG_PASSWORD)); //"mab2; charset=iso5426,utf8"
-yaz_syntax($id, OBVSG_SYNTAX);
-yaz_range($id, 1, 10);
-yaz_element($id, OBVSG_ELEMENTSET);
+/*
+SRU access
+
+https://www.obvsg.at/services/verbundsystem/sru
+*/
+$urlBase = 'https://services.obvsg.at/sru/OBV-LIT?operation=searchRetrieve&query=';
+
+$searchISBN = false;
+$searchPPN = false;
 
 if (isset($_GET['ppn'])) {
-    $ppn = trim($_GET['ppn']);
-    yaz_search($id, "rpn", '@attr 5=100 @attr 1=1016 "' . $ppn . '"');
+    $n = trim($_GET['ppn']);
+    $searchPPN = true;
 }
-if (isset($_GET['isbn'])) {
+if (!$searchPPN && isset($_GET['isbn'])) {
     $n = trim($_GET['isbn']);
-    $nArray = explode(",", $n);
-    if (count($nArray) > 1) {
-        //mehrere ISBNs, z.B. f @or @or @attr 1=7 "9783937219363" @attr 1=7 "9780521369107" @attr 1=7 "9780521518147"
-        //Anfuehrungsstriche muessen demaskiert werden, egal ob String mit ' gemacht wird
-        $suchString = str_repeat("@or ", count($nArray) - 1) . '@attr 1=7 \"' . implode('\" @attr 1=7 \"', $nArray) . '\"';
-        yaz_search($id, "rpn", $suchString);
-    } else {
-        yaz_search($id, "rpn", '@attr 5=100 @attr 1=7 "' . $n . '"');
-    }
-    // @attr 5=100 -> no truncation, ist aber Standardeinstellung, kann daher auch weg
+    $searchISBN = true;
+}
+if ($searchPPN || $searchISBN) {
+    $nArray = preg_split("/\s*(or|,|;)\s*/i", $n);
+    $suchString = 'alma.all=' . implode('+OR+alma.all=', $nArray);
 }
 
+$filteredSuchString = 'alma.mms_tagSuppressed=false+AND+(' . $suchString . ')&maximumRecords=10';
 
-yaz_wait();
-$error = yaz_error($id);
-if (!empty($error)) {
-    echo "Error Number: " . yaz_errno($id);
-    echo "Error Description: " . $error;
-    echo "Additional Error Information: " . yaz_addinfo($id);
+$contextOptions = [
+    'http' => [
+	    'header' => 'Connection: close\r\n',
+	    'timeout' => 3,
+    ],
+];
+$context = stream_context_create($contextOptions);
+$result = file_get_contents($urlBase . $filteredSuchString, false, $context);
+
+if ($result === false) {
+    header('HTTP/1.1 400 Bad Request');
+    echo "Verbindung zu SRU-Schnittstelle fehlgeschlagen\n";
+    var_dump($urlBase . $filteredSuchString);
+    exit;
 }
+
+// Delete namespaces such that we don't need to specify them
+// in every xpath query.
+$result = str_replace(' xmlns:xs="http://www.w3.org/2001/XMLSchema"', '', $result);
+$result = str_replace(' xmlns="http://www.loc.gov/MARC21/slim"', '', $result);
+
+$doc = new DOMDocument();
+$doc->preserveWhiteSpace = false;
+@$doc->loadHTML($result);
+$xpath = new DOMXPath($doc);
+
+$records = $xpath->query("//records/record/recorddata/record"); //beachte: kein CamelCase sondern alles klein schreiben
 
 $outputString = "<?xml version=\"1.0\"?>\n";
-$outputString .= "<datei>\n";
+$outputString .= "<collection>\n";
 $outputArray = [];
 
 
-for ($p = 1; $p <= yaz_hits($id); $p++) {
-    $record = yaz_record($id, $p, "render;charset=iso5426,utf8"); //render;charset=iso5426,utf8
-    $recordArray = explode("\x1e", $record);
-    $header = substr($recordArray[0], 0, 24);
-    $recordContent = '<datensatz id="" typ="' . substr($header, 23, 1) . '" status="' . substr($header, 5, 1) . '" mabVersion="' . substr($header, 6, 4) . '">' . "\n";
-    $recordContent .= printLine(substr($recordArray[0], 24));
-
-    for ($j = 1; $j < count($recordArray); $j++) {
-        $recordContent .= printLine($recordArray[$j]);
+foreach ($records as $record) {
+    // Filter out any other results which contain the ISBN but not in the 020 or 776 field
+    $foundMatch = false;
+    if ($searchISBN) {
+        $foundIsbns = $xpath->query('.//datafield[@tag="020" or @tag="776"]/subfield', $record);
+        foreach ($foundIsbns as $foundNode) {
+            $foundValue = $foundNode->nodeValue;
+            foreach ($nArray as $queryValue) {
+                $testString = preg_replace('/[^0-9xX]/', '', $queryValue);
+                if (strlen($testString) == 13) {
+                    // Delete the 978-prefix and the check value at the end for ISBN13
+                    $testString = substr($testString, 3, -1);
+                } elseif (strlen($testString) == 10) {
+                    // Delete check value at the end for ISBN10
+                    $testString = substr($testString, 0, -1);
+                }
+                if (strpos(preg_replace('[^0-9xX]', '', $foundValue), $testString) !== false) {
+                    $foundMatch = true;
+                }
+            }
+        }
     }
-
-    $recordContent .= '</datensatz>' . "\n";
-    $outputString .= $recordContent;
-    array_push($outputArray, $recordContent);
-
+    if (!$searchISBN || $foundMatch) {
+        $outputString .= $doc->saveXML($record);
+        array_push($outputArray, $doc->saveXML($record));
+    }
 }
+$outputString .= "</collection>";
 
-$outputString .= "</datei>";
-yaz_close($id);
-
-$map = $standardMabMap;
-//e.g. <feld nr="700" ind="g">|SK 830<tf/>Automatisch aus BVB_2013-06 2013-03-27</feld> 
-$map['rvk'] = '//feld[@nr="700" and @ind="g"]/text()[1]';
-$map['bestand'] = '//feld[@nr="088"]';
+$map = $standardMarcMap;
+$map['sw'] = array(
+        'mainPart' => '//datafield[starts-with(@tag,"689")]',
+        'value' => './subfield[@code="a"]',
+        'key' => './subfield[@code="0" and contains(text(), "(DE-588)")]'
+    );
 
 if (!isset($_GET['format'])) {
     header('Content-type: text/xml');
     echo $outputString;
-
 } else if ($_GET['format'] == 'json') {
-
     $outputXml = simplexml_load_string($outputString);
+
     $outputMap = performMapping($map, $outputXml);
     $outputIndividualMap = [];
     for ($j = 0; $j < count($outputArray); $j++) {
