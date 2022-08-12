@@ -111,11 +111,7 @@ foreach ($records as $record) {
 $outputString .= "</collection>";
 
 $map = $standardMarcMap;
-$map['sw'] = array(
-        'mainPart' => '//datafield[starts-with(@tag,"689")]',
-        'value' => './subfield[@code="a"]',
-        'key' => './subfield[@code="0" and contains(text(), "(DE-588)")]'
-    );
+$map['sw']['mainPart'] = '//datafield[starts-with(@tag,"689")]';
 
 if (!isset($_GET['format'])) {
     header('Content-type: text/xml');
