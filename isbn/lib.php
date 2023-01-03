@@ -43,8 +43,9 @@ $standardMarcMap = array(
     'ddc' => '//datafield[@tag="082" and @ind2!="9"]/subfield[@code="a"]',
     'sw' => array(
         'mainPart' => '//datafield[starts-with(@tag,"6") and (subfield[@code="2"]="gbv" or subfield[@code="2"]="gnd")]',
-        'value' => './subfield[@code="a" or @code="t"]',
-        'additional' => './subfield[@code="9" or @code="g"]',
+        'value' => './subfield[@code="a"]',
+        'subvalues' => './subfield[@code="b" or @code="t"]',
+        'additional' => './subfield[@code="9" or @code="g" or @code="z"]',
         'key' => './subfield[@code="0" and contains(text(), "(DE-588)")]'
     ),
     'produktSigel' => '//datafield[@tag="912" and not(@ind2="7")]/subfield[@code="a"]',
@@ -97,15 +98,25 @@ function performMapping($map, $outputXml)
             foreach ($mainPart as $singleMainPart) {
                 $value = $singleMainPart->xpath($xpath['value']);
                 $key = $singleMainPart->xpath($xpath['key']);
-                $additional = $singleMainPart->xpath($xpath['additional']);
                 if ($value) {
                     $valueText = getValues($value[0]);
-                    if ($additional) {
-                        $additionalText = getValues($additional[0]);
-                        if (strpos($additionalText, ':') == 1) {
-                            $additionalText = substr($additionalText, 2);
+                    if (array_key_exists('subvalues', $xpath)) {
+                        $subvalues = $singleMainPart->xpath($xpath['subvalues']);
+                        $subvaluesArray = [$valueText];
+                        foreach ($subvalues as $sub) {
+                            array_push($subvaluesArray, getValues($sub));
                         }
-                        $valueText = $valueText . ' <' . $additionalText . '>';
+                        $valueText = implode('. ', $subvaluesArray);
+                    }
+                    if (array_key_exists('additional', $xpath)) {
+                        $additional = $singleMainPart->xpath($xpath['additional']);
+                        if ($additional) {
+                            $additionalText = getValues($additional[0]);
+                            if (strpos($additionalText, ':') == 1) {
+                                $additionalText = substr($additionalText, 2);
+                            }
+			    $valueText = $valueText . ' <' . $additionalText . '>';
+                        }
                     }
 
                     if ($key) {

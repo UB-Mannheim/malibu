@@ -114,6 +114,8 @@ $map = $standardMarcMap;
 $map['sw'] = array(
         'mainPart' => '//datafield[starts-with(@tag,"689")]',
         'value' => './subfield[@code="a"]',
+        'subvalues' => './subfield[@code="b" or @code="t"]',
+        'additional' => './subfield[@code="g" or @code="z"]',
         'key' => './subfield[@code="0" and contains(text(), "(DE-588)")]'
     );
 
