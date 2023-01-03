@@ -90,6 +90,7 @@ if ($foundOnAmazon) {
     libxml_use_internal_errors(false);
     //$contentAmazon = $docAmazon->saveHTML();
 
+
     //Bild von Amazon
     foreach (["imgBlkFront", "main-image-nonjs", "original-main-image"] as $id) {
         if ($docAmazon->getElementById($id) && $docAmazon->getElementById($id)->getAttribute('src') !== '') {
@@ -114,13 +115,14 @@ if ($foundOnAmazon) {
 	}
 	$descriptionOrigin = $urlAmazon;
     }
-    if (empty($description) && $docAmazon->getElementById('postBodyPS')) {
-        $description = $docAmazon->getElementById('postBodyPS')->textContent;
-        $descriptionOrigin = $urlAmazon;
-    }
-    if (empty($description) && $docAmazon->getElementById('iframeContent')) {
-        $description = $docAmazon->getElementById('iframeContent')->textContent;
-        $descriptionOrigin = $urlAmazon;
+    if (empty($description)) {
+        foreach (['postBodyPS', 'iframeContent', 'bookDescription_feature_div'] as $id) {
+            if ($docAmazon->getElementById($id)) {
+                $description = $docAmazon->getElementById($id)->textContent;
+		$descriptionOrigin = $urlAmazon;
+                break;
+            }
+        }
     }
 
     //Preis von Amazon
@@ -132,9 +134,14 @@ if ($foundOnAmazon) {
             $price = $match[1] . ' ' . $descriptionCurrency[1];
             $priceOrigin = $urlAmazon;
         }
-    } else if ($docAmazon->getElementById('buyNewSection')) {
-        $price = trim($docAmazon->getElementById('buyNewSection')->textContent);
-        $priceOrigin = $urlAmazon;
+    } else {
+        foreach (['buyNewSection', 'price', 'corePrice_feature_div'] as $id) {
+            if ($docAmazon->getElementById($id)) {
+                $price = trim($docAmazon->getElementById($id)->textContent);
+		$priceOrigin = $urlAmazon;
+                break;
+            }
+        }
     }
 
     //Bewertung von Amazon
@@ -229,7 +236,8 @@ echo '</td><td>';
 
 //Preis
 if (isset($price)) {
-    echo $price . '<br/>';
+    $price_array = explode("€", $price);
+    echo implode("€ / ", array_unique(array_filter($price_array))) . '€<br/>';
 }
 //Bewertung
 if (isset($rating)) {
