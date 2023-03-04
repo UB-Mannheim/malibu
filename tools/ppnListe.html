@@ -1,0 +1,117 @@
+<html>
+<head>
+<title>PPN-Liste anreichern</title>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+<style type="text/css">
+body { font-family:  Arial, Verdana, sans-serif; }
+</style>
+<script src="../isbn/jquery.min.js"></script>
+<script src="../isbn/clipboard.min.js"></script>
+<script type="text/javascript">
+<!--
+function listeEingabe() {
+	var isbnListe = $("#isbnListe").val();
+	$('#ausgabe').empty();
+	var isbnArray = isbnListe.split("\n");
+	$("#total").html(isbnArray.length);
+	$(isbnArray).each(function(index, value) {
+		check(index, value);
+	});
+}
+
+function check(index, value) {
+	$('#ausgabe').append('<div id="query-' + index + '" data-ppn="' + value + '"></div>');
+	value = value.replace(/^(\w*).*$/, '$1');
+	if (value.length > 0) {
+		var verbund = $("#verbund :selected").text();
+		var feld = $("#feld :selected").text();
+		$.get("../isbn/" + verbund + ".php?format=json&ppn=" + value, function(data) {
+			if (document.getElementById("mit").checked) {
+				$('#query-'+index).append(value + ": ");
+			}
+			result = data[feld];
+			// Schlagwörter sind keine Arrays sondern Objekte, wobei die Benennungen in den Keys stehen
+			if (!Array.isArray(result) && Object.keys(result).length > 0) {
+				result = Object.keys(result);
+			}
+			if (result.length > 0) {
+				var sep = $("#sep").val();
+				$('#query-'+index).append(result.join(sep));
+			} else {
+				$('#query-'+index).append("---");
+			}
+			updateStatus();
+		});
+	} else {
+		$('#query-'+index).append('KEINE PPN');
+		updateStatus();
+	}
+}
+
+
+// Statusanzeige aktualisieren
+function updateStatus() {
+	var status = parseInt($('#total').text())-$('#ausgabe div:empty').length;
+	$('#status').html(status);
+}
+</script>
+
+</head>
+<body>
+
+<h1>PPN-Liste anreichern</h1>
+
+<p>Eine Liste mit PPNs kann hier eingegeben werden und mit Werten eines Feldes z.B. ISBN, RVK, Bestand, Schlagwörter aus dem gleichen Verbund angereichert werden.</p>
+
+<h2>Eingabe</h2>
+
+<form>
+	<label>1. Verbund auswählen:</label>
+	<select id="verbund">
+		<option>k10plus</option>
+		<option>swb</option>
+		<option>gbv</option>
+		<option>b3kat</option>
+		<option>hebis</option>
+		<option>hbz</option>
+		<option>swiss</option>
+		<option>obvsg</option>
+	</select>
+	<p/>
+	<label>2. Abfragekriterium wählen:</label>
+	<select id="feld">
+		<option>isbn</option>
+		<option>bestand</option>
+		<option>rvk</option>
+		<option>sw</option>
+		<option>ddc</option>
+		<option>produktSigel</option>
+	</select>
+	<p/>
+	<label>3. Liste mit PPNs eingeben (jede PPN auf neue Zeile):</label><br/>
+	<textarea id="isbnListe" cols="100" rows="20"></textarea><br/>
+	<label>4. Ausgabeoptionen wählen:</label>
+	a) <input type="checkbox" name="verlinken" id="mit"> PPN ausgeben;
+	b) Trennzeichen <input id="sep" type="text" value="|" size="4"><br/>
+	<input type="button" value="Jetzt anreichern" onclick='listeEingabe();' />
+</form>
+
+<h2>Ausgabe</h2>
+
+<p>Status: <span id="status">0</span> von <span id="total">0</span> PPNs geprüft</p>
+
+<button class="btn" data-clipboard-target="#ausgabe">
+    In Zwischenablage kopieren 
+    <img src="../img/clippy.svg" alt="In Zwischenablage kopieren" width="16">
+</button>
+
+<div id='ausgabe' style='background-color:#F0F0F0'></div>
+
+
+
+<script type="text/javascript">
+new ClipboardJS('.btn');
+</script>
+
+</body>
+</html>
