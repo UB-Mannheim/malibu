@@ -45,7 +45,7 @@ function renderSigel(sigelArray){
 	var trenner = ", ";
 	for (var i=0; i<sigelArray.length; i++) { 
 		if (sigelArray[i].startsWith("ZDB-")) { // render Sigel starting with ZDB- as links
-			sigelMitZDBAlsLinks += '<a href="https://sigel.staatsbibliothek-berlin.de/nc/suche/?isil='+ sigelArray[i] + '" '  + 'target="_blank">' + sigelArray[i] + '</a>';
+			sigelMitZDBAlsLinks += '<a href="https://sigel.staatsbibliothek-berlin.de/suche/?isil='+ sigelArray[i] + '" '  + 'target="_blank">' + sigelArray[i] + '</a>';
 		} else { // render other Sigel normally
 			sigelMitZDBAlsLinks += sigelArray[i];
 		}
