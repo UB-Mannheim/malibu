@@ -50,8 +50,8 @@ $filteredSuchString = 'alma.mms_tagSuppressed=false+AND+(' . $suchString . ')&ma
 
 $contextOptions = [
     'http' => [
-	    'header' => 'Connection: close\r\n',
-	    'timeout' => 3,
+        'header' => 'Connection: close\r\n',
+        'timeout' => 3,
     ],
 ];
 $context = stream_context_create($contextOptions);

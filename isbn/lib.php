@@ -115,7 +115,7 @@ function performMapping($map, $outputXml)
                             if (strpos($additionalText, ':') == 1) {
                                 $additionalText = substr($additionalText, 2);
                             }
-			    $valueText = $valueText . ' <' . $additionalText . '>';
+                            $valueText = $valueText . ' <' . $additionalText . '>';
                         }
                     }
 
