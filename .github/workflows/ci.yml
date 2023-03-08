@@ -1,0 +1,28 @@
+# GitHub action for continuous integration of UB-Mannheim/malibu
+
+name: Check code
+
+on:
+  pull_request:
+
+  push:
+
+jobs:
+  ci:
+    name: CI checks
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout the repository to the GitHub Actions runner
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install dependencies
+        # php-codesniffer is used for the PSR-2 conformance test.
+        # shellcheck for testing shell scripts for common pitfalls
+        run: |
+             sudo apt-get --quiet update
+             sudo apt-get install --yes php-codesniffer shellcheck
+
+      - name: Run php-codeniffer and shellcheck
+        run: dist/pre-commit.sh .
