@@ -37,7 +37,7 @@ if [[ -z "$staged" ]];then
 fi
 
 # If any PHP files are staged
-staged_php=($($git_diff|grep '\.php$'))
+mapfile -t staged_php < <($git_diff|grep '\.php$')
 if [[ "${#staged_php[@]}" -ne 0 ]];then
     # Run PHP_CodeSniffer
     # echo "${staged_php[@]}"
@@ -46,11 +46,11 @@ if [[ "${#staged_php[@]}" -ne 0 ]];then
 fi
 
 # If any Shell (bash) scripts are staged
-staged_shell=($($git_diff|grep '\.sh$'))
+mapfile -t staged_shell < <($git_diff|grep '\.sh$')
 if [[ "${#staged_shell[@]}" -ne 0 ]];then
-    if which shellcheck >/dev/null; then
+    if command -v shellcheck >/dev/null; then
         out=$(shellcheck --shell bash "${staged_shell[@]}")
-        if [[ ! -z "$out" ]];then
+        if [[ -n "$out" ]];then
             echo "$out";
             exit 1;
         fi
