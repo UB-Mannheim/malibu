@@ -1,5 +1,6 @@
 # malibu - Mannheim library utilities
 
+[![Check code](https://github.com/UB-Mannheim/malibu/actions/workflows/ci.yml/badge.svg)](https://github.com/UB-Mannheim/malibu/actions/workflows/ci.yml)
 [![Build Status](https://travis-ci.org/UB-Mannheim/malibu.svg?branch=master)](https://travis-ci.org/UB-Mannheim/malibu)
 [![GitHub release](https://img.shields.io/github/release/UB-Mannheim/malibu.svg?maxAge=3600)](https://github.com/UB-Mannheim/malibu/releases)
 [![license](https://img.shields.io/github/license/UB-Mannheim/malibu.svg?maxAge=2592000)](https://github.com/UB-Mannheim/malibu/blob/master/LICENSE)
