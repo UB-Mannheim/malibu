@@ -111,15 +111,15 @@ if ($foundOnAmazon) {
                 break;
             }
             $node = $node->nextSibling;
-	    $i++;
-	}
-	$descriptionOrigin = $urlAmazon;
+            $i++;
+        }
+        $descriptionOrigin = $urlAmazon;
     }
     if (empty($description)) {
         foreach (['postBodyPS', 'iframeContent', 'bookDescription_feature_div'] as $id) {
             if ($docAmazon->getElementById($id)) {
                 $description = $docAmazon->getElementById($id)->textContent;
-		$descriptionOrigin = $urlAmazon;
+                $descriptionOrigin = $urlAmazon;
                 break;
             }
         }
@@ -138,7 +138,7 @@ if ($foundOnAmazon) {
         foreach (['buyNewSection', 'price', 'corePrice_feature_div'] as $id) {
             if ($docAmazon->getElementById($id)) {
                 $price = trim($docAmazon->getElementById($id)->textContent);
-		$priceOrigin = $urlAmazon;
+                $priceOrigin = $urlAmazon;
                 break;
             }
         }

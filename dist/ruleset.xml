@@ -5,6 +5,8 @@
     <rule ref="PSR2">
         <!-- https://github.com/squizlabs/PHP_CodeSniffer/blob/master/CodeSniffer/Standards/Squiz/Sniffs/ControlStructures/ControlSignatureSniff.php#L177 -->
         <exclude name="Squiz.ControlStructures.ControlSignature.NewlineAfterOpenBrace"/>
+        <exclude name="Squiz.WhiteSpace.ControlStructureSpacing.SpacingAfterOpen"/>
+        <exclude name="Squiz.WhiteSpace.ControlStructureSpacing.SpacingBeforeClose"/>
         <!-- https://github.com/squizlabs/PHP_CodeSniffer/blob/master/CodeSniffer/Standards/Generic/Sniffs/Functions/FunctionCallArgumentSpacingSniff.php -->
         <exclude name="Generic.Functions.FunctionCallArgumentSpacing"/>
         <exclude name="Generic.Files.LineLength.TooLong"/>

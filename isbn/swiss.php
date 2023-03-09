@@ -54,8 +54,8 @@ $contextOptions = [
         'ciphers' => 'DEFAULT@SECLEVEL=1',
     ],
     'http' => [
-	    'header' => 'Connection: close\r\n',
-	    'timeout' => 3,
+        'header' => 'Connection: close\r\n',
+        'timeout' => 3,
     ],
 ];
 $context = stream_context_create($contextOptions);
@@ -134,4 +134,3 @@ if (!isset($_GET['format'])) {
     header('Content-type: application/json');
     echo json_encode($outputMap, JSON_PRETTY_PRINT);
 }
-

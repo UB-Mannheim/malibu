@@ -19,7 +19,7 @@
  * man-sru?isbn=ISBN&format=holdings
  *
  * Sucht übergebene ISBN bzw. PPN in der SRU-Schnittstelle der UB Mannheim
- * und gibt maximal 10 Ergebnisse als MARCXML, JSON zurück oder eine 
+ * und gibt maximal 10 Ergebnisse als MARCXML, JSON zurück oder eine
  * formattierte Bestandsangabe (eine kurze Zeile und die Details in einer
  * Tabelle).
  */
