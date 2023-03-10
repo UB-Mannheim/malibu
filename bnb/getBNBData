@@ -19,8 +19,8 @@ import zipfile
 debug = False
 maxretry = 5
 datadir = './BNBDaten' if len(sys.argv) < 2 else sys.argv[1]
-urlbase = 'https://www.bl.uk'
-urlpath = '/collection-metadata/new-bnb-records'
+urlbase = 'https://www.bl.uk/collection-metadata/'
+urlpath = '/new-bnb-records'
 
 def request_wrapper(url):
     for retry in range(maxretry):
