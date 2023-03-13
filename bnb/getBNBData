@@ -88,7 +88,7 @@ def main():
             retcode += 1
             continue
         if r.headers['content-type'] != 'application/x-zip-compressed':
-            print(f"Unexpected content type {r.headers['content-type']} for {zipurl}")
+            print(f"Warning: Unexpected content type {r.headers['content-type']} for {zipurl}")
             retcode += 1
             continue
 
