@@ -5,7 +5,7 @@
 # $ docker run -d --rm -p <local-port>:80 --name malibu-container malibu
 # 
 
-FROM php:7.3-apache-buster
+FROM docker.io/php:7.3-apache-buster
 
 ENV JQUERY 3.6.0
 ENV CLIPBOARD 2.0.8
