@@ -28,8 +28,8 @@ COPY bnb/getBNBData bnb/getBNBData
 RUN curl -o "isbn/jquery.min.js" "https://cdnjs.cloudflare.com/ajax/libs/jquery/${JQUERY}/jquery.min.js"
 RUN curl -o "isbn/clipboard.min.js" "https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/${CLIPBOARD}/clipboard.min.js"
 
-# Download BNB data
-RUN bnb/getBNBData "$PWD/bnb/BNBDaten"
+# Download BNB data. It's okay if at least one RDF file was downloaded.
+RUN bnb/getBNBData "$PWD/bnb/BNBDaten" || test -f $(ls bnb/BNBDaten/*.rdf | head -1)
 
 # Copy the complete directory structure sans entries in .dockerignore
 COPY . .
