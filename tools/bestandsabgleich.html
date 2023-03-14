@@ -14,7 +14,7 @@ function listeEingabe() {
 	$('#ausgabe').empty();
 	var isbnArray = isbnListe.split("\n");
 	$("#total").html(isbnArray.length);
-	$(isbnArray).each(function(index, value) {
+	isbnArray.forEach(function(value, index) {
 		check(index, value);
 	});
 }
