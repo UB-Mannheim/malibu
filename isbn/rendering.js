@@ -236,7 +236,6 @@ function getParameterByName(name) {
  * bei liste-se.html?isbn=0521518148
  * getParameterByName("isbn") = 0521518148
  */
-    name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
     var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
         results = regex.exec(location.search);
     return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
