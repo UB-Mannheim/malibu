@@ -7,8 +7,8 @@
 
 FROM docker.io/php:8.2-apache-bullseye
 
-ENV JQUERY 3.6.0
-ENV CLIPBOARD 2.0.8
+ENV JQUERY 3.6.4
+ENV CLIPBOARD 2.0.11
 
 RUN apt-get update \
     && apt-get install --no-install-recommends -y yaz libyaz-dev wget unzip python3-bs4 python3-requests \
