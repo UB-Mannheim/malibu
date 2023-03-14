@@ -5,10 +5,10 @@
 # $ docker run -d --rm -p <local-port>:80 --name malibu-container malibu
 # 
 
-FROM php:7.3-apache-buster
+FROM docker.io/php:8.2-apache-bullseye
 
-ENV JQUERY 3.6.0
-ENV CLIPBOARD 2.0.8
+ENV JQUERY 3.6.4
+ENV CLIPBOARD 2.0.11
 
 RUN apt-get update \
     && apt-get install --no-install-recommends -y yaz libyaz-dev wget unzip python3-bs4 python3-requests \
@@ -28,8 +28,8 @@ COPY bnb/getBNBData bnb/getBNBData
 RUN curl -o "isbn/jquery.min.js" "https://cdnjs.cloudflare.com/ajax/libs/jquery/${JQUERY}/jquery.min.js"
 RUN curl -o "isbn/clipboard.min.js" "https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/${CLIPBOARD}/clipboard.min.js"
 
-# Download BNB data
-RUN chmod +x bnb/getBNBData && bnb/getBNBData "$PWD/bnb/BNBDaten"
+# Download BNB data. It's okay if at least one RDF file was downloaded.
+RUN bnb/getBNBData "$PWD/bnb/BNBDaten" || test -f $(ls bnb/BNBDaten/*.rdf | head -1)
 
 # Copy the complete directory structure sans entries in .dockerignore
 COPY . .
