@@ -88,7 +88,8 @@ function aggregateRVK() {
                      } else {
                          prefix = '<span style="visibility: hidden">' + "∟".repeat(i-1) + '</span>∟';
                      }
-                     parent.append("<div title='" + notation + "'>" + prefix + node + "</div>");
+                     let line = $("<div/>").attr("title", notation).text(prefix + node);
+                     parent.append(line);
                  }
                  parent = $("#rvkaggregiert div[title='" + notation + "']");
              }
@@ -278,7 +279,8 @@ function ppnEingabe(ppn, verbund) {
             var isbnString = data['isbn'].join(",");
             isbnEingabe(isbnString);
         } else {
-            $('#status').append('Keine zugehörige ISBN gefunden! (<a href="' + verbund+'.php?ppn='+ppn+'">Daten zum Titel</a>). Ohne ISBN ist aber keine Suche möglich.');
+            var suchLink = $('<a/>').attr('href', verbund + '.php?ppn=' + ppn).text('Daten zum Titel');
+            $('#status').append('Keine zugehörige ISBN gefunden! (').append(suchLink). append('). Ohne ISBN ist aber keine Suche möglich.');
         }
     });
 }
@@ -320,13 +322,18 @@ function isbnEingabe(n) {
     // Bestandsabgleich für die UB Mannheim
     // (wird ohne entspechende php-Datei ignoriert)
     // ist aber anpassbar: 
-    var url = "man-sru.php?isbn=" + suchString + "&format=holdings";
+    var url = "man-sru.php?isbn=" + encodeURIComponent(suchString) + "&format=holdings";
     $.get(url, function(data){
         var pattern = /<div>Bestand der UB Mannheim: (.*)</;
         var holdingsMAN = pattern.exec( data );
 
         if (holdingsMAN) {
-             $('#bestandsabgleich').append('<br/><div style="background-color:#ffbbbb">Bestand der UB Mannheim: ' + holdingsMAN[1] + ' (<a href="'+url+'" onclick="return toggleHidden()">Details</a>)<div id="detailsText" style="display: none;" class="hidden"><br/></div></div>');
+             var detailsLink = $('<a/>').attr('href', url).attr('onclick', 'return toggleHidden()').text("Details");
+             var bestandsLine = $('<div/>').attr('style', "background-color:#ffbbbb")
+               .text('Bestand der UB Mannheim: ' + holdingsMAN[1]+ ' (')
+               .append(detailsLink)
+               .append(')<div id="detailsText" style="display: none;" class="hidden"><br/></div>');
+             $('#bestandsabgleich').append('<br/>').append(bestandsLine);
         }
         //TODO alles hier effizienter und besser machen (aber vorerst funktioniert es:-)
         $( "#detailsText" ).load( url.replace(/ /g, '+')+" table" );
