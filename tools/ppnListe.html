@@ -30,7 +30,7 @@ function check(index, value) {
 			if (document.getElementById("mit").checked) {
 				$('#query-'+index).text(value + ": ");
 			}
-			result = data[feld];
+			var result = data[feld];
 			// Schlagwörter sind keine Arrays sondern Objekte, wobei die Benennungen in den Keys stehen
 			if (!Array.isArray(result) && Object.keys(result).length > 0) {
 				result = Object.keys(result);
