@@ -243,7 +243,7 @@ $(document).ready(function(){
     //Aktion bei ISBN Form:
     $('#formIsbn').on('submit',function(){
         var parameter = $('#eingabeIsbn').val();
-        window.location.href = "suche.html?isbn=" + parameter;
+        window.location.href = "suche.html?isbn=" + encodeURIComponent(parameter);
         return false;//damit sollte die eigentlich submit action ignoriert werden
     });
 
@@ -251,7 +251,7 @@ $(document).ready(function(){
     $('#formPpn').on('submit',function(){
         var parameter = $('#eingabePpn').val();
         var parameter2 = $('option[name=\'eingabeVerbund\']:checked').val();
-        window.location.href = "suche.html?ppn=" + parameter + "&verbund=" + parameter2;
+        window.location.href = "suche.html?ppn=" + encodeURIComponent(parameter) + "&verbund=" + encodeURIComponent(parameter2);
         return false;//damit sollte die eigentlich submit action ignoriert werden
     });
 
