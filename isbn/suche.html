@@ -275,13 +275,14 @@ function showNotification(message, bcolor, color) {
 function ppnEingabe(ppn, verbund) {
     verbund = verbund.toLowerCase();
     var alle = ["swb", "k10plus", "hebis", "b3kat", "hbz", "swiss", "obvsg"];
-    if (alle.includes(verbund)) {
-        $.getJSON(verbund+".php?ppn="+ppn+"&format=json", function(data){
+    var ind = alle.indexOf(verbund);
+    if (ind > -1) {
+        $.getJSON(alle[ind]+".php?ppn="+ppn+"&format=json", function(data){
             if (data['isbn'].length > 0) {
                 var isbnString = data['isbn'].join(",");
                 isbnEingabe(isbnString);
             } else {
-                var suchLink = $('<a/>').attr('href', verbund + '.php?ppn=' + ppn).text('Daten zum Titel');
+                var suchLink = $('<a/>').attr('href', alle[ind] + '.php?ppn=' + ppn).text('Daten zum Titel');
                 $('#status').append('Keine zugehörige ISBN gefunden! (').append(suchLink). append('). Ohne ISBN ist aber keine Suche möglich.');
             }
         });
