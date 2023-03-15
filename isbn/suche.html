@@ -88,7 +88,7 @@ function aggregateRVK() {
                      } else {
                          prefix = '<span style="visibility: hidden">' + "∟".repeat(i-1) + '</span>∟';
                      }
-                     let line = $("<div/>").attr("title", notation).text(prefix + node);
+                     let line = $("<div/>").attr("title", notation).text(node).prepend(prefix);
                      parent.append(line);
                  }
                  parent = $("#rvkaggregiert div[title='" + notation + "']");
