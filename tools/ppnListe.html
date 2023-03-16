@@ -14,22 +14,23 @@ function listeEingabe() {
 	$('#ausgabe').empty();
 	var isbnArray = isbnListe.split("\n");
 	$("#total").html(isbnArray.length);
-	$(isbnArray).each(function(index, value) {
+	isbnArray.forEach(function(value, index) {
 		check(index, value);
 	});
 }
 
 function check(index, value) {
-	$('#ausgabe').append('<div id="query-' + index + '" data-ppn="' + value + '"></div>');
+	$('#ausgabe').append('<div id="query-' + index + '"/>');
+	$('#query-'+index).attr("data-ppn", value);
 	value = value.replace(/^(\w*).*$/, '$1');
 	if (value.length > 0) {
 		var verbund = $("#verbund :selected").text();
 		var feld = $("#feld :selected").text();
 		$.get("../isbn/" + verbund + ".php?format=json&ppn=" + value, function(data) {
 			if (document.getElementById("mit").checked) {
-				$('#query-'+index).append(value + ": ");
+				$('#query-'+index).text(value + ": ");
 			}
-			result = data[feld];
+			var result = data[feld];
 			// Schlagwörter sind keine Arrays sondern Objekte, wobei die Benennungen in den Keys stehen
 			if (!Array.isArray(result) && Object.keys(result).length > 0) {
 				result = Object.keys(result);

@@ -32,7 +32,7 @@ function renderRVK(rvkArray) {
     } else {
         for (var i=0; i<rvkArray.length; i++) {
             var rvk = rvkArray[i];
-            var rvkUrl = 'https://rvk.uni-regensburg.de/notation/' + rvk.replace(' ', '%20');
+            var rvkUrl = 'https://rvk.uni-regensburg.de/notation/' + encodeURI(rvk);
             rvkArray[i] = '<a href="' + rvkUrl + '" target="_blank" class="' + rvk.replace(' ', '-') + '">' + rvk + '</a>';
             // Die Klassenbezeichnung hier benützen wir später für das
             // dazuladen der Notationen im title-Attribute.
@@ -236,7 +236,6 @@ function getParameterByName(name) {
  * bei liste-se.html?isbn=0521518148
  * getParameterByName("isbn") = 0521518148
  */
-    name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
     var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
         results = regex.exec(location.search);
     return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));

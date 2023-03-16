@@ -88,7 +88,8 @@ function aggregateRVK() {
                      } else {
                          prefix = '<span style="visibility: hidden">' + "∟".repeat(i-1) + '</span>∟';
                      }
-                     parent.append("<div title='" + notation + "'>" + prefix + node + "</div>");
+                     let line = $("<div/>").attr("title", notation).text(node).prepend(prefix);
+                     parent.append(line);
                  }
                  parent = $("#rvkaggregiert div[title='" + notation + "']");
              }
@@ -243,7 +244,7 @@ $(document).ready(function(){
     //Aktion bei ISBN Form:
     $('#formIsbn').on('submit',function(){
         var parameter = $('#eingabeIsbn').val();
-        window.location = "suche.html?isbn=" + parameter;
+        window.location.href = "suche.html?isbn=" + encodeURIComponent(parameter);
         return false;//damit sollte die eigentlich submit action ignoriert werden
     });
 
@@ -251,7 +252,7 @@ $(document).ready(function(){
     $('#formPpn').on('submit',function(){
         var parameter = $('#eingabePpn').val();
         var parameter2 = $('option[name=\'eingabeVerbund\']:checked').val();
-        window.location = "suche.html?ppn=" + parameter + "&verbund=" + parameter2;
+        window.location.href = "suche.html?ppn=" + encodeURIComponent(parameter) + "&verbund=" + encodeURIComponent(parameter2);
         return false;//damit sollte die eigentlich submit action ignoriert werden
     });
 
@@ -273,14 +274,19 @@ function showNotification(message, bcolor, color) {
 
 function ppnEingabe(ppn, verbund) {
     verbund = verbund.toLowerCase();
-    $.getJSON(verbund+".php?ppn="+ppn+"&format=json", function(data){
-        if (data['isbn'].length > 0) {
-            var isbnString = data['isbn'].join(",");
-            isbnEingabe(isbnString);
-        } else {
-            $('#status').append('Keine zugehörige ISBN gefunden! (<a href="' + verbund+'.php?ppn='+ppn+'">Daten zum Titel</a>). Ohne ISBN ist aber keine Suche möglich.');
-        }
-    });
+    var alle = ["swb", "k10plus", "hebis", "b3kat", "hbz", "swiss", "obvsg"];
+    var ind = alle.indexOf(verbund);
+    if (ind > -1) {
+        $.getJSON(alle[ind]+".php?ppn="+ppn+"&format=json", function(data){
+            if (data['isbn'].length > 0) {
+                var isbnString = data['isbn'].join(",");
+                isbnEingabe(isbnString);
+            } else {
+                var suchLink = $('<a/>').attr('href', alle[ind] + '.php?ppn=' + ppn).text('Daten zum Titel');
+                $('#status').append('Keine zugehörige ISBN gefunden! (').append(suchLink). append('). Ohne ISBN ist aber keine Suche möglich.');
+            }
+        });
+    }
 }
 
 
@@ -299,27 +305,39 @@ function isbnEingabe(n) {
     });
     
     var suchString = n.replace(/,/g, ' or ');
-    $('#status').append("Gesucht wurden ISBN " + suchString);
-    $('#suche'+'SWB').html('<a href="http://swb.bsz-bw.de/DB=2.1/SET=1/TTL=1/CMD?ACT=SRCHA&IKT=1007&TRM='+suchString+'" target="_blank">SWB</a>');
-    $('#suche'+'K10PLUS').html('<a href="https://kxp.k10plus.de/DB=2.0/SET=1/TTL=1/CMD?ACT=SRCHA&IKT=7&TRM='+suchString+'" target="_blank">K10PLUS</a>');
-    $('#suche'+'HEBIS').html('<a href="http://cbsopac.rz.uni-frankfurt.de/DB=2.1/SET=1/TTL=1/CMD?ACT=SRCHA&IKT=8520&TRM='+nArray[0]+'" target="_blank">HEBIS</a>');
-    $('#suche'+'B3KAT').html('<a href="https://opacplus.bib-bvb.de/TouchPoint_touchpoint/start.do?Query=-1%3D%22' + nArray[0] + '%22&Language=De&SearchProfile=" target="_blank">B3KAT</a>');
-    $('#suche'+'HBZ').html('<a href="http://okeanos-www.hbz-nrw.de/F/?FUNC=find-c&CCL_TERM=+IBN=%28'+nArray[0]+'" target="_blank">HBZ</a>');
-    $('#suche'+'SWISS').html('<a href="https://swisscovery.slsp.ch/discovery/search?query=isbn,contains,'+nArray[0]+',AND&tab=41SLSP_NETWORK&search_scope=DN_and_CI&vid=41SLSP_NETWORK:VU1_UNION&mode=advanced&offset=0" target="_blank">swisscovery</a>');
-    $('#suche'+'OBVSG').html('<a href="http://search.obvsg.at/primo_library/libweb/action/search.do?fn=search&ct=search&initialSearch=true&mode=Basic&tab=default_tab&indx=1&dum=true&srt=rank&vid=OBV&tb=t&vl%28freeText0%29='+nArray[0]+'" target="_blank">OBVSG</a>');
+    $('#status').text("Gesucht wurden ISBN " + suchString);
+    var swbLink = $('<a target="_blank">SWB</a>').attr("href", "http://swb.bsz-bw.de/DB=2.1/SET=1/TTL=1/CMD?ACT=SRCHA&IKT=1007&TRM=" + suchString);
+    var k10plusLink = $('<a target="_blank">K10PLUS</a>').attr("href", "https://kxp.k10plus.de/DB=2.0/SET=1/TTL=1/CMD?ACT=SRCHA&IKT=7&TRM=" + suchString);
+    var hebisLink = $('<a target="_blank">HEBIS</a>').attr("href", "http://cbsopac.rz.uni-frankfurt.de/DB=2.1/SET=1/TTL=1/CMD?ACT=SRCHA&IKT=8520&TRM=" + nArray[0]);
+    var b3katLink = $('<a target="_blank">B3KAT</a>').attr("href", "https://opacplus.bib-bvb.de/TouchPoint_touchpoint/start.do?Query=-1%3D%22" + nArray[0] + "%22&Language=De&SearchProfile=");
+    var hbzLink = $('<a target="_blank">HBZ</a>').attr("href", "http://okeanos-www.hbz-nrw.de/F/?FUNC=find-c&CCL_TERM=+IBN=%28" + nArray[0]);
+    var swissLink = $('<a target="_blank">swisscovery</a>').attr("href", "https://swisscovery.slsp.ch/discovery/search?query=isbn,contains," + nArray[0] + ",AND&tab=41SLSP_NETWORK&search_scope=DN_and_CI&vid=41SLSP_NETWORK:VU1_UNION&mode=advanced&offset=0");
+    var obvsgLink = $('<a target="_blank">OBVSG</a>').attr("href", "http://search.obvsg.at/primo_library/libweb/action/search.do?fn=search&ct=search&initialSearch=true&mode=Basic&tab=default_tab&indx=1&dum=true&srt=rank&vid=OBV&tb=t&vl%28freeText0%29=" + nArray[0]);
+    $('#suche'+'SWB').html(swbLink);
+    $('#suche'+'K10PLUS').html(k10plusLink);
+    $('#suche'+'HEBIS').html(hebisLink);
+    $('#suche'+'B3KAT').html(b3katLink);
+    $('#suche'+'HBZ').html(hbzLink);
+    $('#suche'+'SWISS').html(swissLink);
+    $('#suche'+'OBVSG').html(obvsgLink);
 
     
     
     // Bestandsabgleich für die UB Mannheim
     // (wird ohne entspechende php-Datei ignoriert)
     // ist aber anpassbar: 
-    var url = "man-sru.php?isbn=" + suchString + "&format=holdings";
+    var url = "man-sru.php?isbn=" + encodeURIComponent(suchString) + "&format=holdings";
     $.get(url, function(data){
         var pattern = /<div>Bestand der UB Mannheim: (.*)</;
         var holdingsMAN = pattern.exec( data );
 
         if (holdingsMAN) {
-             $('#bestandsabgleich').append('<br/><div style="background-color:#ffbbbb">Bestand der UB Mannheim: ' + holdingsMAN[1] + ' (<a href="'+url+'" onclick="return toggleHidden()">Details</a>)<div id="detailsText" style="display: none;" class="hidden"><br/></div></div>');
+             var detailsLink = $('<a/>').attr('href', url).attr('onclick', 'return toggleHidden()').text("Details");
+             var bestandsLine = $('<div/>').attr('style', "background-color:#ffbbbb")
+               .text('Bestand der UB Mannheim: ' + holdingsMAN[1]+ ' (')
+               .append(detailsLink)
+               .append(')<div id="detailsText" style="display: none;" class="hidden"><br/></div>');
+             $('#bestandsabgleich').append('<br/>').append(bestandsLine);
         }
         //TODO alles hier effizienter und besser machen (aber vorerst funktioniert es:-)
         $( "#detailsText" ).load( url.replace(/ /g, '+')+" table" );

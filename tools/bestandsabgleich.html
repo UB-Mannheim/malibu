@@ -14,13 +14,14 @@ function listeEingabe() {
 	$('#ausgabe').empty();
 	var isbnArray = isbnListe.split("\n");
 	$("#total").html(isbnArray.length);
-	$(isbnArray).each(function(index, value) {
-		check(index, value);
+	isbnArray.forEach(function(value, index) {
+		check(index, encodeURIComponent(value));
 	});
 }
 
 function check(index, value) {
-	$('#ausgabe').append('<div id="query-' + index + '" data-isbn="' + value + '"></div>');
+	$('#ausgabe').append('<div id="query-' + index + '"/>');
+	$('#query-'+index).attr("data-isbn", value);
 	var numberOfDigits = value.replace(/\D/g, '').length;
 	if (numberOfDigits>=9) {
 		$.get("../isbn/man-sru.php?format=holdings&isbn="+value, function(data) {
