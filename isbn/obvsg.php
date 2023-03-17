@@ -42,7 +42,7 @@ if (!$searchPPN && isset($_GET['isbn'])) {
     $searchISBN = true;
 }
 if ($searchPPN || $searchISBN) {
-    $nArray = preg_split("/\s*(or|,|;)\s*/i", $n);
+    $nArray = preg_split("/\s*(or|,|;)\s*/i", $n, -1, PREG_SPLIT_NO_EMPTY);
     $suchString = 'alma.all=' . implode('+OR+alma.all=', $nArray);
 }
 

@@ -42,7 +42,7 @@ https://slsp.ch/de/metadata
 $urlBase = 'https://swisscovery.slsp.ch/view/sru/41SLSP_NETWORK?version=1.2&operation=searchRetrieve&recordSchema=marcxml&query=';
 if (isset($_GET['isbn'])) {
     $n = trim($_GET['isbn']);
-    $nArray = preg_split("/\s*(or|,|;)\s*/i", $n);
+    $nArray = preg_split("/\s*(or|,|;)\s*/i", $n, -1, PREG_SPLIT_NO_EMPTY);
     $suchString = 'alma.all=' . implode('+OR+alma.all=', $nArray);
     $suchStringSWB = implode(' or ', $nArray);
 }

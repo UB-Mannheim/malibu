@@ -41,7 +41,7 @@ $urlBase = 'https://uni-mannheim.alma.exlibrisgroup.com/view/sru/49MAN_INST?vers
 
 if (isset($_GET['isbn'])) {
     $n = trim($_GET['isbn']);
-    $nArray = preg_split("/\s*(or|,|;)\s*/i", $n);
+    $nArray = preg_split("/\s*(or|,|;)\s*/i", $n, -1, PREG_SPLIT_NO_EMPTY);
     $suchString = 'alma.all=' . implode('+OR+alma.all=', $nArray);
     $suchStringSWB = implode(' or ', $nArray);
 }
