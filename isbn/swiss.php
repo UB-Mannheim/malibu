@@ -55,7 +55,7 @@ $contextOptions = [
     ],
     'http' => [
         'header' => 'Connection: close\r\n',
-        'timeout' => 3,
+        'timeout' => 10,
     ],
 ];
 $context = stream_context_create($contextOptions);
