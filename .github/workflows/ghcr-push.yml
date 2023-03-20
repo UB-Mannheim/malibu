@@ -9,8 +9,8 @@ on:
 env:
     IMAGE_NAME: malibu
     IMAGE_TAGS: latest ${{ github.sha }}
-    IMAGE_REGISTRY: ghcr.io/${{ github.repository_owner }}
-    REGISTRY_USER: ${{ github.actor }}
+    IMAGE_REGISTRY: ghcr.io/UB-Mannheim
+    REGISTRY_USER: UB-Mannheim
     REGISTRY_PASSWORD: ${{ github.token }}
 
 jobs:
