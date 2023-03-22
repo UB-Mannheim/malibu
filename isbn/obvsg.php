@@ -36,14 +36,14 @@ $searchPPN = false;
 if (isset($_GET['ppn'])) {
     $n = trim($_GET['ppn']);
     $searchPPN = true;
+    $nArray = preg_split("/\s*(or|,|;)\s*/i", $n, -1, PREG_SPLIT_NO_EMPTY);
+    $suchString = 'alma.all=' . implode('+OR+alma.all=', $nArray);
 }
 if (!$searchPPN && isset($_GET['isbn'])) {
     $n = trim($_GET['isbn']);
     $searchISBN = true;
-}
-if ($searchPPN || $searchISBN) {
     $nArray = preg_split("/\s*(or|,|;)\s*/i", $n, -1, PREG_SPLIT_NO_EMPTY);
-    $suchString = 'alma.all=' . implode('+OR+alma.all=', $nArray);
+    $suchString = 'alma.isbn=' . implode('+OR+alma.isbn=', $nArray);
 }
 
 $filteredSuchString = 'alma.mms_tagSuppressed=false+AND+(' . $suchString . ')&maximumRecords=10';
@@ -51,7 +51,7 @@ $filteredSuchString = 'alma.mms_tagSuppressed=false+AND+(' . $suchString . ')&ma
 $contextOptions = [
     'http' => [
         'header' => 'Connection: close\r\n',
-        'timeout' => 3,
+        'timeout' => 15,
     ],
 ];
 $context = stream_context_create($contextOptions);
