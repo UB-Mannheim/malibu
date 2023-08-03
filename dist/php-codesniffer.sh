@@ -25,7 +25,7 @@
 #------------------------------------------------------------------------------
 
 DIR="$(dirname "$(readlink -f "$0")")"
-PHP_CODE_STANDARD=${PHP_CODE_STANDARD:-$DIR}
+PHP_CODE_STANDARD=${PHP_CODE_STANDARD:-PSR2}
 CS_PHAR="$DIR/phpcs.phar"
 CS_URL='https://squizlabs.github.io/PHP_CodeSniffer/phpcs.phar'
 
