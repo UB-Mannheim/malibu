@@ -65,6 +65,9 @@ $outputArray = [];
 
 for ($p = 1; $p <= yaz_hits($id); $p++) {
     $record = yaz_record($id, $p, "xml"); //Umwandlung in XML
+    if (!strlen($record)) {
+        error_log("Empty record in " . __FILE__ . ", line " . __LINE__);
+    }
     //namespace löschen
     $record = str_replace('xmlns="http://www.loc.gov/MARC21/slim"', '', $record);
     $outputString .= $record;
@@ -85,7 +88,15 @@ if (!isset($_GET['format'])) {
     $outputMap = performMapping($map, $outputXml);
     $outputIndividualMap = [];
     for ($j = 0; $j < count($outputArray); $j++) {
+        if (!strlen($outputArray[$j])) {
+            continue;
+        }
         $outputXml = simplexml_load_string($outputArray[$j]);
+        if ($outputXml === false) {
+            error_log("Error loading xml in " . __FILE__ . ", line " . __LINE__ . " from: "
+                      . print_r($outputArray[$j], true));
+            continue;
+        }
         $outputSingleMap = performMapping($map, $outputXml);
         array_push($outputIndividualMap, $outputSingleMap);
     }
