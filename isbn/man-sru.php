@@ -26,6 +26,9 @@
 
 include 'lib.php';
 
+$suchString = '';
+$suchStringSWB = '';
+
 if (isset($_GET['ppn'])) {
     $ppn = trim($_GET['ppn']);
     $suchString = 'dc.id=' . $ppn;
@@ -39,13 +42,18 @@ https://uni-mannheim.alma.exlibrisgroup.com/view/sru/49MAN_INST?version=1.2&oper
 
 $urlBase = 'https://uni-mannheim.alma.exlibrisgroup.com/view/sru/49MAN_INST?version=1.2&operation=searchRetrieve&recordSchema=marcxml&query=';
 
+$filteredSuchString = 'alma.mms_tagSuppressed=false';
 if (isset($_GET['isbn'])) {
     $n = trim($_GET['isbn']);
     $nArray = preg_split("/\s*(or|,|;)\s*/i", $n, -1, PREG_SPLIT_NO_EMPTY);
     $suchString = 'alma.all=' . implode('+OR+alma.all=', $nArray);
     $suchStringSWB = implode(' or ', $nArray);
 }
-$filteredSuchString = 'alma.mms_tagSuppressed=false+AND+(' . $suchString . ')';
+
+if (strlen($suchString)) {
+    $filteredSuchString .= '+AND+(' . $suchString . ')';
+}
+
 # work around ExLibris server configuration issue
 $contextOptions = [
     'ssl' => [
@@ -152,7 +160,9 @@ if (!isset($_GET['format'])) {
             if (strpos($sublocation, "Lehrbuchsammlung") !== false) {
                 $location = "LBS";
             }
-            $number = getValues($node->xpath('./subfield[@code="f"]')[0]);
+
+            $node_f = $node->xpath('./subfield[@code="f"]');
+            $number = count($node_f) ? getValues($node_f[0]) : 0;
             if (array_key_exists($location, $bestand)) {
                 $bestand[$location] += $number;
             } else {
