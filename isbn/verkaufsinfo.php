@@ -52,7 +52,11 @@ function isbn13($z)
     }
 }
 
-
+function status_ok($url) {
+    $status = intval(substr(get_headers($url, 1)[0], 9, 3));
+    //return $status != 404 && $status != 403;
+    return $status == 200;
+}
 
 if (isset($_GET['isbn10'])) {
     global $n10, $n13;
@@ -80,11 +84,8 @@ if (!isset($_GET['isbn13']) && !isset($_GET['isbn10'])) {
 
 
 $urlAmazon = 'https://www.amazon.de/dp/' . $n10;
-$headerAmazon = get_headers($urlAmazon, 1); //$headerAmazon[0] is a String, e.g. HTTP/1.1 404 ; HTTP/1.1 200
-$foundOnAmazon = !strpos($headerAmazon[0], '404');
-$docAmazon = new DOMDocument();
-
-if ($foundOnAmazon) {
+if (status_ok($urlAmazon)) {
+    $docAmazon = new DOMDocument();
     libxml_use_internal_errors(true); //HTML5 erzeugt Warnings beim Einlesen, aber die Option beseitigt dies
     $docAmazon->loadHTMLFile($urlAmazon);
     libxml_use_internal_errors(false);
@@ -164,14 +165,11 @@ if ($foundOnAmazon) {
 
 
 $urlGoogle = "https://www.googleapis.com/books/v1/volumes?q=ISBN:$n13";
-$headerGoogle = get_headers($urlGoogle, 1);
-$foundOnGoogle = !strpos($headerGoogle[0], '404 NotFound') && !strpos($headerGoogle[0], '403 Forbidden');
-
-if ($foundOnGoogle) {
+if (status_ok($urlGoogle)) {
     $contentGoogle = file_get_contents($urlGoogle);
     $jsonGoogle = json_decode($contentGoogle);
 
-    if (property_exists($jsonGoogle, 'items')) {
+    if (!is_null($jsonGoogle) && property_exists($jsonGoogle, 'items')) {
         for ($j = 0; $j < count($jsonGoogle->items); $j++) {
             //die Suche welche durch die URL $urlGoogle ausgeführt wird, liefert auch falsche Ergebnisse (welche die ISBN nur in einer angehängten URL enthalten --> darum muss man hier nochmals genau filtern
             $volumeInfo = $jsonGoogle->items[$j]->volumeInfo;
