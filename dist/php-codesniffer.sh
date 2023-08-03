@@ -39,4 +39,4 @@ if [[ -z "$CODE_SNIFFER" ]];then
     CODE_SNIFFER="php $CS_PHAR"
 fi
 
-$CODE_SNIFFER --standard="$PHP_CODE_STANDARD" -s "$@"
+$CODE_SNIFFER --standard="$PHP_CODE_STANDARD" --ignore=*.min.js -s "$@"

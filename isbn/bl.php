@@ -1,6 +1,6 @@
 <?php
 /*
- * Source: https://github.com/UB-Mannheim/malibu/isbn
+ * Source: https://github.com/UB-Mannheim/malibu/
  *
  * Copyright (C) 2013 Universitätsbibliothek Mannheim
  *
@@ -22,6 +22,7 @@
  * bzw. als JSON.
  */
 
+include 'conf.php';
 include 'lib.php';
 
 $id = yaz_connect(BL_URL, array("user" => BL_USER, "password" => BL_PASSWORD));
@@ -69,16 +70,14 @@ $outputString .= "</collection>";
 
 yaz_close($id);
 
-$map = $standardMarcMap;
+$map = STANDARD_MARC_MAP;
 $map['bestand'] = '//datafield[@tag="900"]/subfield[@code="b"]';
 
 
 if (!isset($_GET['format'])) {
     header('Content-type: text/xml');
     echo $outputString;
-
-} else if ($_GET['format'] == 'json') {
-
+} elseif ($_GET['format'] == 'json') {
     $outputXml = simplexml_load_string($outputString);
     $outputMap = performMapping($map, $outputXml);
     $outputIndividualMap = [];

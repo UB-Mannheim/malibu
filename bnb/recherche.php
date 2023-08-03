@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <!--
-Source: https://github.com/UB-Mannheim/malibu/bnb
+Source: https://github.com/UB-Mannheim/malibu/
 
 Copyright (C) 2013 Universitätsbibliothek Mannheim
 

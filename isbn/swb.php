@@ -1,6 +1,6 @@
 <?php
 /*
- * Source: https://github.com/UB-Mannheim/malibu/isbn
+ * Source: https://github.com/UB-Mannheim/malibu/
  *
  * Copyright (C) 2013 Universitätsbibliothek Mannheim
  *
@@ -26,6 +26,7 @@
  * bzw. als JSON.
  */
 
+include 'conf.php';
 include 'lib.php';
 
 $id = yaz_connect(SWB_URL);
@@ -72,13 +73,13 @@ for ($p = 1; $p <= yaz_hits($id); $p++) {
 $outputString .= "</collection>";
 yaz_close($id);
 
-$map = $standardMarcMap;
+$map = STANDARD_MARC_MAP;
 
 
 if (!isset($_GET['format'])) {
     header('Content-type: text/xml');
     echo $outputString;
-} else if ($_GET['format'] == 'json') {
+} elseif ($_GET['format'] == 'json') {
     $outputXml = simplexml_load_string($outputString);
 
     $outputMap = performMapping($map, $outputXml);
