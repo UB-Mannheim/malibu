@@ -12,4 +12,7 @@
         <exclude name="Generic.Files.LineLength.TooLong"/>
         <exclude name="PSR2.ControlStructures.ElseIfDeclaration.NotAllowed"/>
     </rule>
+    <rule ref="PSR1.Files.SideEffects.FoundWithSymbols">
+      <exclude-pattern>bnb/getBNBData.php</exclude-pattern>
+    </rule>
 </ruleset>
