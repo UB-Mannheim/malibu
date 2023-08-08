@@ -11,7 +11,7 @@ ENV JQUERY 3.6.4
 ENV CLIPBOARD 2.0.11
 
 RUN apt-get update \
-    && apt-get install --no-install-recommends -y yaz libyaz-dev wget unzip python3-bs4 python3-requests \
+    && apt-get install --no-install-recommends -y yaz libyaz-dev wget unzip \
     && pecl install yaz \
     && docker-php-ext-enable yaz \
     && apt-get clean \
@@ -29,7 +29,7 @@ RUN curl -o "isbn/jquery.min.js" "https://cdnjs.cloudflare.com/ajax/libs/jquery/
 RUN curl -o "isbn/clipboard.min.js" "https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/${CLIPBOARD}/clipboard.min.js"
 
 # Download BNB data. It's okay if at least one RDF file was downloaded.
-RUN bnb/getBNBData "$PWD/bnb/BNBDaten" || test -f $(ls bnb/BNBDaten/*.rdf | head -1)
+RUN php bnb/getBNBData.php "$PWD/bnb/BNBDaten" || test -f $(ls bnb/BNBDaten/*.rdf | head -1)
 
 # Copy the complete directory structure sans entries in .dockerignore
 COPY . .
