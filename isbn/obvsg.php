@@ -1,6 +1,6 @@
 <?php
 /*
- * Source: https://github.com/UB-Mannheim/malibu/isbn
+ * Source: https://github.com/UB-Mannheim/malibu/
  *
  * Copyright (C) 2022 Universitätsbibliothek Mannheim
  *
@@ -21,6 +21,7 @@
  * und gibt maximal 10 Ergebnisse als MARCXML oder JSON zurück.
  */
 
+include 'conf.php';
 include 'lib.php';
 
 /*
@@ -110,7 +111,7 @@ foreach ($records as $record) {
 }
 $outputString .= "</collection>";
 
-$map = $standardMarcMap;
+$map = STANDARD_MARC_MAP;
 $map['sw'] = array(
         'mainPart' => '//datafield[starts-with(@tag,"689")]',
         'value' => './subfield[@code="a"]',
@@ -122,7 +123,7 @@ $map['sw'] = array(
 if (!isset($_GET['format'])) {
     header('Content-type: text/xml');
     echo $outputString;
-} else if ($_GET['format'] == 'json') {
+} elseif ($_GET['format'] == 'json') {
     $outputXml = simplexml_load_string($outputString);
 
     $outputMap = performMapping($map, $outputXml);

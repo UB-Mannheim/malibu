@@ -1,6 +1,6 @@
 <?php
 /*
- * Source: https://github.com/UB-Mannheim/malibu/isbn
+ * Source: https://github.com/UB-Mannheim/malibu/
  *
  * Copyright (C) 2014 Universitätsbibliothek Mannheim
  *
@@ -11,20 +11,11 @@
  * version 3, or (at your option) any later version.
  * See <http://www.gnu.org/licenses/> for more details.
  *
- * Zusammenstellung von Funktionen und gemeinsam genutzten Konstrukten
- * sowie Laden der ini Datei.
+ * Zusammenstellung von Konstanten und Funktionen.
  *
  */
 
-if (!file_exists('conf.php')) {
-    header('HTTP/1.1 500 Internal Server Error');
-    exit("ERROR: conf.php nicht gefunden");
-}
-
-include 'conf.php';
-
-
-$standardMarcMap = array(
+const STANDARD_MARC_MAP = [
     'id' => '//controlfield[@tag="001"]',
     'isbn' => '//datafield[@tag="020"]/subfield[@code="a"]|//datafield[@tag="776"]/subfield[@code="z"]',
     'dnbNr' => '//datafield[@tag="016" and contains(subfield[@code="2"], "DE-101")]/subfield[@code="a"]',
@@ -41,20 +32,20 @@ $standardMarcMap = array(
     'bestand' => '//datafield[@tag="LOK" and contains(subfield[@code="0"], "852")]/subfield[@code="a"]',
     'rvk' => '//datafield[@tag="084" and contains(subfield[@code="2"], "rvk")]/subfield[@code="a"]',
     'ddc' => '//datafield[@tag="082" and @ind2!="9"]/subfield[@code="a"]',
-    'sw' => array(
+    'sw' => [
         'mainPart' => '//datafield[starts-with(@tag,"6") and (subfield[@code="2"]="gbv" or subfield[@code="2"]="gnd")]',
         'value' => './subfield[@code="a"]',
         'subvalues' => './subfield[@code="b" or @code="t"]',
         'additional' => './subfield[@code="9" or @code="g" or @code="z"]',
         'key' => './subfield[@code="0" and contains(text(), "(DE-588)")]'
-    ),
+    ],
     'produktSigel' => '//datafield[@tag="912" and not(@ind2="7")]/subfield[@code="a"]',
     'vorauflage' => '//datafield[@tag="780"]/subfield[@code="z"]',
     'folgeauflage' => '//datafield[@tag="785"]/subfield[@code="z"]',
     'andererelation' => '//datafield[@tag="787" or @tag="775"]/subfield[@code="z"]'
-);
+];
 
-$standardMabMap = array(
+const STANDARD_MAB_MAP = [
     'id' => '//feld[@nr="001"]',
     'isbn' => '//feld[@nr="540"]',
     'dnbNr' => '//feld[@nr="026" and contains(text(), "DNB")]',
@@ -73,7 +64,7 @@ $standardMabMap = array(
     'ddc' => '//feld[@nr="700" and @ind="b"]|//feld[@nr="705"]/uf[@code="a"]',
     'sw' => '//feld[@nr="902" or @nr="907" or @nr="912" or @nr="917" or @nr="922" or @nr="927" or @nr="932" or @nr="937" or @nr="942" or @nr="947" ]',
     'produktSigel' => '//feld[@nr="078" and @ind="e"]/uf[@code="a"]',
-);
+];
 
 function performMapping($map, $outputXml)
 {
@@ -127,9 +118,7 @@ function performMapping($map, $outputXml)
                 }
             }
             $outputMap[$label] = $outputArray;
-
         }
-
     }
     return cleanUp($outputMap);
 }
@@ -269,6 +258,42 @@ function printMabContent($content)
     } else {
         return htmlspecialchars($content, ENT_XML1);
     }
+}
+
+
+function isbn10($z)
+{
+    if (strlen($z) == 13) {
+        $z = substr($z, 3, 9);
+        $t = ($z[0] + 2 * $z[1] + 3 * $z[2] + 4 * $z[3] + 5 * $z[4] +
+              6 * $z[5] + 7 * $z[6] + 8 * $z[7] + 9 * $z[8]) % 11;
+        if ($t == 10) {
+            $t = 'X';
+        }
+        return $z . $t;
+    } else {
+        return $z;
+    }
+}
+
+function isbn13($z)
+{
+    if (strlen($z) == 10) {
+        $z = '978' . substr($z, 0, 9);
+        $t = (10 - (($z[0] + 3 * $z[1] + $z[2] + 3 * $z[3] +
+                     $z[4] + 3 * $z[5] + $z[6] + 3 * $z[7] +
+                     $z[8] + 3 * $z[9] + $z[10] + 3 * $z[11]) % 10)) % 10;
+        return $z . $t;
+    } else {
+        return $z;
+    }
+}
+
+function status_ok($url)
+{
+    $status = intval(substr(get_headers($url, 1)[0], 9, 3));
+    //return $status != 404 && $status != 403;
+    return $status == 200;
 }
 
 /* Alternative:

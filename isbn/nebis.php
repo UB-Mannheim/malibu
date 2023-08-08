@@ -1,6 +1,6 @@
 <?php
 /*
- * Source: https://github.com/UB-Mannheim/malibu/isbn
+ * Source: https://github.com/UB-Mannheim/malibu/
  *
  * Copyright (C) 2014 Universitätsbibliothek Mannheim
  *
@@ -26,6 +26,7 @@
  * bzw. als JSON.
  */
 
+include 'conf.php';
 include 'lib.php';
 
 $id = yaz_connect(NEBIS_URL);
@@ -43,7 +44,8 @@ if (isset($_GET['isbn'])) {
     if (count($nArray) > 1) {
         //mehrere ISBNs, z.B. f @or @or @attr 1=7 "9783937219363" @attr 1=7 "9780521369107" @attr 1=7 "9780521518147"
         //Anfuehrungsstriche muessen demaskiert werden, egal ob String mit ' gemacht wird
-        $suchString = str_repeat("@or ", count($nArray) - 1) . '@attr 1=7 \"' . implode('\" @attr 1=7 \"', $nArray) . '\"';
+        $suchString = str_repeat("@or ", count($nArray) - 1) . '@attr 1=7 \"'
+                    . implode('\" @attr 1=7 \"', $nArray) . '\"';
         yaz_search($id, "rpn", $suchString);
     } else {
         yaz_search($id, "rpn", '@attr 5=100 @attr 1=7 "' . $n . '"');
@@ -75,16 +77,14 @@ $outputString .= "</collection>";
 
 yaz_close($id);
 
-$map = $standardMarcMap;
+$map = STANDARD_MARC_MAP;
 $map['bestand'] = '//datafield[@tag="900"]/subfield[@code="b"]';
 
 
 if (!isset($_GET['format'])) {
     header('Content-type: text/xml');
     echo $outputString;
-
-} else if ($_GET['format'] == 'json') {
-
+} elseif ($_GET['format'] == 'json') {
     $outputXml = simplexml_load_string($outputString);
     $outputMap = performMapping($map, $outputXml);
     $outputIndividualMap = [];

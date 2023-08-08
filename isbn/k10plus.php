@@ -1,6 +1,6 @@
 <?php
 /*
- * Source: https://github.com/UB-Mannheim/malibu/isbn
+ * Source: https://github.com/UB-Mannheim/malibu/
  *
  * Copyright (C) 2019 Universitätsbibliothek Mannheim
  *
@@ -30,6 +30,7 @@
  * Info zur SRU-Schnittstelle: https://wiki.k10plus.de/display/K10PLUS/SRU
  */
 
+include 'conf.php';
 include 'lib.php';
 
 $urlBase = 'https://sru.k10plus.de/opac-de-627?version=1.1&operation=searchRetrieve&query=';
@@ -74,14 +75,13 @@ $outputString .= "<collection>\n";
 $outputArray = [];
 
 foreach ($records as $record) {
-
     $outputString .= $doc->saveXML($record);
     array_push($outputArray, $doc->saveXML($record));
 }
 $outputString .= "</collection>";
 
 
-$map = $standardMarcMap;
+$map = STANDARD_MARC_MAP;
 $map['bestand'] = '//datafield[@tag="924"]/subfield[@code="b"]';
 //TODO special mapping K10PLUS, if needed?
 //$map['bestand'] = '//datafield[@tag="949" or @tag="852"]/subfield[@code="F"]';
@@ -90,7 +90,7 @@ $map['bestand'] = '//datafield[@tag="924"]/subfield[@code="b"]';
 if (!isset($_GET['format'])) {
     header('Content-type: text/xml');
     echo $outputString;
-} else if ($_GET['format'] == 'json') {
+} elseif ($_GET['format'] == 'json') {
     $outputXml = simplexml_load_string($outputString);
 
     $outputMap = performMapping($map, $outputXml);

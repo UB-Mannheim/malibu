@@ -24,39 +24,8 @@
  * Anbieter dafür abgefragt.
  */
 
-function isbn10($z)
-{
-    if (strlen($z) == 13) {
-        $z = substr($z, 3, 9);
-        $t = ($z[0] + 2 * $z[1] + 3 * $z[2] + 4 * $z[3] + 5 * $z[4] +
-              6 * $z[5] + 7 * $z[6] + 8 * $z[7] + 9 * $z[8]) % 11;
-        if ($t == 10) {
-            $t = 'X';
-        }
-        return $z . $t;
-    } else {
-        return $z;
-    }
-}
-
-function isbn13($z)
-{
-    if (strlen($z) == 10) {
-        $z = '978' . substr($z, 0, 9);
-        $t = (10 - (($z[0] + 3 * $z[1] + $z[2] + 3 * $z[3] +
-                     $z[4] + 3 * $z[5] + $z[6] + 3 * $z[7] +
-                     $z[8] + 3 * $z[9] + $z[10] + 3 * $z[11]) % 10)) % 10;
-        return $z . $t;
-    } else {
-        return $z;
-    }
-}
-
-function status_ok($url) {
-    $status = intval(substr(get_headers($url, 1)[0], 9, 3));
-    //return $status != 404 && $status != 403;
-    return $status == 200;
-}
+include 'conf.php';
+include 'lib.php';
 
 if (isset($_GET['isbn10'])) {
     global $n10, $n13;
@@ -94,7 +63,8 @@ if (status_ok($urlAmazon)) {
 
     //Bild von Amazon
     foreach (["imgBlkFront", "main-image-nonjs", "original-main-image"] as $id) {
-        if ($docAmazon->getElementById($id) && $docAmazon->getElementById($id)->getAttribute('src') !== '') {
+        if ($docAmazon->getElementById($id) &&
+            $docAmazon->getElementById($id)->getAttribute('src') !== '') {
             $cover = $docAmazon->getElementById($id)->getAttribute('src');
             $coverOrigin = $urlAmazon;
             break;
@@ -102,7 +72,8 @@ if (status_ok($urlAmazon)) {
     }
 
     //Beschreibung von Amazon
-    if ($docAmazon->getElementById('bookDesc_override_CSS') && $docAmazon->getElementById('bookDesc_override_CSS')->nextSibling) {
+    if ($docAmazon->getElementById('bookDesc_override_CSS') &&
+        $docAmazon->getElementById('bookDesc_override_CSS')->nextSibling) {
         $node = $docAmazon->getElementById('bookDesc_override_CSS');
         // description is expected inside the next following tag named "noscript"
         $i = 0;
@@ -130,7 +101,11 @@ if (status_ok($urlAmazon)) {
     if ($docAmazon->getElementById('fbt_item_data')) {
         $hiddenItemData = $docAmazon->getElementById('fbt_item_data')->textContent;
         //..."buyingPrice":79.99,"ASIN":"3830493665"...
-        if (preg_match('/"buyingPrice":(.*),"ASIN":"' . $n10 . '"/', $hiddenItemData, $match)) {
+        if (preg_match(
+            '/"buyingPrice":(.*),"ASIN":"' . $n10 . '"/',
+            $hiddenItemData,
+            $match
+        )) {
             preg_match('/"currencyCode":"([^"]*)"/', $hiddenItemData, $descriptionCurrency);
             $price = $match[1] . ' ' . $descriptionCurrency[1];
             $priceOrigin = $urlAmazon;
@@ -151,8 +126,11 @@ if (status_ok($urlAmazon)) {
         $numberOfReviews = $docAmazon->getElementById('acrCustomerReviewText')->textContent;
         $rating = $ratingValue . ' (' . $numberOfReviews . ')';
         $ratingOrigin = 'https://www.amazon.de/product-reviews/' . $n10;
-    } else if ($docAmazon->getElementById('revFMSR')) {
-        $ratingValue = $docAmazon->getElementById('revFMSR')->getElementsByTagName('a')->item(0)->getAttribute('title');
+    } elseif ($docAmazon->getElementById('revFMSR')) {
+        $ratingValue = $docAmazon->getElementById('revFMSR')
+                                 ->getElementsByTagName('a')
+                                 ->item(0)
+                                 ->getAttribute('title');
         $textTotal = $docAmazon->getElementById('revFMSR')->textContent;
         if (preg_match('/\d+\s(?:Rezension|Rezensionen)/', $textTotal, $treffer)) {
             $numberOfReviews = $treffer[0];
@@ -160,7 +138,6 @@ if (status_ok($urlAmazon)) {
         $rating = $ratingValue . ' (' . $numberOfReviews . ')';
         $ratingOrigin = 'https://www.amazon.com/product-reviews/' . $n10;
     }
-
 }
 
 
@@ -171,27 +148,34 @@ if (status_ok($urlGoogle)) {
 
     if (!is_null($jsonGoogle) && property_exists($jsonGoogle, 'items')) {
         for ($j = 0; $j < count($jsonGoogle->items); $j++) {
-            //die Suche welche durch die URL $urlGoogle ausgeführt wird, liefert auch falsche Ergebnisse (welche die ISBN nur in einer angehängten URL enthalten --> darum muss man hier nochmals genau filtern
+            // die Suche welche durch die URL $urlGoogle ausgeführt wird,
+            // liefert auch falsche Ergebnisse (welche die ISBN nur in einer angehängten URL
+            // enthalten --> darum muss man hier nochmals genau filtern
             $volumeInfo = $jsonGoogle->items[$j]->volumeInfo;
             if ($volumeInfo && property_exists($volumeInfo, "industryIdentifiers")) {
                 for ($k = 0; $k < count($volumeInfo->industryIdentifiers); $k++) {
-                    if ($volumeInfo->industryIdentifiers[$k]->identifier == $n13 || $volumeInfo->industryIdentifiers[$k]->identifier == $n13) {
+                    if ($volumeInfo->industryIdentifiers[$k]->identifier == $n13 ||
+                        $volumeInfo->industryIdentifiers[$k]->identifier == $n13) {
                         $urlGoogle = $volumeInfo->infoLink;
                         //Bild von Google
-                        if (!isset($cover) && property_exists($volumeInfo, 'imageLinks') && property_exists($volumeInfo->imageLinks, 'thumbnail')) {
+                        if (!isset($cover) && property_exists($volumeInfo, 'imageLinks') &&
+                            property_exists($volumeInfo->imageLinks, 'thumbnail')) {
                             $cover = $volumeInfo->imageLinks->thumbnail;
                             $coverOrigin = $urlGoogle;
                         }
 
                         //Beschreibung von Google
-                        if (!isset($description) && property_exists($volumeInfo, 'description')) {
+                        if (!isset($description) &&
+                            property_exists($volumeInfo, 'description')) {
                             $description = $volumeInfo->description;
                             $descriptionOrigin = $urlGoogle;
                         }
 
                         //Bewertung von Google
-                        if (!isset($rating) && property_exists($volumeInfo, 'averageRating')) {
-                            $rating = $volumeInfo->averageRating . ' von 5 (' . $volumeInfo->ratingsCount . ' Ratings)';
+                        if (!isset($rating) &&
+                            property_exists($volumeInfo, 'averageRating')) {
+                            $rating = $volumeInfo->averageRating . ' von 5 ('
+                                    . $volumeInfo->ratingsCount . ' Ratings)';
                             $ratingOrigin = $urlGoogle;
                         }
                     }
@@ -218,16 +202,21 @@ echo '<tr><td>';
 
 //Cover anzeigen
 if (isset($cover)) {
-    echo '<a href="' . $coverOrigin . '" target="_blank"><img src="' . $cover . '"/></a><br />';
+    echo '<a href="' . $coverOrigin . '" target="_blank"><img src="' . $cover
+                     . '"/></a><br />';
 }
 //Direktlinks zu Amazon, GoogleBooks
-echo '<a href="' . $urlAmazon . '" target="_blank">AmazonDE</a> ; <a href="https://www.amazon.com/dp/' . $n10 . '" target="_blank">AmazonCOM</a> ; <a href="' . $urlGoogle . '" target="_blank">GoogleBooks</a>';
+echo '<a href="' . $urlAmazon
+    . '" target="_blank">AmazonDE</a> ; <a href="https://www.amazon.com/dp/' . $n10
+    . '" target="_blank">AmazonCOM</a> ; <a href="' . $urlGoogle
+    . '" target="_blank">GoogleBooks</a>';
 
 echo '</td><td>';
 
 //Beschreibung
 if (isset($description)) {
-    echo $description . '(Quelle: <a href="' . $descriptionOrigin . '" target="_blank">' . $descriptionOrigin . '</a>)';
+    echo $description . '(Quelle: <a href="' . $descriptionOrigin . '" target="_blank">'
+                      . $descriptionOrigin . '</a>)';
 }
 
 echo '</td><td>';

@@ -1,6 +1,6 @@
 <?php
 /*
- * Source: https://github.com/UB-Mannheim/malibu/isbn
+ * Source: https://github.com/UB-Mannheim/malibu/
  *
  * Copyright (C) 2013 Universitätsbibliothek Mannheim
  *
@@ -26,6 +26,7 @@
  * bzw. als JSON.
  */
 
+include 'conf.php';
 include 'lib.php';
 
 $id = yaz_connect(B3KAT_URL, array("user" => B3KAT_USER, "password" => B3KAT_PASSWORD)); //"mab2; charset=iso5426,utf8"
@@ -80,21 +81,18 @@ for ($p = 1; $p <= yaz_hits($id); $p++) {
     $recordContent .= '</datensatz>' . "\n";
     $outputString .= $recordContent;
     array_push($outputArray, $recordContent);
-
 }
 
 $outputString .= "</datei>";
 yaz_close($id);
 
-$map = $standardMabMap;
+$map = STANDARD_MAB_MAP;
 $map['bestand'] = '//feld[@nr="LOW" and @ind="a"]';
 
 if (!isset($_GET['format'])) {
     header('Content-type: text/xml');
     echo $outputString;
-
-} else if ($_GET['format'] == 'json') {
-
+} elseif ($_GET['format'] == 'json') {
     $outputXml = simplexml_load_string($outputString);
     $outputMap = performMapping($map, $outputXml);
     $outputIndividualMap = [];

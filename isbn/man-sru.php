@@ -1,6 +1,6 @@
 <?php
 /*
- * Source: https://github.com/UB-Mannheim/malibu/isbn
+ * Source: https://github.com/UB-Mannheim/malibu/
  *
  * Copyright (C) 2016 Universitätsbibliothek Mannheim
  *
@@ -24,6 +24,7 @@
  * Tabelle).
  */
 
+include 'conf.php';
 include 'lib.php';
 
 $suchString = '';
@@ -115,13 +116,13 @@ foreach ($records as $record) {
 $outputString .= "</collection>";
 
 
-$map = $standardMarcMap;
+$map = STANDARD_MARC_MAP;
 $map['bestand'] = '//datafield[@tag="AVA"]/subfield[@code="b"]';
 
 if (!isset($_GET['format'])) {
     header('Content-type: text/xml');
     echo $outputString;
-} else if ($_GET['format'] == 'json') {
+} elseif ($_GET['format'] == 'json') {
     $outputXml = simplexml_load_string($outputString);
 
     $outputMap = performMapping($map, $outputXml);
@@ -136,7 +137,7 @@ if (!isset($_GET['format'])) {
 
     header('Content-type: application/json');
     echo json_encode($outputMap, JSON_PRETTY_PRINT);
-} else if ($_GET['format'] == 'holdings') {
+} elseif ($_GET['format'] == 'holdings') {
     echo "<html>\n<head>\n	<title>Bestand UB Mannheim zu ISBN-Suche</title>\n	<meta http-equiv='content-type' content='text/html; charset=UTF-8' />\n	<style type='text/css'>body { font-family:  Arial, Verdana, sans-serif; }</style>\n</head>\n<body>\n";
     $outputXml = simplexml_load_string($outputString);
     $avaNodes = $outputXml->xpath('//datafield[@tag="AVA"]');
@@ -196,7 +197,7 @@ if (!isset($_GET['format'])) {
             echo "E";
         }
         echo '</div>';
-    } else if ($aveNodes and !$avaNodes) {
+    } elseif ($aveNodes and !$avaNodes) {
         echo "<table>\n";
         foreach ($aveNodes as $node) {
             echo "<tr>\n";
@@ -211,7 +212,7 @@ if (!isset($_GET['format'])) {
         echo "</table>\n";
         echo "<hr/>\n";
         echo '<div>Bestand der UB Mannheim: E</div>';
-    } else if ($size > 100) {
+    } elseif ($size > 100) {
         //if the isbn is not found, then the $outputString is a minimal xml document
         //of size 48, for larger size something might be found...
         $urlMAN = 'man-sru.php?isbn=' . $suchStringSWB;
@@ -225,7 +226,7 @@ if (!isset($_GET['format'])) {
         $ncoins = substr_count($contentSWB, 'class="Z3988"');
         if ($nhits > 0) {//multiple results
             echo '<div>Bestand der UB Mannheim: SWB sagt ja (<a href="' . $urlSWB . '" target="_blank">' . $nhits / 2 . ' Treffer</a>)</div>';
-        } else if ($ncoins > 0) {//single result
+        } elseif ($ncoins > 0) {//single result
             echo '<div>Bestand der UB Mannheim: SWB sagt ja (<a href="' . $urlSWB . '" target="_blank">Einzeltreffer mit ' . $ncoins . ' COinS</a>)</div>';
         } else {
             echo 'Es wurde nichts gefunden';

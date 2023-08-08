@@ -25,7 +25,6 @@
 header('Content-type: text/xml');
 
 if (isset($_GET['nr'])) {
-
     if (is_string($_GET['nr'])) {
         $nrArray = explode(',', $_GET['nr']);
     } else {
