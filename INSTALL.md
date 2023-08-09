@@ -86,12 +86,7 @@ before the first start:
 Moreover, for the retrieval of data from the British National Library, you should set up CRON to run the script `bnb/getBNBData` regularly:
 ```sh
 # Update British National Library RDF files for malibu
-0 10 * * 6 /var/www/html/malibu/bnb/getBNBData /var/www/html/malibu/bnb/BNBDaten
-```
-
-This script requires the python module BeautifulSoup 4. Install it e.g. on Debian with:
-```sh
-sudo apt-get install python3-bs4
+0 10 * * 6 php /var/www/html/malibu/bnb/getBNBData.php /var/www/html/malibu/bnb/BNBDaten
 ```
 
 ## Configurations for code development
