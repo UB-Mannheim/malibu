@@ -26,6 +26,7 @@ function check(index, value) {
 	if (value.length > 0) {
 		var verbund = $("#verbund :selected").text();
 		var feld = $("#feld :selected").text();
+		var filter = $("#filter").val();
 		$.get("../isbn/" + verbund + ".php?format=json&ppn=" + value, function(data) {
 			if (document.getElementById("mit").checked) {
 				$('#query-'+index).text(value + ": ");
@@ -34,6 +35,9 @@ function check(index, value) {
 			// Schlagwörter sind keine Arrays sondern Objekte, wobei die Benennungen in den Keys stehen
 			if (!Array.isArray(result) && Object.keys(result).length > 0) {
 				result = Object.keys(result);
+			}
+			if (filter && filter.length > 0) {
+				result = result.filter(bib => RegExp("^" + filter + "$").test(bib));
 			}
 			if (result.length > 0) {
 				var sep = $("#sep").val();
@@ -91,6 +95,10 @@ function updateStatus() {
 	<p/>
 	<label>3. Liste mit PPNs eingeben (jede PPN auf neue Zeile):</label><br/>
 	<textarea id="isbnListe" cols="100" rows="20"></textarea><br/>
+	<label>OPTIONAL Ausgabe filtern:</label>
+	<input id="filter" type="text" placeholder="z.B. 180">
+	(Eingabe von RegExp auch möglich, z.B. "(21.*|180)" für Bestand)
+	<p/>
 	<label>4. Ausgabeoptionen wählen:</label>
 	a) <input type="checkbox" name="verlinken" id="mit"> PPN ausgeben;
 	b) Trennzeichen <input id="sep" type="text" value="|" size="4"><br/>
