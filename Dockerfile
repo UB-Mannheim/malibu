@@ -21,7 +21,7 @@ WORKDIR /var/www/html/malibu
 
 # create minimal set of directories and files needed for retrieving external files
 RUN  mkdir isbn bnb
-COPY bnb/getBNBData bnb/getBNBData
+COPY bnb/getBNBData.php bnb/getBNBData.php
 
 # From the best practices: you should use curl or wget instead of ADD
 # https://docs.docker.com/engine/userguide/eng-image/dockerfile_best-practices/#add-or-copy
