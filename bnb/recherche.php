@@ -215,7 +215,10 @@ Lesezeichen zu erstellen, z.B.
 
             $files = glob('BNBDaten/*.rdf');
             usort($files, function ($a, $b) {
-                return $a < $b;
+                if ($a == $b) {
+                    return 0;
+                }
+                return ($a < $b) ? -1 : 1;
             });
             echo "<table>";
             foreach ($files as $filename) {// BNBDaten/bnbrdf_N3240.xml
