@@ -309,7 +309,7 @@ function isbnEingabe(n) {
     var swbLink = $('<a target="_blank">SWB</a>').attr("href", "http://swb.bsz-bw.de/DB=2.1/SET=1/TTL=1/CMD?ACT=SRCHA&IKT=1007&TRM=" + suchString);
     var k10plusLink = $('<a target="_blank">K10PLUS</a>').attr("href", "https://kxp.k10plus.de/DB=2.0/SET=1/TTL=1/CMD?ACT=SRCHA&IKT=7&TRM=" + suchString);
     var hebisLink = $('<a target="_blank">HEBIS</a>').attr("href", "http://cbsopac.rz.uni-frankfurt.de/DB=2.1/SET=1/TTL=1/CMD?ACT=SRCHA&IKT=8520&TRM=" + nArray[0]);
-    var b3katLink = $('<a target="_blank">B3KAT</a>').attr("href", "https://opacplus.bib-bvb.de/TouchPoint_touchpoint/start.do?Query=-1%3D%22" + nArray[0] + "%22&Language=De&SearchProfile=");
+    var b3katLink = $('<a target="_blank">B3KAT</a>').attr("href", "https://www.gateway-bayern.de/TP61/start.do?Query=-1%3D%22" + nArray[0] + "%22");
     var hbzLink = $('<a target="_blank">HBZ</a>').attr("href", "http://okeanos-www.hbz-nrw.de/F/?FUNC=find-c&CCL_TERM=+IBN=%28" + nArray[0]);
     var swissLink = $('<a target="_blank">swisscovery</a>').attr("href", "https://swisscovery.slsp.ch/discovery/search?query=isbn,contains," + nArray[0] + ",AND&tab=41SLSP_NETWORK&search_scope=DN_and_CI&vid=41SLSP_NETWORK:VU1_UNION&mode=advanced&offset=0");
     var obvsgLink = $('<a target="_blank">OBVSG</a>').attr("href", "http://search.obvsg.at/primo_library/libweb/action/search.do?fn=search&ct=search&initialSearch=true&mode=Basic&tab=default_tab&indx=1&dum=true&srt=rank&vid=OBV&tb=t&vl%28freeText0%29=" + nArray[0]);
