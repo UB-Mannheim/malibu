@@ -55,7 +55,6 @@ $contextOptions = [
         'ciphers' => 'DEFAULT@SECLEVEL=1',
     ],
     'http' => [
-        'header' => 'Connection: close\r\n',
         'timeout' => 10,
     ],
 ];
