@@ -17,7 +17,8 @@
  *   ISBN kann ebenfalls eine Komma-separierte Liste von ISBNs sein
  * man-sru?isbn=ISBN&format=json
  * man-sru?isbn=ISBN&format=holdings
- *
+ * man-sru?isbn=ISBN&format=holdings&with=collections
+*
  * Sucht übergebene ISBN bzw. PPN in der SRU-Schnittstelle der UB Mannheim
  * und gibt maximal 10 Ergebnisse als MARCXML, JSON zurück oder eine
  * formattierte Bestandsangabe (eine kurze Zeile und die Details in einer
@@ -118,6 +119,7 @@ $outputString .= "</collection>";
 
 $map = STANDARD_MARC_MAP;
 $map['bestand'] = '//datafield[@tag="AVA"]/subfield[@code="b"]';
+$map['sammlung'] = '//datafield[@tag="AVE"]/subfield[@code="m"]';
 
 if (!isset($_GET['format'])) {
     header('Content-type: text/xml');
@@ -173,6 +175,7 @@ if (!isset($_GET['format'])) {
         echo "</table>\n";
         echo "<hr/>\n";
         if ($aveNodes) {
+            $collections = [];
             echo "<table>\n";
             foreach ($aveNodes as $node) {
                 echo "<tr>\n";
@@ -183,6 +186,10 @@ if (!isset($_GET['format'])) {
                     echo "   <td>" . $value . "</td>";
                 }
                 echo "\n</tr>\n";
+                $collection = $node->xpath('./subfield[@code="m"]');
+                if ($collection) {
+                    $collections[] = getValues($collection[0]);
+                }
             }
             echo "</table>\n";
             echo "<hr/>\n";
@@ -195,10 +202,14 @@ if (!isset($_GET['format'])) {
         }
         if ($aveNodes) {
             echo "E";
+            if ($_GET['with']) {
+                echo ' (' . implode(" | ", $collections) . ')';
+            }
         }
         echo '</div>';
     } elseif ($aveNodes and !$avaNodes) {
         echo "<table>\n";
+        $collections = [];
         foreach ($aveNodes as $node) {
             echo "<tr>\n";
             $subfields = $node->xpath('./subfield');
@@ -208,10 +219,18 @@ if (!isset($_GET['format'])) {
                 echo "   <td>" . $value . "</td>";
             }
             echo "\n</tr>\n";
+            $collection = $node->xpath('./subfield[@code="m"]');
+            if ($collection) {
+                $collections[] = getValues($collection[0]);
+            }
         }
         echo "</table>\n";
         echo "<hr/>\n";
-        echo '<div>Bestand der UB Mannheim: E</div>';
+        echo '<div>Bestand der UB Mannheim: E';
+        if ($_GET['with']) {
+            echo ' (' . implode(" | ", $collections) . ')';
+        }
+        echo '</div>';
     } elseif ($size > 100) {
         //if the isbn is not found, then the $outputString is a minimal xml document
         //of size 48, for larger size something might be found...

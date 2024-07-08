@@ -11,8 +11,8 @@ body { font-family:  Arial, Verdana, sans-serif; }
 <!--
 function listeEingabe() {
 	var isbnListe = $("#isbnListe").val();
-	$('#ausgabe').empty();
 	var isbnArray = isbnListe.split("\n");
+	$('#ausgabe').empty();
 	$("#total").html(isbnArray.length);
 	isbnArray.forEach(function(value, index) {
 		check(index, encodeURIComponent(value));
@@ -22,9 +22,10 @@ function listeEingabe() {
 function check(index, value) {
 	$('#ausgabe').append('<div id="query-' + index + '"/>');
 	$('#query-'+index).attr("data-isbn", value);
+	var suffix = (document.getElementById("mitSammlungen").checked) ? "&with=collections" : "";
 	var numberOfDigits = value.replace(/\D/g, '').length;
 	if (numberOfDigits>=9) {
-		$.get("../isbn/man-sru.php?format=holdings&isbn="+value, function(data) {
+		$.get("../isbn/man-sru.php?format=holdings&isbn="+value+suffix, function(data) {
 			var pattern = /<div>Bestand der UB Mannheim: (.*)</;
 			var holdingsMAN = pattern.exec(data);
 			if (holdingsMAN && value) {
@@ -76,6 +77,7 @@ function updateStatus() {
 <textarea id="isbnListe" cols="100" rows="20"></textarea><br/>
 <input type="checkbox" name="verlinken" value="Bike" id="mitLink"> Mit Link 
 <input type="checkbox" name="verlinken" id="mitISBN"> Mit ISBN 
+<input type="checkbox" name="verlinken" id="mitSammlungen"> Sammlungen anzeigen 
 <input type="button" value="Bestand prüfen" onclick='listeEingabe();' />
 </form>
 
