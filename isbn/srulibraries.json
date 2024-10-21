@@ -1,0 +1,114 @@
+{
+  "CH-UBS" : {
+    "name": "Basel U",
+    "sru": "https://ubs.swisscovery.slsp.ch/view/sru/41SLSP_UBS"
+  },
+  "CH-BFH" : {
+    "name": "Bern FH",
+    "sru": "https://bfh.swisscovery.slsp.ch/view/sru/41SLSP_BFH"
+  },
+  "CH-UBE" : {
+    "name": "Bern U",
+    "sru": "https://ube.swisscovery.slsp.ch/view/sru/41SLSP_UBE"
+  },
+  "CH-BCUFR" : {
+    "name": "Fribourg BCU",
+    "sru": "https://bcufr.swisscovery.slsp.ch/view/sru/41SLSP_BCUFR"
+  },
+  "CH-HSG " : {
+    "name": "St. Gallen U",
+    "sru": "https://hsg.swisscovery.slsp.ch/view/sru/41SLSP_HSG"
+  },
+  "CH-UGE" : {
+    "name": "Genève UGE",
+    "sru": "https://uge.swisscovery.slsp.ch/view/sru/41SLSP_UGE"
+  },
+  "CH-EPF" : {
+    "name": "Lausanne EPFL",
+    "sru": "https://epf.swisscovery.slsp.ch/view/sru/41SLSP_EPF"
+  },
+  "CH-USI" : {
+    "name": "Lugano USI",
+    "sru": "https://usi.swisscovery.slsp.ch/view/sru/41SLSP_USI"
+  },
+  "CH-RZS" : {
+    "name": "Luzern RZS",
+    "sru": "https://rzs.swisscovery.slsp.ch/view/sru/41SLSP_RZS"
+  },
+  "CH-UNE" : {
+    "name": "Neuchâtel UNE",
+    "sru": "https://une.swisscovery.slsp.ch/view/sru/41SLSP_UNE"
+  },
+  "CH-FHNW" : {
+    "name": "Nordwestschweiz FHNW",
+    "sru": "https://fhnw.swisscovery.slsp.ch/view/sru/41SLSP_FNW"
+  },
+  "CH-OSTFH" : {
+    "name": "Ostschweiz FH",
+    "sru": "https://ostgre.swisscovery.slsp.ch/view/sru/41SLSP_FHO"
+  },
+  "CH-ETH" : {
+    "name": "Zürich ETH",
+    "sru": "https://eth.swisscovery.slsp.ch/view/sru/41SLSP_ETH"
+  },
+  "CH-UZB": {
+    "name": "Zürich UZB",
+    "sru": "https://uzb.swisscovery.slsp.ch/view/sru/41SLSP_UZB"
+  },
+  "CH-ZHAW" : {
+    "name": "Zürich ZHAW",
+    "sru": "https://zhaw.swisscovery.slsp.ch/view/sru/41SLSP_ZAW"
+  },
+  "DE-6" : {
+    "name": "Münster ULB",
+    "sru": "https://katalogplus.uni-muenster.de/view/sru/49HBZ_ULM"
+  },
+  "AT-UBG" : {
+    "name": "Graz U",
+    "sru": "https://obv-at-ubg.userservices.exlibrisgroup.com/view/sru/43ACC_UBG"
+  },
+  "AT-TUG" : {
+    "name": "Graz TU",
+    "sru": "https://obv-at-ubtug.userservices.exlibrisgroup.com/view/sru/43ACC_TUG"
+  },
+  "AT-UBI" : {
+    "name": "Innsbruck U",
+    "sru": "https://obv-at-ubi.alma.exlibrisgroup.com/view/sru/43ACC_UBI"
+  },
+  "AT-UBK" : {
+    "name": "Klagenfurt U",
+    "sru": "https://obv-at-ubk.userservices.exlibrisgroup.com/view/sru/43ACC_UBK"
+  },
+  "AT-UBL" : {
+    "name": "Linz U",
+    "sru": "https://obv-at-ubl.userservices.exlibrisgroup.com/view/sru/43ACC_UBL"
+  },
+  "AT-UBS" : {
+    "name": "Salzburg U",
+    "sru": "https://obv-at-ubs.userservices.exlibrisgroup.com/view/sru/43ACC_UBS"
+  },
+  "AT-UBWW" : {
+    "name": "Wien WU",
+    "sru": "https://obv-at-ubww.userservices.exlibrisgroup.com/view/sru/43ACC_WUW"
+  },
+  "AT-UBW" : {
+    "name": "Wien U",
+    "sru": "https://obv-at-ubw.userservices.exlibrisgroup.com/view/sru/43ACC_UBW"
+  },
+  "AT-TUW" : {
+    "name": "Wien TU",
+    "sru": "https://obv-at-ubtuw.userservices.exlibrisgroup.com/view/sru/43ACC_TUW"
+  },
+  "DE-180" : {
+    "name": "Mannheim U",
+    "sru": "https://uni-mannheim.alma.exlibrisgroup.com/view/sru/49MAN_INST"
+  },
+  "DE-12" : {
+    "name": "München BSB",
+    "sru": "https://bsb.alma.exlibrisgroup.com/view/sru/49BVB_BSB"
+  },
+    "DE-188" : {
+    "name": "Berlin FU",
+    "sru": "https://fu-berlin.alma.exlibrisgroup.com/view/sru/49KOBV_FUB"
+  }
+}

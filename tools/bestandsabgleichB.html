@@ -1,0 +1,151 @@
+<html>
+<head>
+<title>Bestandsabgleich Alma-SRU</title>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+<style type="text/css">
+body { font-family:  Arial, Verdana, sans-serif; }
+</style>
+<script src="../isbn/jquery.min.js"></script>
+<script src="../isbn/clipboard.min.js"></script>
+<script src="../isbn/rendering.js"></script>
+<script type="text/javascript">
+<!--
+function listeEingabe() {
+	var isbnListe = $("#isbnListe").val();
+	var isbnArray = isbnListe.split("\n");
+	$('#ausgabe').empty();
+	$("#total").html(isbnArray.length);
+	isbnArray.forEach(function(value, index) {
+		check(index, encodeURIComponent(value));
+	});
+}
+
+function check(index, value) {
+	$('#ausgabe').append('<div id="query-' + index + '"/>');
+	$('#query-'+index).attr("data-isbn", value);
+	var selectedLibrary = document.getElementById("bibliothek").value;
+	//var sruBase = libraries[selectedLibrary].sru;
+	var sruBase = selectedLibrary;
+	var suffix = (document.getElementById("mitSammlungen").checked) ? "&with=collections" : "";
+	var numberOfDigits = value.replace(/\D/g, '').length;
+	if (numberOfDigits>=9) {
+		$.get("../isbn/alma-sru.php?base="+sruBase+"&format=holdings&isbn="+value+suffix, function(data) {
+			var pattern = /<div>Bestand Alma-SRU: (.*)</;
+			var holdings = pattern.exec(data);
+			if (holdings && value) {
+				$('#query-'+index).append(render(holdings[1], value));
+			} else {
+				if (document.getElementById("mitISBN").checked) {
+					$('#query-'+index).append(render(' FEHLT', value));
+				} else {
+					$('#query-'+index).append(render('0', value));
+				}
+			}
+			updateStatus();
+		});
+	} else {
+		$('#query-'+index).append('KEINE ISBN');
+		updateStatus();
+	}
+}
+
+function render(result, isbn) {
+	if (document.getElementById("mitISBN").checked) {
+		result = isbn + ' ' + result;
+	}
+	if (document.getElementById("mitLink").checked) {
+		return '<a href="../isbn/suche.html?isbn=' + isbn + '" target="_blank">' + result + '</a>';
+	} else {
+		return result;
+	}
+}
+
+// Statusanzeige aktualisieren
+function updateStatus() {
+	var status = parseInt($('#total').text())-$('#ausgabe div:empty').length;
+	$('#status').html(status);
+}
+
+function populateSelectElement(selectElementId, data) {
+	const selectElement = document.getElementById(selectElementId);
+	for (let index in data) {
+		element = data[index];
+		const option = document.createElement("option");
+		option.value = index;
+		option.text = element.name;
+		let country = index.substring(0,2);
+		let countryNode = document.getElementById(country);
+		if (countryNode != null) {
+			countryNode.appendChild(option);
+		} else {
+			selectElement.appendChild(option);
+		}
+	}
+}
+
+
+function updateBookmark() {
+	var param = document.getElementById("bibliothek").value;
+	document.getElementById("bookmark").href = window.location.pathname + "?bibliothek=" + param;
+}
+//-->
+</script>
+
+</head>
+<body>
+
+<h1>Bestandsabgleich Alma-SRU</h1>
+
+<p>Anhand einer Liste von ISBNs wird der Bestand über eine Alma-SRU-Schnittstelle abgefragt und die Ergebnisse in der gleichen Reihenfolge wiedergegeben.</p>
+
+<h2>Eingabe</h2>
+
+<form>
+<label for="bibliothek">Bibliothek auswählen:</label>
+<select name="bibliothek" id="bibliothek" onchange="updateBookmark()">
+<optgroup id="DE" label="Deutschland" />
+<optgroup id="AT" label="Österreich" />
+<optgroup id="CH" label="Schweiz" />
+</select>
+<a id="bookmark" href="">Bookmark</a>
+<br/>
+<textarea id="isbnListe" cols="100" rows="20"></textarea><br/>
+<input type="checkbox" name="verlinken" value="Bike" id="mitLink"> Mit Link 
+<input type="checkbox" name="verlinken" id="mitISBN"> Mit ISBN 
+<input type="checkbox" name="verlinken" id="mitSammlungen"> Sammlungen anzeigen 
+<input type="button" value="Bestand prüfen" onclick='listeEingabe();' />
+</form>
+
+<h2>Ausgabe</h2>
+
+<p>Status: <span id="status">0</span> von <span id="total">0</span> ISBNs geprüft</p>
+
+<button class="btn" data-clipboard-target="#ausgabe">
+    In Zwischenablage kopieren 
+    <img src="../img/clippy.svg" alt="In Zwischenablage kopieren" width="16">
+</button>
+
+<div id='ausgabe' style='background-color:#F0F0F0'></div>
+
+
+
+<script type="text/javascript">
+new ClipboardJS('.btn');
+var libraries;
+fetch('../isbn/srulibraries.json')
+  .then((response) => response.json())
+  .then(json => {
+    libraries = json;
+    populateSelectElement("bibliothek", libraries);
+    let param = getParameterByName("bibliothek");
+    if (param != null && param in libraries) {
+      document.getElementById("bibliothek").value = param;
+    } else {
+        document.getElementById("bibliothek").value = "DE-180";
+    }
+  });
+
+</script>
+
+</body>
+</html>
