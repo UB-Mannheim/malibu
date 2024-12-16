@@ -22,12 +22,13 @@ function listeEingabe() {
 function check(index, value) {
 	$('#ausgabe').append('<div id="query-' + index + '"/>');
 	$('#query-'+index).attr("data-ppn", value);
-	value = value.replace(/^(\w*).*$/, '$1');
+	value = value.replace(/^([\w-]*).*$/, '$1');
 	if (value.length > 0) {
+		var typ = $("#eingabetyp :selected").text();
 		var verbund = $("#verbund :selected").text();
 		var feld = $("#feld :selected").text();
 		var filter = $("#filter").val();
-		$.get("../isbn/" + verbund + ".php?format=json&ppn=" + value, function(data) {
+		$.get("../isbn/" + verbund + ".php?format=json&" + typ + "=" + value, function(data) {
 			if (document.getElementById("mit").checked) {
 				$('#query-'+index).text(value + ": ");
 			}
@@ -64,13 +65,19 @@ function updateStatus() {
 </head>
 <body>
 
-<h1>PPN-Liste anreichern</h1>
+<h1>PPN/ISBN-Liste anreichern</h1>
 
-<p>Eine Liste mit PPNs kann hier eingegeben werden und mit Werten eines Feldes z.B. ISBN, RVK, Bestand, Schlagwörter aus dem gleichen Verbund angereichert werden.</p>
+<p>Eine Liste mit PPNs oder ISBNs kann hier eingegeben werden und mit Werten eines Feldes z.B. RVK, Bestand, Schlagwörter aus dem gleichen Verbund angereichert werden.</p>
 
 <h2>Eingabe</h2>
 
 <form>
+    <label>0. Eingabetyp für Liste auswählen:</label>
+	<select id="eingabetyp">
+		<option>ppn</option>
+		<option>isbn</option>
+	</select>
+	<p/>
 	<label>1. Verbund auswählen:</label>
 	<select id="verbund">
 		<option>k10plus</option>
@@ -93,21 +100,21 @@ function updateStatus() {
 		<option>produktSigel</option>
 	</select>
 	<p/>
-	<label>3. Liste mit PPNs eingeben (jede PPN auf neue Zeile):</label><br/>
+	<label>3. Liste mit PPNs/ISBNs eingeben (jeweils eine pro Zeile):</label><br/>
 	<textarea id="isbnListe" cols="100" rows="20"></textarea><br/>
 	<label>OPTIONAL Ausgabe filtern:</label>
 	<input id="filter" type="text" placeholder="z.B. 180">
 	(Eingabe von RegExp auch möglich, z.B. "(21.*|180)" für Bestand)
 	<p/>
 	<label>4. Ausgabeoptionen wählen:</label>
-	a) <input type="checkbox" name="verlinken" id="mit"> PPN ausgeben;
+	a) <input type="checkbox" name="verlinken" id="mit"> PPN/ISBN mit ausgeben;
 	b) Trennzeichen <input id="sep" type="text" value="|" size="4"><br/>
 	<input type="button" value="Jetzt anreichern" onclick='listeEingabe();' />
 </form>
 
 <h2>Ausgabe</h2>
 
-<p>Status: <span id="status">0</span> von <span id="total">0</span> PPNs geprüft</p>
+<p>Status: <span id="status">0</span> von <span id="total">0</span> PPNs/ISBNs geprüft</p>
 
 <button class="btn" data-clipboard-target="#ausgabe">
     In Zwischenablage kopieren 
