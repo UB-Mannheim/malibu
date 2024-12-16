@@ -59,10 +59,6 @@
     "name": "Zürich ZHAW",
     "sru": "https://zhaw.swisscovery.slsp.ch/view/sru/41SLSP_ZAW"
   },
-  "DE-6" : {
-    "name": "Münster ULB",
-    "sru": "https://katalogplus.uni-muenster.de/view/sru/49HBZ_ULM"
-  },
   "AT-UBG" : {
     "name": "Graz U",
     "sru": "https://obv-at-ubg.userservices.exlibrisgroup.com/view/sru/43ACC_UBG"
@@ -106,6 +102,10 @@
   "DE-12" : {
     "name": "München BSB",
     "sru": "https://bsb.alma.exlibrisgroup.com/view/sru/49BVB_BSB"
+  },
+  "DE-6" : {
+    "name": "Münster ULB",
+    "sru": "https://katalogplus.uni-muenster.de/view/sru/49HBZ_ULM"
   },
     "DE-188" : {
     "name": "Berlin FU",

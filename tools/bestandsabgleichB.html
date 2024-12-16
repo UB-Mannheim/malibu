@@ -29,7 +29,7 @@ function check(index, value) {
 	var suffix = (document.getElementById("mitSammlungen").checked) ? "&with=collections" : "";
 	var numberOfDigits = value.replace(/\D/g, '').length;
 	if (numberOfDigits>=9) {
-		$.get("../isbn/alma-sru.php?base="+sruBase+"&format=holdings&isbn="+value+suffix, function(data) {
+		$.get("../isbn/alma-sru.php?bibliothek="+sruBase+"&format=holdings&isbn="+value+suffix, function(data) {
 			var pattern = /<div>Bestand Alma-SRU: (.*)</;
 			var holdings = pattern.exec(data);
 			if (holdings && value) {

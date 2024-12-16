@@ -15,9 +15,9 @@
  * alma-sru?isbn=ISBN
  *   ISBN ist eine 10- bzw. 13-stellige ISBN mit/ohne Bindestriche/Leerzeichen
  *   ISBN kann ebenfalls eine Komma-separierte Liste von ISBNs sein
- * alma-sru?base=BIB&isbn=ISBN&format=json
- * alma-sru?base=BIB&isbn=ISBN&format=holdings
- * alma-sru?base=BIB&isbn=ISBN&format=holdings&with=collections
+ * alma-sru?bibliothek=BIB&isbn=ISBN&format=json
+ * alma-sru?bibliothek=BIB&isbn=ISBN&format=holdings
+ * alma-sru?bibliothek=BIB&isbn=ISBN&format=holdings&with=collections
 *
  * Sucht übergebene ISBN bzw. PPN in der SRU-Schnittstelle einer Alma-Bibliothek
  * und gibt maximal 10 Ergebnisse als MARCXML, JSON zurück oder eine
@@ -35,12 +35,12 @@ if (isset($_GET['ppn'])) {
     $ppn = trim($_GET['ppn']);
     $suchString = 'dc.id=' . $ppn;
 }
-if (isset($_GET['base'])) {
+if (isset($_GET['bibliothek'])) {
     $file = file_get_contents('./srulibraries.json'); 
     $json = json_decode($file, true);
-    $urlBase = $json[$_GET['base']]['sru'];
+    $urlBase = $json[$_GET['bibliothek']]['sru'];
 } else {
-    echo "Keine Base-URL für die SRU-Schnittstelle (Alma) angegeben\n";
+    echo "Bibliothek nicht gefunden in der Liste der bekannten Alma-SRU-Schnittstellen.\n";
     exit;
 }
 
