@@ -190,7 +190,12 @@ if (!isset($_GET['format'])) {
                 echo "\n</tr>\n";
                 $collection = $node->xpath('./subfield[@code="m"]');
                 if ($collection) {
-                    $collections[] = getValues($collection[0]);
+                    $collectionValue = getValues($collection[0]);
+					$availability = $node->xpath('./subfield[@code="e"]');
+					if ($availability and getValues($availability[0]) != "Available") {
+						$collectionValue .= " [" . getValues($availability[0]) . "]";
+					}
+					$collections[] = $collectionValue;
                 }
             }
             echo "</table>\n";
@@ -223,7 +228,12 @@ if (!isset($_GET['format'])) {
             echo "\n</tr>\n";
             $collection = $node->xpath('./subfield[@code="m"]');
             if ($collection) {
-                $collections[] = getValues($collection[0]);
+                $collectionValue = getValues($collection[0]);
+				$availability = $node->xpath('./subfield[@code="e"]');
+				if ($availability and getValues($availability[0]) != "Available") {
+					$collectionValue .= " [" . getValues($availability[0]) . "]";
+				}
+				$collections[] = $collectionValue;
             }
         }
         echo "</table>\n";
