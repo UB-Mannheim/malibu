@@ -95,20 +95,56 @@
     "name": "Wien TU",
     "sru": "https://obv-at-ubtuw.userservices.exlibrisgroup.com/view/sru/43ACC_TUW"
   },
-  "DE-180" : {
+  "DE-FUB" : {
+    "name": "Berlin FU",
+    "sru": "https://fu-berlin.alma.exlibrisgroup.com/view/sru/49KOBV_FUB"
+  },
+  "DE-TUBUDK" : {
+    "name": "Berlin TU+UdK",
+    "sru": "https://tuudk-berlin.alma.exlibrisgroup.com/view/sru/49KOBV_TUBUDK"
+  },
+  "DE-BIE" : {
+    "name": "Bielefeld U",
+    "sru": "https://eu04.alma.exlibrisgroup.com/view/sru/49HBZ_BIE"
+  },
+  "DE-ULB" : {
+    "name": "Bonn ULB",
+    "sru": "https://eu04.alma.exlibrisgroup.com/view/sru/49HBZ_ULB"
+  },
+  "DE-UBD" : {
+    "name": "Dortmund TU",
+    "sru": "https://eu04.alma.exlibrisgroup.com/view/sru/49HBZ_UBD"
+  },
+  "DE-FUH" : {
+    "name": "Hagen FernU",
+    "sru": "https://eu04.alma.exlibrisgroup.com/view/sru/49HBZ_FUH"
+  },
+  "DE-RTU" : {
+    "name": "Kaiserslautern/Landau TU",
+    "sru": "https://eu04.alma.exlibrisgroup.com/view/sru/49HBZ_RTU"
+  },
+  "DE-MAN" : {
     "name": "Mannheim U",
     "sru": "https://uni-mannheim.alma.exlibrisgroup.com/view/sru/49MAN_INST"
   },
-  "DE-12" : {
+  "DE-BSB" : {
     "name": "München BSB",
     "sru": "https://bsb.alma.exlibrisgroup.com/view/sru/49BVB_BSB"
   },
-  "DE-6" : {
+  "DE-ULM" : {
     "name": "Münster ULB",
     "sru": "https://katalogplus.uni-muenster.de/view/sru/49HBZ_ULM"
   },
-    "DE-188" : {
-    "name": "Berlin FU",
-    "sru": "https://fu-berlin.alma.exlibrisgroup.com/view/sru/49KOBV_FUB"
+  "DE-PAD" : {
+    "name": "Paderborn U",
+    "sru": "https://eu04.alma.exlibrisgroup.com/view/sru/49HBZ_PAD"
+  },
+  "DE-SIE" : {
+    "name": "Siegen U",
+    "sru": "https://eu04.alma.exlibrisgroup.com/view/sru/49HBZ_SIE"
+  },
+  "DE-WUP" : {
+    "name": "Wuppertal U",
+    "sru": "https://eu04.alma.exlibrisgroup.com/view/sru/49HBZ_WUP"
   }
 }
