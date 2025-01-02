@@ -200,6 +200,7 @@ function htmlEscape(str)
 function renderSW(swObject)
 {
     var swArray = [];
+    var swTextArray = [];
     $.each(swObject, function (key, value) {
         if (typeof value == 'string') {
             var swUrl = 'https://d-nb.info/gnd/' + value + '/about/html';
@@ -207,8 +208,9 @@ function renderSW(swObject)
         } else {
             swArray.push(key);
         }
+        swTextArray.push(key);
     });
-    return swArray.join('; ');
+    return swArray.join('; ') + "&emsp;<button class='btn' title='Schlagwörter kopieren' data-clipboard-text='" + swTextArray.join('\n') + "'><img src='../img/clippy.svg' width='16'/></button>";
 }
 
 function bestellInfo(databaseText, currentRecord)
