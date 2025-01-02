@@ -19,10 +19,10 @@ Unterstützungstool für Fachreferatsarbeit
 <style type="text/css">
 body { font-family:  Arial, Verdana, sans-serif; }
 </style>
-	
+
 <!-- Stylesheet mit Link, damit per JS eindeutig zugegriffen werden kann -->
-<link id="stylesheet" href="malibu_light.css" type="text/css" rel="stylesheet">	
-	
+<link id="stylesheet" href="malibu_light.css" type="text/css" rel="stylesheet">
+
 <script src="jquery.min.js"></script>
 <script src="clipboard.min.js"></script>
 <script type="text/javascript">
@@ -101,7 +101,7 @@ function aggregateRVK() {
          } else {
               parent.append(": ");
          }
-      	 parent.append("<b>" + frequencies[rvk] + " x </b>");
+         parent.append("<b>" + frequencies[rvk] + " x </b>");
          $(rvkExample[rvk]).clone().appendTo(parent);
     }
     $("#rvkaggregiert").append("<br/><br/><small><img src='../img/flash.svg' height='15px' /> powered by <a href='https://rvk.uni-regensburg.de/api/'>RVK API</a></small>");
@@ -114,7 +114,7 @@ function hideRVKAggregation() {
     $(".rvk").removeAttr("style");
     $(".rvkaggregiert").attr("style", "display: none");
 }
-	
+
 
 
 function aggregateDDC() {
@@ -205,7 +205,7 @@ function hideDDCAggregation() {
 function ChangeDesign() {
     //Falls id "stylesheet" vergeben
     if ( !!(document.getElementById("stylesheet")) ) {
-	  //Nimm Link zu CSS heraus und ändere id
+      //Nimm Link zu CSS heraus und ändere id
       document.getElementById("stylesheet").href = "";
       document.getElementById("stylesheet").id = "no-stylesheet";
     } else {
@@ -213,7 +213,7 @@ function ChangeDesign() {
       document.getElementById("no-stylesheet").id = "stylesheet";
     }
 }
-	
+
 
 $(document).ready(function(){
     var clipboard = new ClipboardJS(".btn");
@@ -321,20 +321,44 @@ function isbnEingabe(n) {
     $('#suche'+'SWISS').html(swissLink);
     $('#suche'+'OBVSG').html(obvsgLink);
 
-    
-    
     // Bestandsabgleich für die UB Mannheim
-    // (wird ohne entspechende php-Datei ignoriert)
-    // ist aber anpassbar: 
+    // (Default-Vorgehen, wenn kein oder unbekannter
+    // bibliotheks-Parameter gesetzt wurde)
     var url = "man-sru.php?isbn=" + encodeURIComponent(suchString) + "&format=holdings";
+    var pattern = /<div>Bestand der UB Mannheim: (.*)</;
+    var label = 'Bestand der UB Mannheim: ';
+    
+    // Bestandsabgleich über eine bekannte Alma-SRU-Schnittstelle
+    var paramBibliothek = getParameterByName("bibliothek");
+    var name = ""
+    if (paramBibliothek) {
+        $.ajax({
+            dataType: "json",
+            url: './srulibraries.json',
+            async: false,
+            success: function(srulibrares) {
+                if (paramBibliothek in srulibrares) {
+                    name = srulibrares[paramBibliothek].name;
+                    url = "alma-sru.php?isbn=" + encodeURIComponent(suchString) + "&bibliothek=" + getParameterByName("bibliothek") + "&format=holdings";
+                    pattern = /<div>Bestand Alma-SRU: (.*)</;
+                    var posBlank = name.indexOf(" ");
+                    if (posBlank > 0) {
+                        name = name.substr(posBlank + 1) + " " + name.substr(0, posBlank);
+                    }
+                    label = 'Bestand ' + name + ': ';
+                } else {
+                    console.log("Bibliothek '" + paramBibliothek + "' nicht gefunden; daher auf Default (UB Mannheim) zurückgegriffen.");
+                }
+            }
+        });
+    }
+    // Bestandsabgleich durchführen
     $.get(url, function(data){
-        var pattern = /<div>Bestand der UB Mannheim: (.*)</;
-        var holdingsMAN = pattern.exec( data );
-
+        var holdingsMAN = pattern.exec(data);
         if (holdingsMAN) {
              var detailsLink = $('<a/>').attr('href', url).attr('onclick', 'return toggleHidden()').text("Details");
              var bestandsLine = $('<div/>').attr('style', "background-color:#ffbbbb")
-               .text('Bestand der UB Mannheim: ' + holdingsMAN[1]+ ' (')
+               .text(label + holdingsMAN[1]+ ' (')
                .append(detailsLink)
                .append(')<div id="detailsText" style="display: none;" class="hidden"><br/></div>');
              $('#bestandsabgleich').append('<br/>').append(bestandsLine);
@@ -484,7 +508,7 @@ function isbnEingabe(n) {
         });
     });
     
-	//sometimes the table cells are not correctly rendered if empty
+    //sometimes the table cells are not correctly rendered if empty
     $('td:empty').each( function() { $(this).html('&nbsp;'); });
 }
 //-->
@@ -594,7 +618,7 @@ function isbnEingabe(n) {
         <td id="rvkHEBIS" class="rvk"></td>
         <td id="ddcHEBIS" class="ddc"></td>
         <td id="swHEBIS"></td>
-	<tr>
+    <tr>
         <td><div id="sucheSWISS">swisscovery</div><small><div id="bestandSWISS"></div></small></td>
         <td id="rvkSWISS" class="rvk"></td>
         <td id="ddcSWISS" class="ddc"></td>
@@ -617,7 +641,7 @@ function isbnEingabe(n) {
 </div>
 
 
-	
+
 <div id='status'>
 </div>
 

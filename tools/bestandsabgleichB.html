@@ -54,7 +54,12 @@ function render(result, isbn) {
 		result = isbn + ' ' + result;
 	}
 	if (document.getElementById("mitLink").checked) {
-		return '<a href="../isbn/suche.html?isbn=' + isbn + '" target="_blank">' + result + '</a>';
+		var link = '../isbn/suche.html?isbn=' + isbn
+		var param = document.getElementById("bibliothek").value;
+		if (param != "") {
+			link += "&bibliothek=" + param;
+		}
+		return '<a href="' + link + '" target="_blank">' + result + '</a>';
 	} else {
 		return result;
 	}
