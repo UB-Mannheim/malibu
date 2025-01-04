@@ -172,14 +172,14 @@ function renderLinks(linkArray)
 function renderBestand(bestandArray, id, verbund)
 {
     var bibArray = $.map(bestandArray, function (sigel) {
-        if (sigel === "180" && verbund == "K10PLUS") {
+        if (sigel === "180" && verbund == "k10plus") {
             return '<span style="border:2px solid red">180</span>';
         } else {
             return sigel;
         }
     });
     if (bibArray.length > 0) {
-        return "Insgesamt "+bibArray.length+" Bibliotheken im " + verbund + " mit Bestand: "+bibArray.join(", ");
+        return "Insgesamt "+bibArray.length+" Bibliotheken im " + verbund.toUpperCase() + " mit Bestand: "+bibArray.join(", ");
     }
     return "";
 }

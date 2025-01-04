@@ -225,7 +225,7 @@ $(document).ready(function(){
         showNotification('Jetzt Cmd+C zum Kopieren drücken!', '#8A4B08', 'white');
     });
 
-    var meinVerbund = getParameterByName("verbund") || "K10PLUS";
+    var meinVerbund = getParameterByName("verbund").toLowerCase() || "k10plus";
     //Damit werden die Variablen ueber HTML ausgewertet (so wie GET Variablen in PHP)
     if (getParameterByName("isbn")) {
         $('#eingabeIsbn').val(getParameterByName("isbn"));
@@ -234,14 +234,21 @@ $(document).ready(function(){
     } else if (getParameterByName("ppn")) {
         $('#eingabePpn').val(getParameterByName("ppn"));
         $('#eingabeIsbn').val('');
-        $("option[name='eingabeVerbund'][value='" + meinVerbund + "']").prop('checked', true);
+        document.querySelector("#formPpn select").value = meinVerbund;
         ppnEingabe(getParameterByName("ppn"), meinVerbund);
     }
     
     //Aktion bei ISBN Form:
     $('#formIsbn').on('submit',function(){
         var parameter = $('#eingabeIsbn').val();
-        window.location.href = "suche.html?isbn=" + encodeURIComponent(parameter);
+        var newUrl = "suche.html?isbn=" + encodeURIComponent(parameter);
+        if (getParameterByName("bibliothek")) {
+            newUrl += "&bibliothek=" + getParameterByName("bibliothek");
+        }
+        if (getParameterByName("verbund")) {
+            newUrl += "&verbund=" + getParameterByName("verbund");
+        }
+        window.location.href = newUrl;
         return false;//damit sollte die eigentlich submit action ignoriert werden
     });
 
@@ -249,7 +256,11 @@ $(document).ready(function(){
     $('#formPpn').on('submit',function(){
         var parameter = $('#eingabePpn').val();
         var parameter2 = $('option[name=\'eingabeVerbund\']:checked').val();
-        window.location.href = "suche.html?ppn=" + encodeURIComponent(parameter) + "&verbund=" + encodeURIComponent(parameter2);
+        var newUrl = "suche.html?ppn=" + encodeURIComponent(parameter) + "&verbund=" + encodeURIComponent(parameter2);
+        if (getParameterByName("bibliothek")) {
+            newUrl += "&bibliothek=" + getParameterByName("bibliothek");
+        }
+        window.location.href = newUrl;
         return false;//damit sollte die eigentlich submit action ignoriert werden
     });
 
@@ -270,7 +281,6 @@ function showNotification(message, bcolor, color) {
 }
 
 function ppnEingabe(ppn, verbund) {
-    verbund = verbund.toLowerCase();
     var alle = ["swb", "k10plus", "hebis", "b3kat", "hbz", "dnb", "swiss", "obvsg"];
     var ind = alle.indexOf(verbund);
     if (ind > -1) {
@@ -310,13 +320,13 @@ function isbnEingabe(n) {
     var swissLink = $('<a target="_blank">swisscovery</a>').attr("href", "https://swisscovery.slsp.ch/discovery/search?query=isbn,contains," + nArray[0] + ",AND&tab=41SLSP_NETWORK&search_scope=DN_and_CI&vid=41SLSP_NETWORK:VU1_UNION&mode=advanced&offset=0");
     var obvsgLink = $('<a target="_blank">OBVSG</a>').attr("href", "http://search.obvsg.at/primo_library/libweb/action/search.do?fn=search&ct=search&initialSearch=true&mode=Basic&tab=default_tab&indx=1&dum=true&srt=rank&vid=OBV&tb=t&vl%28freeText0%29=" + nArray[0]);
     var dnbLink = $('<a target="_blank">DNB</a>').attr("href","https://portal.dnb.de/opac.htm?method=simpleSearch&cqlMode=true&query=num%3D" + nArray[0]);
-    $('#suche'+'K10PLUS').html(k10plusLink);
-    $('#suche'+'HEBIS').html(hebisLink);
-    $('#suche'+'B3KAT').html(b3katLink);
-    $('#suche'+'HBZ').html(hbzLink);
-    $('#suche'+'SWISS').html(swissLink);
-    $('#suche'+'OBVSG').html(obvsgLink);
-    $('#suche'+'DNB').html(dnbLink);
+    $('#suche-'+'k10plus').html(k10plusLink);
+    $('#suche-'+'hebis').html(hebisLink);
+    $('#suche-'+'b3kat').html(b3katLink);
+    $('#suche-'+'hbz').html(hbzLink);
+    $('#suche-'+'swiss').html(swissLink);
+    $('#suche-'+'obvsg').html(obvsgLink);
+    $('#suche-'+'dnb').html(dnbLink);
 
     // Bestandsabgleich für die UB Mannheim
     // (Default-Vorgehen, wenn kein oder unbekannter
@@ -364,12 +374,12 @@ function isbnEingabe(n) {
         $( "#detailsText" ).load( url.replace(/ /g, '+')+" table" );
     });
 
-    var meinVerbund = getParameterByName("verbund") || "K10PLUS";
+    var meinVerbund = getParameterByName("verbund").toLowerCase() || "k10plus";
     
-    var alleVerbuende = ["K10PLUS", "HEBIS", "B3KAT", "HBZ", "DNB", "SWISS", "OBVSG"];
+    var alleVerbuende = ["k10plus", "hebis", "b3kat", "hbz", "dnb", "swiss", "obvsg"];
     $.each(alleVerbuende, function(index, verbund){
         $.getJSON(verbund.toLowerCase()+".php"+query+"&format=json", function(data){
-            // Details am Anfang sollen von meinem gewählten Verbund (bzw. K10PLUS als Default) kommen
+            // Details am Anfang sollen von meinem gewählten Verbund (bzw. k10plus als Default) kommen
             if (verbund == meinVerbund) {
                 $('#titel').append(renderTitle(data));
                 
@@ -428,10 +438,10 @@ function isbnEingabe(n) {
             }
 
             // folgende Informationen aus allen Verbünden zusammentragen
-            $('#rvk'+verbund).html( renderRVK(data.rvk) );
-            $('#rvk'+verbund+' a').each( addBenennung );
-            $('#ddc'+verbund).html( renderDDC(data.ddc) );
-            $('#sw'+verbund).html( renderSW(data.sw) );
+            $('#rvk-'+verbund).html( renderRVK(data.rvk) );
+            $('#rvk-'+verbund+' a').each( addBenennung );
+            $('#ddc-'+verbund).html( renderDDC(data.ddc) );
+            $('#sw-'+verbund).html( renderSW(data.sw) );
 
             var bestandsListe = [];
             var gesamtBestand = 0;
@@ -440,7 +450,7 @@ function isbnEingabe(n) {
                 gesamtBestand += data.einzelaufnahmen[i].bestand.length;
             }
             if (gesamtBestand > 0) {
-                $('#bestand'+verbund).append(bestandsListe.join(" + "));
+                $('#bestand-'+verbund).append(bestandsListe.join(" + "));
             }
             if(data.produktSigel && data.produktSigel.length>0) {
                 $('#pda').append( renderPS(data.produktSigel) );
@@ -484,14 +494,14 @@ function isbnEingabe(n) {
             <form id="formPpn" name='formular'  action="#">&nbsp; &nbsp; &nbsp;
                 <input id="eingabePpn" type="search" size="20" maxlength="30" placeholder="id...">
                 <select>
-                    <option type="radio" name="eingabeVerbund" value="K10PLUS">K10PLUS
-                    <option type="radio" name="eingabeVerbund" value="SWB">SWB
-                    <option type="radio" name="eingabeVerbund" value="B3KAT">B3KAT
-                    <option type="radio" name="eingabeVerbund" value="HEBIS">HEBIS
-                    <option type="radio" name="eingabeVerbund" value="HBZ">HBZ
-                    <option type="radio" name="eingabeVerbund" value="DNB">DNB
-                    <option type="radio" name="eingabeVerbund" value="SWISS">swisscovery
-                    <option type="radio" name="eingabeVerbund" value="OBVSG">OBVSG
+                    <option type="radio" name="eingabeVerbund" value="k10plus">k10plus
+                    <option type="radio" name="eingabeVerbund" value="swb">swb
+                    <option type="radio" name="eingabeVerbund" value="b3kat">b3kat
+                    <option type="radio" name="eingabeVerbund" value="hebis">hebis
+                    <option type="radio" name="eingabeVerbund" value="hbz">hzb
+                    <option type="radio" name="eingabeVerbund" value="dnb">dnb
+                    <option type="radio" name="eingabeVerbund" value="swiss">swisscovery
+                    <option type="radio" name="eingabeVerbund" value="obvsg">obvsg
                 </select>
                 <input class="button" type="submit" value="Submit">
             </form>
@@ -548,48 +558,48 @@ function isbnEingabe(n) {
         <th>Schlagwörter</th>
     </tr>
     <tr>
-        <td><div id="sucheK10PLUS">K10PLUS</div><small><div id="bestandK10PLUS"></div></small></td>
-        <td id="rvkK10PLUS" class="rvk"></td>
+        <td><div id="suche-k10plus">K10PLUS</div><small><div id="bestand-k10plus"></div></small></td>
+        <td id="rvk-k10plus" class="rvk"></td>
         <td id="rvkaggregiert" class="rvkaggregiert" rowspan="7" style="display: none"></td>
-        <td id="ddcK10PLUS" class="ddc"></td>
+        <td id="ddc-k10plus" class="ddc"></td>
         <td id="ddcaggregiert" class="ddcaggregiert" rowspan="7" style="display: none"></td>
-        <td id="swK10PLUS"></td>
+        <td id="sw-k10plus"></td>
     </tr>
     <tr>
-        <td><span id="sucheB3KAT">B3Kat</span> (Link zu BVB)<small><div id="bestandB3KAT"></div></small></td>
-        <td id="rvkB3KAT" class="rvk"></td>
-        <td id="ddcB3KAT" class="ddc"></td>
-        <td id="swB3KAT"></td>
+        <td><span id="suche-b3kat">B3Kat</span> (Link zu BVB)<small><div id="bestand-b3kat"></div></small></td>
+        <td id="rvk-b3kat" class="rvk"></td>
+        <td id="ddc-b3kat" class="ddc"></td>
+        <td id="sw-b3kat"></td>
     </tr>
     <tr>
-        <td><div id="sucheHBZ">HBZ</div><small><div id="bestandHBZ"></div></small></td>
-        <td id="rvkHBZ" class="rvk"></td>
-        <td id="ddcHBZ" class="ddc"></td>
-        <td id="swHBZ"></td>
+        <td><div id="suche-hbz">HBZ</div><small><div id="bestand-hbz"></div></small></td>
+        <td id="rvk-hbz" class="rvk"></td>
+        <td id="ddc-hbz" class="ddc"></td>
+        <td id="sw-hbz"></td>
     </tr>
     <tr>
-        <td><div id="sucheHEBIS">HEBIS</div><small><div id="bestandHEBIS"></div></small></td>
-        <td id="rvkHEBIS" class="rvk"></td>
-        <td id="ddcHEBIS" class="ddc"></td>
-        <td id="swHEBIS"></td>
+        <td><div id="suche-hebis">HEBIS</div><small><div id="bestand-hebis"></div></small></td>
+        <td id="rvk-hebis" class="rvk"></td>
+        <td id="ddc-hebis" class="ddc"></td>
+        <td id="sw-hebis"></td>
     </tr>
     <tr>
-        <td><div id="sucheDNB">DNB</div><small><div id="bestandDNB"></div></small></td>
-        <td id="rvkDNB" class="rvk"></td>
-        <td id="ddcDNB" class="ddc"></td>
-        <td id="swDNB"></td>
+        <td><div id="suche-dnb">DNB</div><small><div id="bestand-dnb"></div></small></td>
+        <td id="rvk-dnb" class="rvk"></td>
+        <td id="ddc-dnb" class="ddc"></td>
+        <td id="sw-dnb"></td>
     </tr>
     <tr>
-        <td><div id="sucheSWISS">swisscovery</div><small><div id="bestandSWISS"></div></small></td>
-        <td id="rvkSWISS" class="rvk"></td>
-        <td id="ddcSWISS" class="ddc"></td>
-        <td id="swSWISS"></td>
+        <td><div id="suche-swiss">swisscovery</div><small><div id="bestand-swiss"></div></small></td>
+        <td id="rvk-swiss" class="rvk"></td>
+        <td id="ddc-swiss" class="ddc"></td>
+        <td id="sw-swiss"></td>
     </tr>
     <tr>
-        <td><div id="sucheOBVSG">OBVSG</div><small><div id="bestandOBVSG"></div></small></td>
-        <td id="rvkOBVSG" class="rvk"></td>
-        <td id="ddcOBVSG" class="ddc"></td>
-        <td id="swOBVSG"></td>
+        <td><div id="suche-obvsg">OBVSG</div><small><div id="bestand-obvsg"></div></small></td>
+        <td id="rvk-obvsg" class="rvk"></td>
+        <td id="ddc-obvsg" class="ddc"></td>
+        <td id="sw-obvsg"></td>
     </tr>
 </table>
 
