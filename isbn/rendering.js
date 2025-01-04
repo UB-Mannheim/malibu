@@ -169,17 +169,19 @@ function renderLinks(linkArray)
     }
 }
 
-function renderBestandSWB(bestandArray, id)
+function renderBestand(bestandArray, id, verbund)
 {
     var bibArray = $.map(bestandArray, function (sigel) {
-        if (sigel === "180") {
+        if (sigel === "180" && verbund == "K10PLUS") {
             return '<span style="border:2px solid red">180</span>';
         } else {
             return sigel;
         }
     });
-    var outputString = "Insgesamt "+bibArray.length+" Bibliotheken im <a href='https://swb.bsz-bw.de/DB=2.1/PPNSET?PPN="+id+"&INDEXSET=21' target='_blank'>SWB</a> mit Bestand: "+bibArray.join(", ");
-    return outputString;
+    if (bibArray.length > 0) {
+        return "Insgesamt "+bibArray.length+" Bibliotheken im " + verbund + " mit Bestand: "+bibArray.join(", ");
+    }
+    return "";
 }
 
 
@@ -210,7 +212,10 @@ function renderSW(swObject)
         }
         swTextArray.push(key);
     });
-    return swArray.join('; ') + "&emsp;<button class='btn' title='Schlagwörter kopieren' data-clipboard-text='" + swTextArray.join('\n') + "'><img src='../img/clippy.svg' width='16'/></button>";
+    if (swArray.length > 0) {
+        return swArray.join('; ') + "&emsp;<button class='btn' title='Schlagwörter kopieren' data-clipboard-text='" + swTextArray.join('\n') + "'><img src='../img/clippy.svg' width='16'/></button>";
+    }
+    return "";
 }
 
 function bestellInfo(databaseText, currentRecord)
@@ -226,6 +231,21 @@ function bestellInfo(databaseText, currentRecord)
     content += '; ' + render(currentRecord.umfang);
 
     return content;
+}
+
+function renderTitle(data)
+{
+    var info = "<b>"+data["titel"][0] + "</b> <i>" + data["autor"][0] + "</i><br/>";
+    if (data["gesamttitel"].length>0) {
+        info += "("+data["gesamttitel"]+")<br/>";
+    }
+    if (data["hochschulvermerk"].length>0) {
+        info += data["hochschulvermerk"]+"<br/>";
+    }
+    if (data["isbn"].length>0) {
+        info += data["isbn"].join(", ")+"<br/>";
+    }
+    return info;
 }
 
 function coins(currentRecord)
