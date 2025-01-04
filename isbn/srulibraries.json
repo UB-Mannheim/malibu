@@ -146,5 +146,9 @@
   "DE-WUP" : {
     "name": "Wuppertal U",
     "sru": "https://eu04.alma.exlibrisgroup.com/view/sru/49HBZ_WUP"
+  },
+  "DE-HBZ" : {
+    "name": "HBZ (keine Bestandsdaten)",
+    "sru": "https://eu04.alma.exlibrisgroup.com/view/sru/49HBZ_NETWORK"
   }
 }

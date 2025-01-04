@@ -140,6 +140,7 @@ var libraries;
 fetch('../isbn/srulibraries.json')
   .then((response) => response.json())
   .then(json => {
+    delete json["DE-HBZ"];
     libraries = json;
     populateSelectElement("bibliothek", libraries);
     let param = getParameterByName("bibliothek");
