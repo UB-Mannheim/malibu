@@ -36,7 +36,7 @@ if (isset($_GET['ppn'])) {
     $suchString = 'dc.id=' . $ppn;
 }
 if (isset($_GET['bibliothek'])) {
-    $file = file_get_contents('./srulibraries.json'); 
+    $file = file_get_contents('./srulibraries.json');
     $json = json_decode($file, true);
     $urlBase = $json[$_GET['bibliothek']]['sru'];
 } else {
@@ -191,11 +191,11 @@ if (!isset($_GET['format'])) {
                 $collection = $node->xpath('./subfield[@code="m"]');
                 if ($collection) {
                     $collectionValue = getValues($collection[0]);
-					$availability = $node->xpath('./subfield[@code="e"]');
-					if ($availability and getValues($availability[0]) != "Available") {
-						$collectionValue .= " [" . getValues($availability[0]) . "]";
-					}
-					$collections[] = $collectionValue;
+                    $availability = $node->xpath('./subfield[@code="e"]');
+                    if ($availability and getValues($availability[0]) != "Available") {
+                        $collectionValue .= " [" . getValues($availability[0]) . "]";
+                    }
+                    $collections[] = $collectionValue;
                 }
             }
             echo "</table>\n";
@@ -229,11 +229,11 @@ if (!isset($_GET['format'])) {
             $collection = $node->xpath('./subfield[@code="m"]');
             if ($collection) {
                 $collectionValue = getValues($collection[0]);
-				$availability = $node->xpath('./subfield[@code="e"]');
-				if ($availability and getValues($availability[0]) != "Available") {
-					$collectionValue .= " [" . getValues($availability[0]) . "]";
-				}
-				$collections[] = $collectionValue;
+                $availability = $node->xpath('./subfield[@code="e"]');
+                if ($availability and getValues($availability[0]) != "Available") {
+                    $collectionValue .= " [" . getValues($availability[0]) . "]";
+                }
+                $collections[] = $collectionValue;
             }
         }
         echo "</table>\n";
