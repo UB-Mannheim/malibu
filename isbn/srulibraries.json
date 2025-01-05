@@ -149,6 +149,21 @@
   },
   "DE-HBZ" : {
     "name": "HBZ (keine Bestandsdaten)",
+    "holdings": false,
+    "doku": "https://service-wiki.hbz-nrw.de/display/VDBE/Zugriff+auf+die+hbz-Verbunddatenbank+via+SRU",
     "sru": "https://eu04.alma.exlibrisgroup.com/view/sru/49HBZ_NETWORK"
+  },
+  "CH-SWISS" : {
+    "name": "SWISS (keine Bestandsdaten)",
+    "holdings": false,
+    "doku": "https://slsp.ch/de/metadata",
+    "sru": "https://swisscovery.slsp.ch/view/sru/41SLSP_NETWORK"
+  },
+  "AT-OBVSG" : {
+    "name": "OBVSG (keine Bestandsdaten)",
+    "holdings": false,
+    "doku": "https://www.obvsg.at/services/verbundsystem/sru",
+    "sru": "https://services.obvsg.at/sru/OBV-LIT"
   }
+  
 }

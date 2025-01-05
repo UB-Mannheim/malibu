@@ -75,6 +75,9 @@ function populateSelectElement(selectElementId, data) {
 	const selectElement = document.getElementById(selectElementId);
 	for (let index in data) {
 		element = data[index];
+		if ("holdings" in element && !element["holdings"]) {
+			delete element;
+		}
 		const option = document.createElement("option");
 		option.value = index;
 		option.text = element.name;
@@ -140,7 +143,6 @@ var libraries;
 fetch('../isbn/srulibraries.json')
   .then((response) => response.json())
   .then(json => {
-    delete json["DE-HBZ"];
     libraries = json;
     populateSelectElement("bibliothek", libraries);
     let param = getParameterByName("bibliothek");

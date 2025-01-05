@@ -5,7 +5,7 @@
  * Copyright (C) 2024 Universitätsbibliothek Mannheim
  *
  * Author:
- *    Philipp Zumstein <philipp.zumstein@bib.uni-mannheim.de>
+ *    Philipp Zumstein <philipp.zumstein@uni-mannheim.de>
  *
  * This is free software licensed under the terms of the GNU GPL,
  * version 3, or (at your option) any later version.
@@ -28,13 +28,6 @@
 include 'conf.php';
 include 'lib.php';
 
-$suchString = '';
-$suchStringSWB = '';
-
-if (isset($_GET['ppn'])) {
-    $ppn = trim($_GET['ppn']);
-    $suchString = 'dc.id=' . $ppn;
-}
 if (isset($_GET['bibliothek'])) {
     $file = file_get_contents('./srulibraries.json');
     $json = json_decode($file, true);
@@ -46,23 +39,34 @@ if (isset($_GET['bibliothek'])) {
 
 $urlBase = $urlBase . '?version=1.2&operation=searchRetrieve&recordSchema=marcxml&query=';
 
-$filteredSuchString = 'alma.mms_tagSuppressed=false';
+if (!isset($_GET['ppn']) and !isset($_GET['isbn'])) {
+    echo "Weder isbn noch ppn Parameter für eine Suche angegeben.\n";
+    exit;
+}
+
+$suchString = '';
+
+if (isset($_GET['ppn'])) {
+    $n = trim($_GET['ppn']);
+    $searchObject = "ppn";
+}
 if (isset($_GET['isbn'])) {
     $n = trim($_GET['isbn']);
-    $nArray = preg_split("/\s*(or|,|;)\s*/i", $n, -1, PREG_SPLIT_NO_EMPTY);
-    $suchString = 'alma.all=' . implode('+OR+alma.all=', $nArray);
-    $suchStringSWB = implode(' or ', $nArray);
+    $searchObject = "isbn";
 }
-
-if (strlen($suchString)) {
-    $filteredSuchString .= '+AND+(' . $suchString . ')';
-}
+$nArray = preg_split("/\s*(or|,|;)\s*/i", $n, -1, PREG_SPLIT_NO_EMPTY);
+$suchString = 'alma.all=' . implode('+OR+alma.all=', $nArray);
+$filteredSuchString = 'alma.mms_tagSuppressed=false' . '+AND+(' . $suchString . ')';
 
 # work around ExLibris server configuration issue
+# and increase timeout (i.e. waiting time)
 $contextOptions = [
     'ssl' => [
         'verify_peer' => true,
         'ciphers' => 'DEFAULT@SECLEVEL=1',
+    ],
+    'http' => [
+        'timeout' => 10,
     ],
 ];
 $context = stream_context_create($contextOptions);
@@ -93,20 +97,29 @@ $outputArray = [];
 
 foreach ($records as $record) {
     // Filter out any other results which contain the ISBN but not in the 020 or 776 field
+    // or the PPN in the 001 or 035 field(s).
+    $pattern = [
+        "isbn" => './/datafield[@tag="020" or @tag="776"]/subfield',
+        "ppn" => './/controlfield[@tag="001"]|.//datafield[@tag="035"]/subfield'
+    ];
     $foundMatch = false;
-    $foundIsbns = $xpath->query('.//datafield[@tag="020" or @tag="776"]/subfield', $record);
-    foreach ($foundIsbns as $foundNode) {
+    $nodes = $xpath->query($pattern[$searchObject], $record);
+    foreach ($nodes as $foundNode) {
         $foundValue = $foundNode->nodeValue;
         foreach ($nArray as $queryValue) {
-            $testString = preg_replace('/[^0-9xX]/', '', $queryValue);
-            if (strlen($testString) == 13) {
-                // Delete the 978-prefix and the check value at the end for ISBN13
-                $testString = substr($testString, 3, -1);
-            } elseif (strlen($testString) == 10) {
-                // Delete check value at the end for ISBN10
-                $testString = substr($testString, 0, -1);
+            $testString = $queryValue;
+            if ($searchObject == "isbn") {
+                $testString = preg_replace('/[^0-9xX]/', '', $testString);
+                $foundValue = preg_replace('/[^0-9xX]/', '', $foundValue);
+                if (strlen($testString) == 13) {
+                    // Delete the 978-prefix and the check value at the end for ISBN13
+                    $testString = substr($testString, 3, -1);
+                } elseif (strlen($testString) == 10) {
+                    // Delete check value at the end for ISBN10
+                    $testString = substr($testString, 0, -1);
+                }
             }
-            if (strpos(preg_replace('/[^0-9xX]/', '', $foundValue), $testString) !== false) {
+            if (strpos($foundValue, $testString) !== false) {
                 $foundMatch = true;
             }
         }
@@ -122,6 +135,18 @@ $outputString .= "</collection>";
 $map = STANDARD_MARC_MAP;
 $map['bestand'] = '//datafield[@tag="AVA"]/subfield[@code="b"]';
 $map['sammlung'] = '//datafield[@tag="AVE"]/subfield[@code="m"]';
+// TODO Prüfen ob man die SW nicht allgemeingültig so wie folgt behandeln könnte
+// (Feld 689 wird von HBZ und SWISS genutzt und Feld 650 von SWISS;
+// Unterfeld 2 hat nur SWISS mit "gnd" gefüllt; aber alle nutzen Unterfeld
+// 0 zur Verlinkung mit der GND beginnend mit "(DE-588)". Aber unklar wie dies
+// etwa bei Formschlagwörtern ohne Verlinkung aussieht.)
+$map['sw'] = array(
+        'mainPart' => '//datafield[starts-with(@tag,"6") and (starts-with(subfield[@code="0"],"(DE-588)") or subfield[@code="2"]="gnd")]',
+        'value' => './subfield[@code="a"]',
+        'subvalues' => './subfield[@code="b" or @code="t"]',
+        'additional' => './subfield[@code="g" or @code="z"]',
+        'key' => './subfield[@code="0" and contains(text(), "(DE-588)")]'
+    );
 
 if (!isset($_GET['format'])) {
     header('Content-type: text/xml');
@@ -142,7 +167,7 @@ if (!isset($_GET['format'])) {
     header('Content-type: application/json');
     echo json_encode($outputMap, JSON_PRETTY_PRINT);
 } elseif ($_GET['format'] == 'holdings') {
-    echo "<html>\n<head>\n	<title>Bestand Alma-SRU zu ISBN-Suche</title>\n	<meta http-equiv='content-type' content='text/html; charset=UTF-8' />\n	<style type='text/css'>body { font-family:  Arial, Verdana, sans-serif; }</style>\n</head>\n<body>\n";
+    echo "<html>\n<head>\n    <title>Bestand Alma-SRU zu ISBN-Suche</title>\n    <meta http-equiv='content-type' content='text/html; charset=UTF-8' />\n    <style type='text/css'>body { font-family:  Arial, Verdana, sans-serif; }</style>\n</head>\n<body>\n";
     $outputXml = simplexml_load_string($outputString);
     $avaNodes = $outputXml->xpath('//datafield[@tag="AVA"]');
     $aveNodes = $outputXml->xpath('//datafield[@tag="AVE"]');
@@ -244,11 +269,11 @@ if (!isset($_GET['format'])) {
         }
         echo '</div>';
     } elseif ($size > 100) {
-        //if the isbn is not found, then the $outputString is a minimal xml document
+        //if the isbn/ppn is not found, then the $outputString is a minimal xml document
         //of size 48, for larger size something might be found...
-        $urlMAN = 'man-sru.php?isbn=' . $suchStringSWB;
+        $sruUrl = str_replace('format=holdings', '', $_SERVER['REQUEST_URI']);
         echo '<div>Bestand Alma-SRU: eventuell da (' . $size . ")</div>\n";
-        echo '<table><tr><td><a href="' . $urlMAN . '" taget="_blank">See SRU Result</a></td></tr></table>';
+        echo '<table><tr><td><a href="' . $sruUrl . '" taget="_blank">See SRU Result</a></td></tr></table>';
     } else {
         echo 'Es wurde nichts gefunden';
     }
