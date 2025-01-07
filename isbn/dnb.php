@@ -20,16 +20,8 @@
  * Sucht übergebene ISBN bzw. PPN in der SRU-Schnittstelle der DNB
  * und gibt maximal 10 Ergebnisse als MARCXML oder JSON zurück.
  */
-
-include 'conf.php';
-include 'lib.php';
-
-if (isset($_GET['ppn'])) {
-    $ppn = trim($_GET['ppn']);
-    $suchString = 'dnb.idn=' . $ppn;
-}
-
-/*
+ 
+ /*
 Explain SRU
 
 https://services.dnb.de/sru/dnb?version=1.1&operation=explain
@@ -40,12 +32,19 @@ https://www.dnb.de/DE/Professionell/Metadatendienste/Datenbezug/SRU/sru_node.htm
 
 */
 
+include 'conf.php';
+include 'lib.php';
+
+if (isset($_GET['ppn'])) {
+    $ppn = trim($_GET['ppn']);
+    $suchString = 'dnb.idn=' . $ppn;
+}
+
 $urlBase = 'https://services.dnb.de/sru/dnb?version=1.1&operation=searchRetrieve&recordSchema=MARC21-xml&query=';
 if (isset($_GET['isbn'])) {
     $n = trim($_GET['isbn']);
     $nArray = preg_split("/\s*(or|,|;)\s*/i", $n, -1, PREG_SPLIT_NO_EMPTY);
     $suchString = 'dnb.num=' . implode('+OR+dnb.num=', $nArray);
-    $suchStringSWB = implode(' or ', $nArray);
 }
 
 $result = file_get_contents($urlBase . $suchString, false);
@@ -75,29 +74,8 @@ $outputArray = [];
 
 
 foreach ($records as $record) {
-    // Filter out any other results which contain the ISBN but not in the 020 or 776 field
-    $foundMatch = false;
-    $foundIsbns = $xpath->query('.//datafield[@tag="020" or @tag="776"]/subfield', $record);
-    foreach ($foundIsbns as $foundNode) {
-        $foundValue = $foundNode->nodeValue;
-        foreach ($nArray as $queryValue) {
-            $testString = preg_replace('/[^0-9xX]/', '', $queryValue);
-            if (strlen($testString) == 13) {
-                // Delete the 978-prefix and the check value at the end for ISBN13
-                $testString = substr($testString, 3, -1);
-            } elseif (strlen($testString) == 10) {
-                // Delete check value at the end for ISBN10
-                $testString = substr($testString, 0, -1);
-            }
-            if (strpos(preg_replace('[^0-9xX]', '', $foundValue), $testString) !== false) {
-                $foundMatch = true;
-            }
-        }
-    }
-    if ($foundMatch) {
-        $outputString .= $doc->saveXML($record);
-        array_push($outputArray, $doc->saveXML($record));
-    }
+    $outputString .= $doc->saveXML($record);
+    array_push($outputArray, $doc->saveXML($record));
 }
 $outputString .= "</collection>";
 

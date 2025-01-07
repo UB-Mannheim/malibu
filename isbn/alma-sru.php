@@ -28,9 +28,9 @@
 include 'conf.php';
 include 'lib.php';
 
-if (isset($_GET['bibliothek'])) {
-    $file = file_get_contents('./srulibraries.json');
-    $json = json_decode($file, true);
+$file = file_get_contents('./srulibraries.json');
+$json = json_decode($file, true);
+if (isset($_GET['bibliothek']) and isset($json[$_GET['bibliothek']])) {
     $urlBase = $json[$_GET['bibliothek']]['sru'];
 } else {
     echo "Bibliothek nicht gefunden in der Liste der bekannten Alma-SRU-Schnittstellen.\n";
@@ -118,9 +118,16 @@ foreach ($records as $record) {
                     // Delete check value at the end for ISBN10
                     $testString = substr($testString, 0, -1);
                 }
-            }
-            if (strpos($foundValue, $testString) !== false) {
-                $foundMatch = true;
+                // for isbn, check that the test string is part of the found value
+                if (strpos($foundValue, $testString) !== false) {
+                    $foundMatch = true;
+                }
+            } else {
+                // for ppn (or other ids), skip the possible prefix in paranthesis and then they need to be exactly the same
+                $foundValue = preg_replace('/^\(.*\)/', '', $foundValue);
+                if ($foundValue == $testString) {
+                    $foundMatch = true;
+                }
             }
         }
     }
@@ -187,9 +194,6 @@ if (!isset($_GET['format'])) {
 
             $location = getValues($node->xpath('./subfield[@code="b"]')[0]);
             $sublocation = getValues($node->xpath('./subfield[@code="c"]')[0]);
-            /*if (strpos($sublocation, "Lehrbuchsammlung") !== false) {
-                $location = "LBS";
-            }*/
 
             $node_f = $node->xpath('./subfield[@code="f"]');
             $number = count($node_f) ? getValues($node_f[0]) : 0;

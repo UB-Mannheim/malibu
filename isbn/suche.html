@@ -30,7 +30,7 @@ if (typeof jQuery == 'undefined') {
     alert("jQuery wurde nicht gefunden");
 }
 </script>
-<script src="rendering.js"></script>
+<script src="rendering.js?20250104"></script>
 <script src="paketinfo.js"></script>
 <script type="text/javascript">
 function toggleHidden() {
@@ -226,6 +226,7 @@ $(document).ready(function(){
     });
 
     var meinVerbund = getParameterByName("verbund").toLowerCase() || "k10plus";
+    document.querySelector("#selectPpn").value = meinVerbund;
     //Damit werden die Variablen ueber HTML ausgewertet (so wie GET Variablen in PHP)
     if (getParameterByName("isbn")) {
         $('#eingabeIsbn').val(getParameterByName("isbn"));
@@ -234,7 +235,6 @@ $(document).ready(function(){
     } else if (getParameterByName("ppn")) {
         $('#eingabePpn').val(getParameterByName("ppn"));
         $('#eingabeIsbn').val('');
-        document.querySelector("#formPpn select").value = meinVerbund;
         ppnEingabe(getParameterByName("ppn"), meinVerbund);
     }
     
@@ -361,11 +361,11 @@ function isbnEingabe(n) {
     }
     // Bestandsabgleich durchführen
     $.get(url, function(data){
-        var holdingsMAN = pattern.exec(data);
-        if (holdingsMAN) {
+        var holdings = pattern.exec(data);
+        if (holdings) {
              var detailsLink = $('<a/>').attr('href', url).attr('onclick', 'return toggleHidden()').text("Details");
              var bestandsLine = $('<div/>').attr('style', "background-color:#ffbbbb")
-               .text(label + holdingsMAN[1]+ ' (')
+               .text(label + holdings[1]+ ' (')
                .append(detailsLink)
                .append(')<div id="detailsText" style="display: none;" class="hidden"><br/></div>');
              $('#bestandsabgleich').append('<br/>').append(bestandsLine);
@@ -493,7 +493,7 @@ function isbnEingabe(n) {
         <td id="idTD">
             <form id="formPpn" name='formular'  action="#">&nbsp; &nbsp; &nbsp;
                 <input id="eingabePpn" type="search" size="20" maxlength="30" placeholder="id...">
-                <select>
+                <select id="selectPpn">
                     <option type="radio" name="eingabeVerbund" value="k10plus">k10plus
                     <option type="radio" name="eingabeVerbund" value="swb">swb
                     <option type="radio" name="eingabeVerbund" value="b3kat">b3kat
