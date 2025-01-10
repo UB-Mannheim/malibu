@@ -74,9 +74,9 @@ function updateStatus() {
 function populateSelectElement(selectElementId, data) {
 	const selectElement = document.getElementById(selectElementId);
 	for (let index in data) {
-		element = data[index];
+		let element = data[index];
 		if ("holdings" in element && !element["holdings"]) {
-			delete element;
+			continue;
 		}
 		const option = document.createElement("option");
 		option.value = index;
