@@ -102,6 +102,30 @@ function renderDDC(ddcArray)
 }
 
 
+// Alle speziellen Links mit der ausgewählten Bibliothek und Verbund
+// als URL-Paramter updaten.
+function updateLinks() {
+    let bibliothek = getParameterByName("bibliothek");
+    let verbund = getParameterByName("verbund");
+    parameters = []
+    if (bibliothek != "") {
+        parameters.push("bibliothek=" + bibliothek);
+    }
+    if (verbund != "") {
+        parameters.push("verbund=" + verbund);
+    }
+    if (parameters.length > 0) {
+        for (let linkNode of document.getElementsByClassName("link")) {
+            let separator = "?";
+            if (linkNode.dataset.href.includes("?")) {
+                separator = "&";
+            }
+            linkNode.href = linkNode.dataset.href + separator + parameters.join("&")
+        }
+    }
+}
+
+
 function renderRelationen(relationenArray)
 {
     if (typeof relationenArray === 'string') {
@@ -109,7 +133,7 @@ function renderRelationen(relationenArray)
     } else {
         for (var i=0; i<relationenArray.length; i++) {
             var rel = relationenArray[i];
-            relationenArray[i] = '<a href="./suche.html?isbn=' + rel + '" target="_blank">' + rel + '</a>';
+            relationenArray[i] = '<a class="link" href="./suche.html?isbn=' + rel + '" data-href="./suche.html?isbn=' + rel + '" target="_blank">' + rel + '</a>';
         }
         return relationenArray.join(', ');
     }

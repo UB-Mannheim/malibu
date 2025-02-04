@@ -11,22 +11,121 @@
 				margin-right: auto;
 			}
 		</style>
+		<script src="./isbn/rendering.js"></script>
 	</head>
 	<body>
 		<h1>malibu - Mannheim library utilities</h1>
 		<p><b>malibu</b> ist eine Sammlung von leichtgewichtigen, webbasierten Tools im Umfeld von bibliographischen Daten zur Unterstützung von Arbeitsabläufen, wie sie häufig in Bibliotheken bei den Fachreferaten und der Erwerbung aufteten.</p>
-		<p>Hauptkomponenten sind:</p>
+		<h2>Hauptkomponenten</h2>
 		<ul>
-			<li><b>Suche nach einer ISBN</b> in verschiedenen Verbunddatenbanken und weitere Informationen etwa von Buchhändlern: <a href="isbn/suche.html">isbn/suche.html</a><br/></li>
+			<li><b>Suche nach einer ISBN</b> in verschiedenen Verbunddatenbanken und weitere Informationen etwa von Buchhändlern: <a class="link" href="isbn/suche.html" data-href="isbn/suche.html">isbn/suche.html</a><br/></li>
 			<li>Recherchewerkzeug für die <b>BNB weekly</b>: <a href="bnb/recherche.php">bnb/recherche.php</a><br/></li>
 			<li><b>Bestandsabgleich</b> anhand einer Liste von ISBNs:<ul>
 			    <li>für den Bestand der UB Mannheim: <a href="tools/bestandsabgleich.html">tools/bestandsabgleich.html</a></li>
-				<li>für die Bestandsdaten in einem Verbund: <a href="tools/bestandsabgleichA.html">tools/bestandsabgleichA.html</a></li>
-				<li>für Bibliotheken mit einer ALMA-SRU-Schnittstelle: <a href="tools/bestandsabgleichB.html">tools/bestandsabgleichB.html</a></li></ul>
+				<li>für die Bestandsdaten in einem Verbund: <a class="link" href="tools/bestandsabgleichA.html" data-href="tools/bestandsabgleichA.html">tools/bestandsabgleichA.html</a></li>
+				<li>für Bibliotheken mit einer ALMA-SRU-Schnittstelle: <a class="link" href="tools/bestandsabgleichB.html" data-href="tools/bestandsabgleichB.html">tools/bestandsabgleichB.html</a></li></ul>
 			</li>
-			<li><b>PPN/ISBN-Liste anreichern</b> mit Werten eines Feldes (z.B. ISBN, Bestand, RVK, Schlagwörter) aus dem gleichen Verbund: <a href="tools/ppnListe.html">tools/ppnListe.html</a></li>
+			<li><b>PPN/ISBN-Liste anreichern</b> mit Werten eines Feldes (z.B. ISBN, Bestand, RVK, Schlagwörter) aus dem gleichen Verbund: <a class="link" href="tools/ppnListe.html" data-href="tools/ppnListe.html">tools/ppnListe.html</a></li>
 		</ul>
+		<h2>Einstellungen</h2>
+		<form>
+			<label>Verbund auswählen:</label>
+			<select id="verbund" onchange="updateBookmark()">
+				<option>k10plus</option>
+				<option>b3kat</option>
+				<option>hebis</option>
+				<option>hbz</option>
+				<option>dnb</option>
+				<option>swiss</option>
+				<option>obvsg</option>
+			</select>
+			<label for="bibliothek">Bibliothek auswählen:</label>
+			<select name="bibliothek" id="bibliothek" onchange="updateBookmark()">
+			<option value="keine">keine</option>
+			<optgroup id="DE" label="Deutschland" />
+			<optgroup id="AT" label="Österreich" />
+			<optgroup id="CH" label="Schweiz" />
+			</select>
+		</form>
+		<p>Bei Auswahl eines anderen Verbundes und/oder Bibliothek ändert sich die URL um die entsprechenden Parameter hier.
+		Zudem berücksichtigen die ausgehenden Links dann auch diese Einstellungen (soweit relevant ist).</p>
+		
+		<h2>Anwendungsbeschreibung</h2>
+		Es gibt keine offizielle Dokumentation, aber die prinzipielle Anwendung sollte hoffentlich möglichst selbsterklärend sein.
+		Zwei etwas ältere Veröffentlichungen können vielleicht die Anwendungsfälle und mögliche Workflows etwas klarer machen:
+		<ul>
+			<li><a href="https://netzwerkeln.bibliothekswelt.de/2020/12/21/informationen-zu-einer-isbn-auf-einen-blick-mit-malibu" target="_blank">
+				Informationen zu einer ISBN auf einen Blick mit malibu</a>, netzwerkeln [Blog], 2020.</li>
+			<li><a href="http://www.b-i-t-online.de/heft/2014-06-fachbeitrag-balz.pdf" target="_blank">
+				Literaturauswahl und -bestellung leichter gemacht!</a> BIT online, 2014.</li>
+		</ul>
+		Darüber hinaus gibt es in <a href="https://github.com/UB-Mannheim/malibu/wiki" target="_blank">Github ein Wiki</a> mit ein paar Unterseiten.
+
+		<h2>Quellcode und Kontakt</h2>
 		<p>malibu ist Open Source Software. Den Quellcode findet man auf GitHub zusammen mit der Möglichkeit eigene Issues oder Pull Requests zu stellen: <a href="https://github.com/UB-Mannheim/malibu/">https://github.com/UB-Mannheim/malibu</a></p>
 		<p>Ansprechperson: <a href="https://www.bib.uni-mannheim.de/ihre-ub/ansprechpersonen/dr-philipp-zumstein/">Philipp Zumstein</a></p>
+	
+		<script>
+			function populateSelectElement(selectElementId, data) {
+				const selectElement = document.getElementById(selectElementId);
+				for (let index in data) {
+					let element = data[index];
+					if ("holdings" in element && !element["holdings"]) {
+						continue;
+					}
+					const option = document.createElement("option");
+					option.value = index;
+					option.text = element.name;
+					let country = index.substring(0,2);
+					let countryNode = document.getElementById(country);
+					if (countryNode != null) {
+						countryNode.appendChild(option);
+					} else {
+						selectElement.appendChild(option);
+					}
+				}
+			}
+			function updateBookmark() {
+				var param = document.getElementById("bibliothek").value;
+				var verbund = document.getElementById("verbund").value;
+				parameters = []
+				if (param != "") {
+					parameters.push("bibliothek=" + param);
+				}
+				if (verbund != "") {
+					parameters.push("verbund=" + verbund);
+				}
+				if (parameters.length > 0) {
+					window.location.href = window.location.pathname + "?" + parameters.join("&");
+				}
+			}
+			//-->
+		</script>
+
+		
+		
+		<script type="text/javascript">
+			var libraries;
+			fetch('./isbn/srulibraries.json')
+			  .then((response) => response.json())
+			  .then(json => {
+				libraries = json;
+				populateSelectElement("bibliothek", libraries);
+				
+				updateLinks();
+				let bibliothek = getParameterByName("bibliothek");
+				let verbund = getParameterByName("verbund");
+				if (bibliothek != null) {
+					document.getElementById("bibliothek").value = bibliothek;
+				}
+				if (verbund != null) {
+					document.getElementById("verbund").value = verbund;
+				}
+
+			  });
+			
+
+		</script>
+
 	</body>
 </html>

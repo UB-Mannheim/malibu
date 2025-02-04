@@ -225,6 +225,9 @@ $(document).ready(function(){
         showNotification('Jetzt Cmd+C zum Kopieren drücken!', '#8A4B08', 'white');
     });
 
+   updateLinks();
+
+
     var meinVerbund = getParameterByName("verbund").toLowerCase() || "k10plus";
     document.querySelector("#selectPpn").value = meinVerbund;
     //Damit werden die Variablen ueber HTML ausgewertet (so wie GET Variablen in PHP)
@@ -388,7 +391,7 @@ function isbnEingabe(n) {
                 var bestandsArray = [];
                 $.each(data.einzelaufnahmen, function(key, currentRecord) {
                     $('#ausgaben table').append("<tr id='"+currentRecord.id+"'>");
-                    $('#'+currentRecord.id).append("<td>"+coins(currentRecord)+currentRecord.id+"<br/><button class='btn' title='In Zwischenablage kopieren' data-clipboard-text=''>Bestell Info <img src='../img/clippy.svg' width='16'/></button></td>");
+                    $('#'+currentRecord.id).append("<td>"+coins(currentRecord)+currentRecord.id+"<br/><button class='btn' title='In Zwischenablage kopieren' data-clipboard-text=''>Bestell Info <img src='../img/clippy.svg' alt='clipboard icon' width='16'/></button></td>");
                     $('#'+currentRecord.id).append("<td>"+render(currentRecord.auflage)+"</td>");
                     $('#'+currentRecord.id).append("<td>"+render(currentRecord.erscheinungsinfo)+"</td>");
                     if (render(currentRecord.produktSigel) == '') {
@@ -472,6 +475,7 @@ function isbnEingabe(n) {
                 $('#relationen').html(relationenText.trim());
             }
             $('#links').append( renderLinks(data.links) );
+            updateLinks();
         });
     });
     
@@ -513,10 +517,10 @@ function isbnEingabe(n) {
             </form>
         </td>
         <td id="idTD">
-            <span class="box">
-                <a href="http://wiki.bib.uni-mannheim.de/InterneSeiten/doku.php?id=anleitungen:anleitungen_und_formulare#fachreferenten" target="_blank" title="Internes Wiki -> Unterstützungstool für Fachreferatsarbeit">Hilfe</a>
-            </span>
             <span class="box" onclick="ChangeDesign();" id="ChangeDesignButton"><b>Design wechseln</b></span>
+            <span class="box">
+                <a class="link" href="../index.html" data-href="../index.html" title="Zurück zum Hauptmenü">Menü ✨</a>
+            </span>
         </td>
     </tr>
 </table>
