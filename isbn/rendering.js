@@ -202,18 +202,19 @@ function htmlEscape(str)
 function renderSW(swObject)
 {
     var swArray = [];
-    var swTextArray = [];
+    var swCopyText = [];
     $.each(swObject, function (key, value) {
+        swCopyText.push(key);
         if (typeof value == 'string') {
             var swUrl = 'https://d-nb.info/gnd/' + value + '/about/html';
             swArray.push('<a href="' + swUrl + '" target="_blank">' + htmlEscape(key) + '</a>');
+            swCopyText.push(value);
         } else {
             swArray.push(key);
         }
-        swTextArray.push(key);
     });
     if (swArray.length > 0) {
-        return swArray.join('; ') + "&emsp;<button class='btn' title='Schlagwörter kopieren' data-clipboard-text='" + swTextArray.join('\n') + "'><img src='../img/clippy.svg' width='16'/></button>";
+        return swArray.join('; ') + "&emsp;<button class='btn' title='Schlagwörter kopieren' data-clipboard-text='" + swCopyText.join('\n') + "'><img src='../img/clippy.svg' width='16'/></button>";
     }
     return "";
 }
