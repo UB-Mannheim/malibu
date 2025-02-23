@@ -1,0 +1,152 @@
+<html>
+<head>
+<title>ISBN-Liste anreichern</title>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+<style type="text/css">
+body { font-family:  Arial, Verdana, sans-serif; }
+</style>
+<script src="../isbn/jquery.min.js"></script>
+<script src="../isbn/clipboard.min.js"></script>
+<script type="text/javascript">
+<!--
+function listeEingabe() {
+	var isbnListe = $("#isbnListe").val();
+	$('#ausgabe').empty();
+	var isbnArray = isbnListe.split("\n");
+	var verbuende = [];
+	for (let obj of $("#verbuende input:checked")) {
+		verbuende.push(obj.value);
+	}
+
+	var requests = isbnArray.length*verbuende.length;
+	$("#total").html(requests);
+	$(".status").html(0);
+	isbnArray.forEach(function(value, index) {
+		check(index, value, verbuende);
+	});
+}
+
+function check(index, value, verbuende) {
+	$('#ausgabe').append('<div id="query-' + index + '"/>');
+	$('#query-'+index).attr("data-isbn", value);
+	value = value.replace(/^([\w-]*).*$/, '$1');
+	if (value.length > 0) {
+		var feld = $("#feld :selected").text();
+		var filter = $("#filter").val();
+		var sep = $("#sep").val();
+		if (document.getElementById("mit").checked) {
+			$('#query-'+index).text(value + sep + "---");
+		}
+		for (let verbund of verbuende) {
+			$.get("../isbn/" + verbund + ".php?format=json&isbn=" + value, function(data) {
+				var result = data[feld];
+				// Schlagwörter sind keine Arrays sondern Objekte, wobei die Benennungen in den Keys stehen
+				if (!Array.isArray(result) && Object.keys(result).length > 0) {
+					result = Object.keys(result);
+				}
+				if (filter && filter.length > 0) {
+					result = result.filter(bib => RegExp("^" + filter + "$").test(bib));
+				}
+				var currentAnswer = $('#query-'+index).text();
+				if (result.length > 0) {
+					for (let element of result) {
+						if (!currentAnswer.includes(element)) {
+							var parts = currentAnswer.split(sep);
+							if (parts.pop() == "---") {
+								currentAnswer = parts.join(sep);
+								$('#query-'+index).html(currentAnswer);
+							}
+							if (currentAnswer.length > 0) {
+								$('#query-'+index).append(sep);
+							}
+							$('#query-'+index).append(element);
+							currentAnswer = $('#query-'+index).text();
+						}
+					}
+				} else {
+					if (currentAnswer.length == 0) {
+						$('#query-'+index).append("---");
+					}
+				}
+				$('#query-'+index).attr("data-" + verbund, result);
+				updateStatus(verbund);
+			});
+		}
+	} else {
+		$('#query-'+index).append('KEINE ISBN');
+		var newValue = parseInt($("#total").text()) - verbuende.length;
+		$('#total').html(newValue);
+	}
+}
+
+
+// Statusanzeige aktualisieren
+function updateStatus(verbund) {
+	var status = parseInt($('#status').text());
+	$('#status').html(status + 1);
+	var vid = verbund + '-status';
+	var vstatus = parseInt($('#' + vid).text());
+	$('#' + vid).html(vstatus + 1);
+}
+</script>
+
+</head>
+<body>
+
+<h1>ISBN-Liste anreichern</h1>
+
+<p>Eine Liste mit ISBNs kann hier eingegeben werden und mit Werten eines Feldes z.B. RVK, DDC, Schlagwörter aus verschiedenen Verbünden angereichert werden.</p>
+
+<h2>Eingabe</h2>
+
+<form>
+	<label>1. Verbünde auswählen:</label>
+	<span id="verbuende">
+		<input type="checkbox" value="k10plus" checked>k10plus
+		<input type="checkbox" value="b3kat" checked>b3kat
+		<input type="checkbox" value="hebis" checked>hebis
+		<input type="checkbox" value="hbz" checked>hbz
+		<input type="checkbox" value="dnb" checked>dnb
+		<input type="checkbox" value="swiss" checked>swiss
+		<input type="checkbox" value="obvsg" checked>obvsg
+	</span>
+	<p/>
+	<label>2. Abfragekriterium wählen:</label>
+	<select id="feld">
+		<option>rvk</option>
+		<option>sw</option>
+		<option>ddc</option>
+		<option>produktSigel</option>
+	</select>
+	<p/>
+	<label>3. Liste mit ISBNs eingeben (jeweils eine pro Zeile):</label><br/>
+	<textarea id="isbnListe" cols="100" rows="20"></textarea><br/>
+	<label>OPTIONAL Ausgabe filtern:</label>
+	<input id="filter" type="text" placeholder="z.B. 180">
+	(Eingabe von RegExp auch möglich)
+	<p/>
+	<label>4. Ausgabeoptionen wählen:</label>
+	a) <input type="checkbox" name="verlinken" id="mit"> ISBN mit ausgeben;
+	b) Trennzeichen <input id="sep" type="text" value="|" size="4"><br/>
+	<input type="button" value="Jetzt anreichern" onclick='listeEingabe();' />
+</form>
+
+<h2>Ausgabe</h2>
+
+<p>Status: <span id="status" class="status">0</span> von <span id="total">0</span> Abfragen durchgeführt (<span id="k10plus-status" class="status">0</span> k10plus, <span id="b3kat-status" class="status">0</span> b3kat, <span id="hebis-status" class="status">0</span> hebis, <span id="hbz-status" class="status">0</span> hbz, <span id="dnb-status" class="status">0</span> dnb, <span id="swiss-status" class="status">0</span> swiss, <span id="obvsg-status" class="status">0</span> obvsg)</span></p>
+
+<button class="btn" data-clipboard-target="#ausgabe">
+    In Zwischenablage kopieren 
+    <img src="../img/clippy.svg" alt="In Zwischenablage kopieren" width="16">
+</button>
+
+<div id='ausgabe' style='background-color:#F0F0F0'></div>
+
+
+
+<script type="text/javascript">
+new ClipboardJS('.btn');
+</script>
+
+</body>
+</html>
