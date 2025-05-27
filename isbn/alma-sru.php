@@ -2,24 +2,24 @@
 /*
  * Source: https://github.com/UB-Mannheim/malibu/
  *
- * Copyright (C) 2016 Universitätsbibliothek Mannheim
+ * Copyright (C) 2024 Universitätsbibliothek Mannheim
  *
  * Author:
- *    Philipp Zumstein <philipp.zumstein@bib.uni-mannheim.de>
+ *    Philipp Zumstein <philipp.zumstein@uni-mannheim.de>
  *
  * This is free software licensed under the terms of the GNU GPL,
  * version 3, or (at your option) any later version.
  * See <http://www.gnu.org/licenses/> for more details.
  *
  * Aufruf aus Webbrowser:
- * man-sru?isbn=ISBN
+ * alma-sru?isbn=ISBN
  *   ISBN ist eine 10- bzw. 13-stellige ISBN mit/ohne Bindestriche/Leerzeichen
  *   ISBN kann ebenfalls eine Komma-separierte Liste von ISBNs sein
- * man-sru?isbn=ISBN&format=json
- * man-sru?isbn=ISBN&format=holdings
- * man-sru?isbn=ISBN&format=holdings&with=collections
+ * alma-sru?bibliothek=BIB&isbn=ISBN&format=json
+ * alma-sru?bibliothek=BIB&isbn=ISBN&format=holdings
+ * alma-sru?bibliothek=BIB&isbn=ISBN&format=holdings&with=collections
 *
- * Sucht übergebene ISBN bzw. PPN in der SRU-Schnittstelle der UB Mannheim
+ * Sucht übergebene ISBN bzw. PPN in der SRU-Schnittstelle einer Alma-Bibliothek
  * und gibt maximal 10 Ergebnisse als MARCXML, JSON zurück oder eine
  * formattierte Bestandsangabe (eine kurze Zeile und die Details in einer
  * Tabelle).
@@ -28,39 +28,45 @@
 include 'conf.php';
 include 'lib.php';
 
+$file = file_get_contents('./srulibraries.json');
+$json = json_decode($file, true);
+if (isset($_GET['bibliothek']) and isset($json[$_GET['bibliothek']])) {
+    $urlBase = $json[$_GET['bibliothek']]['sru'];
+} else {
+    echo "Bibliothek nicht gefunden in der Liste der bekannten Alma-SRU-Schnittstellen.\n";
+    exit;
+}
+
+$urlBase = $urlBase . '?version=1.2&operation=searchRetrieve&recordSchema=marcxml&query=';
+
+if (!isset($_GET['ppn']) and !isset($_GET['isbn'])) {
+    echo "Weder isbn noch ppn Parameter für eine Suche angegeben.\n";
+    exit;
+}
+
 $suchString = '';
-$suchStringSWB = '';
 
 if (isset($_GET['ppn'])) {
-    $ppn = trim($_GET['ppn']);
-    $suchString = 'dc.id=' . $ppn;
+    $n = trim($_GET['ppn']);
+    $searchObject = "ppn";
 }
-
-/*
-Explain SRU
-
-https://uni-mannheim.alma.exlibrisgroup.com/view/sru/49MAN_INST?version=1.2&operation=explain
-*/
-
-$urlBase = 'https://uni-mannheim.alma.exlibrisgroup.com/view/sru/49MAN_INST?version=1.2&operation=searchRetrieve&recordSchema=marcxml&query=';
-
-$filteredSuchString = 'alma.mms_tagSuppressed=false';
 if (isset($_GET['isbn'])) {
     $n = trim($_GET['isbn']);
-    $nArray = preg_split("/\s*(or|,|;)\s*/i", $n, -1, PREG_SPLIT_NO_EMPTY);
-    $suchString = 'alma.all=' . implode('+OR+alma.all=', $nArray);
-    $suchStringSWB = implode(' or ', $nArray);
+    $searchObject = "isbn";
 }
-
-if (strlen($suchString)) {
-    $filteredSuchString .= '+AND+(' . $suchString . ')';
-}
+$nArray = preg_split("/\s*(or|,|;)\s*/i", $n, -1, PREG_SPLIT_NO_EMPTY);
+$suchString = 'alma.all=' . implode('+OR+alma.all=', $nArray);
+$filteredSuchString = 'alma.mms_tagSuppressed=false' . '+AND+(' . $suchString . ')';
 
 # work around ExLibris server configuration issue
+# and increase timeout (i.e. waiting time)
 $contextOptions = [
     'ssl' => [
         'verify_peer' => true,
         'ciphers' => 'DEFAULT@SECLEVEL=1',
+    ],
+    'http' => [
+        'timeout' => 10,
     ],
 ];
 $context = stream_context_create($contextOptions);
@@ -91,21 +97,37 @@ $outputArray = [];
 
 foreach ($records as $record) {
     // Filter out any other results which contain the ISBN but not in the 020 or 776 field
+    // or the PPN in the 001 or 035 field(s).
+    $pattern = [
+        "isbn" => './/datafield[@tag="020" or @tag="776"]/subfield',
+        "ppn" => './/controlfield[@tag="001"]|.//datafield[@tag="035"]/subfield'
+    ];
     $foundMatch = false;
-    $foundIsbns = $xpath->query('.//datafield[@tag="020" or @tag="776"]/subfield', $record);
-    foreach ($foundIsbns as $foundNode) {
+    $nodes = $xpath->query($pattern[$searchObject], $record);
+    foreach ($nodes as $foundNode) {
         $foundValue = $foundNode->nodeValue;
         foreach ($nArray as $queryValue) {
-            $testString = preg_replace('/[^0-9xX]/', '', $queryValue);
-            if (strlen($testString) == 13) {
-                // Delete the 978-prefix and the check value at the end for ISBN13
-                $testString = substr($testString, 3, -1);
-            } elseif (strlen($testString) == 10) {
-                // Delete check value at the end for ISBN10
-                $testString = substr($testString, 0, -1);
-            }
-            if (strpos(preg_replace('/[^0-9xX]/', '', $foundValue), $testString) !== false) {
-                $foundMatch = true;
+            $testString = $queryValue;
+            if ($searchObject == "isbn") {
+                $testString = preg_replace('/[^0-9xX]/', '', $testString);
+                $foundValue = preg_replace('/[^0-9xX]/', '', $foundValue);
+                if (strlen($testString) == 13) {
+                    // Delete the 978-prefix and the check value at the end for ISBN13
+                    $testString = substr($testString, 3, -1);
+                } elseif (strlen($testString) == 10) {
+                    // Delete check value at the end for ISBN10
+                    $testString = substr($testString, 0, -1);
+                }
+                // for isbn, check that the test string is part of the found value
+                if (strpos($foundValue, $testString) !== false) {
+                    $foundMatch = true;
+                }
+            } else {
+                // for ppn (or other ids), skip the possible prefix in paranthesis and then they need to be exactly the same
+                $foundValue = preg_replace('/^\(.*\)/', '', $foundValue);
+                if ($foundValue == $testString) {
+                    $foundMatch = true;
+                }
             }
         }
     }
@@ -120,6 +142,18 @@ $outputString .= "</collection>";
 $map = STANDARD_MARC_MAP;
 $map['bestand'] = '//datafield[@tag="AVA"]/subfield[@code="b"]';
 $map['sammlung'] = '//datafield[@tag="AVE"]/subfield[@code="m"]';
+// TODO Prüfen ob man die SW nicht allgemeingültig so wie folgt behandeln könnte
+// (Feld 689 wird von HBZ und SWISS genutzt und Feld 650 von SWISS;
+// Unterfeld 2 hat nur SWISS mit "gnd" gefüllt; aber alle nutzen Unterfeld
+// 0 zur Verlinkung mit der GND beginnend mit "(DE-588)". Aber unklar wie dies
+// etwa bei Formschlagwörtern ohne Verlinkung aussieht.)
+$map['sw'] = array(
+        'mainPart' => '//datafield[starts-with(@tag,"6") and (starts-with(subfield[@code="0"],"(DE-588)") or subfield[@code="2"]="gnd")]',
+        'value' => './subfield[@code="a"]',
+        'subvalues' => './subfield[@code="b" or @code="t"]',
+        'additional' => './subfield[@code="g" or @code="z"]',
+        'key' => './subfield[@code="0" and contains(text(), "(DE-588)")]'
+    );
 
 if (!isset($_GET['format'])) {
     header('Content-type: text/xml');
@@ -140,7 +174,7 @@ if (!isset($_GET['format'])) {
     header('Content-type: application/json');
     echo json_encode($outputMap, JSON_PRETTY_PRINT);
 } elseif ($_GET['format'] == 'holdings') {
-    echo "<html>\n<head>\n	<title>Bestand UB Mannheim zu ISBN-Suche</title>\n	<meta http-equiv='content-type' content='text/html; charset=UTF-8' />\n	<style type='text/css'>body { font-family:  Arial, Verdana, sans-serif; }</style>\n</head>\n<body>\n";
+    echo "<html>\n<head>\n    <title>Bestand Alma-SRU zu ISBN-Suche</title>\n    <meta http-equiv='content-type' content='text/html; charset=UTF-8' />\n    <style type='text/css'>body { font-family:  Arial, Verdana, sans-serif; }</style>\n</head>\n<body>\n";
     $outputXml = simplexml_load_string($outputString);
     $avaNodes = $outputXml->xpath('//datafield[@tag="AVA"]');
     $aveNodes = $outputXml->xpath('//datafield[@tag="AVE"]');
@@ -160,9 +194,6 @@ if (!isset($_GET['format'])) {
 
             $location = getValues($node->xpath('./subfield[@code="b"]')[0]);
             $sublocation = getValues($node->xpath('./subfield[@code="c"]')[0]);
-            if (strpos($sublocation, "Lehrbuchsammlung") !== false) {
-                $location = "LBS";
-            }
 
             $node_f = $node->xpath('./subfield[@code="f"]');
             $number = count($node_f) ? getValues($node_f[0]) : 0;
@@ -188,7 +219,12 @@ if (!isset($_GET['format'])) {
                 echo "\n</tr>\n";
                 $collection = $node->xpath('./subfield[@code="m"]');
                 if ($collection) {
-                    $collections[] = getValues($collection[0]);
+                    $collectionValue = getValues($collection[0]);
+                    $availability = $node->xpath('./subfield[@code="e"]');
+                    if ($availability and getValues($availability[0]) != "Available") {
+                        $collectionValue .= " [" . getValues($availability[0]) . "]";
+                    }
+                    $collections[] = $collectionValue;
                 }
             }
             echo "</table>\n";
@@ -196,7 +232,7 @@ if (!isset($_GET['format'])) {
         }
 
 
-        echo '<div>Bestand der UB Mannheim: ';
+        echo '<div>Bestand Alma-SRU: ';
         foreach ($bestand as $loc => $n) {
             echo $n . "x" . $loc . ", ";
         }
@@ -222,36 +258,30 @@ if (!isset($_GET['format'])) {
             echo "\n</tr>\n";
             $collection = $node->xpath('./subfield[@code="m"]');
             if ($collection) {
-                $collections[] = getValues($collection[0]);
+                $collectionValue = getValues($collection[0]);
+                $availability = $node->xpath('./subfield[@code="e"]');
+                if ($availability and getValues($availability[0]) != "Available") {
+                    $collectionValue .= " [" . getValues($availability[0]) . "]";
+                }
+                $collections[] = $collectionValue;
             }
         }
         echo "</table>\n";
         echo "<hr/>\n";
-        echo '<div>Bestand der UB Mannheim: E';
+        echo '<div>Bestand Alma-SRU: E';
         if ($_GET['with']) {
             sort($collections, SORT_STRING | SORT_FLAG_CASE);
             echo ' (' . implode(" | ", $collections) . ')';
         }
         echo '</div>';
     } elseif ($size > 100) {
-        //if the isbn is not found, then the $outputString is a minimal xml document
+        //if the isbn/ppn is not found, then the $outputString is a minimal xml document
         //of size 48, for larger size something might be found...
-        $urlMAN = 'man-sru.php?isbn=' . $suchStringSWB;
-        echo '<div>Bestand der UB Mannheim: eventuell da (' . $size . ")</div>\n";
-        echo '<table><tr><td><a href="' . $urlMAN . '" taget="_blank">See SRU Result</a></td></tr></table>';
+        $sruUrl = str_replace('format=holdings', '', $_SERVER['REQUEST_URI']);
+        echo '<div>Bestand Alma-SRU: eventuell da (' . $size . ")</div>\n";
+        echo '<table><tr><td><a href="' . $sruUrl . '" taget="_blank">See SRU Result</a></td></tr></table>';
     } else {
-        $urlSWB = 'http://swb.bsz-bw.de/DB=2.1/SET=11/TTL=2/CMD?ACT=SRCHM&ACT0=SRCH&IKT0=2135&TRM0=%60180%60&ACT1=*&IKT1=1016&TRM1=' . str_replace(" ", "+", $suchStringSWB);
-        $contentSWB = utf8_decode(file_get_contents($urlSWB));
-        //echo $contentSWB;
-        $nhits = substr_count($contentSWB, 'class="hit"');
-        $ncoins = substr_count($contentSWB, 'class="Z3988"');
-        if ($nhits > 0) {//multiple results
-            echo '<div>Bestand der UB Mannheim: SWB sagt ja (<a href="' . $urlSWB . '" target="_blank">' . $nhits / 2 . ' Treffer</a>)</div>';
-        } elseif ($ncoins > 0) {//single result
-            echo '<div>Bestand der UB Mannheim: SWB sagt ja (<a href="' . $urlSWB . '" target="_blank">Einzeltreffer mit ' . $ncoins . ' COinS</a>)</div>';
-        } else {
-            echo 'Es wurde nichts gefunden';
-        }
+        echo 'Es wurde nichts gefunden';
     }
     echo "\n</body>\n</html>";
 }

@@ -102,6 +102,30 @@ function renderDDC(ddcArray)
 }
 
 
+// Alle speziellen Links mit der ausgewählten Bibliothek und Verbund
+// als URL-Paramter updaten.
+function updateLinks() {
+    let bibliothek = getParameterByName("bibliothek");
+    let verbund = getParameterByName("verbund");
+    parameters = []
+    if (bibliothek != "") {
+        parameters.push("bibliothek=" + bibliothek);
+    }
+    if (verbund != "") {
+        parameters.push("verbund=" + verbund);
+    }
+    if (parameters.length > 0) {
+        for (let linkNode of document.getElementsByClassName("link")) {
+            let separator = "?";
+            if (linkNode.dataset.href.includes("?")) {
+                separator = "&";
+            }
+            linkNode.href = linkNode.dataset.href + separator + parameters.join("&")
+        }
+    }
+}
+
+
 function renderRelationen(relationenArray)
 {
     if (typeof relationenArray === 'string') {
@@ -109,7 +133,7 @@ function renderRelationen(relationenArray)
     } else {
         for (var i=0; i<relationenArray.length; i++) {
             var rel = relationenArray[i];
-            relationenArray[i] = '<a href="./suche.html?isbn=' + rel + '" target="_blank">' + rel + '</a>';
+            relationenArray[i] = '<a class="link" href="./suche.html?isbn=' + rel + '" data-href="./suche.html?isbn=' + rel + '" target="_blank">' + rel + '</a>';
         }
         return relationenArray.join(', ');
     }
@@ -169,17 +193,19 @@ function renderLinks(linkArray)
     }
 }
 
-function renderBestandSWB(bestandArray, id)
+function renderBestand(bestandArray, id, verbund)
 {
     var bibArray = $.map(bestandArray, function (sigel) {
-        if (sigel === "180") {
+        if (sigel === "180" && verbund == "k10plus") {
             return '<span style="border:2px solid red">180</span>';
         } else {
             return sigel;
         }
     });
-    var outputString = "Insgesamt "+bibArray.length+" Bibliotheken im <a href='https://swb.bsz-bw.de/DB=2.1/PPNSET?PPN="+id+"&INDEXSET=21' target='_blank'>SWB</a> mit Bestand: "+bibArray.join(", ");
-    return outputString;
+    if (bibArray.length > 0) {
+        return "Insgesamt "+bibArray.length+" Bibliotheken im " + verbund.toUpperCase() + " mit Bestand: "+bibArray.join(", ");
+    }
+    return "";
 }
 
 
@@ -200,15 +226,21 @@ function htmlEscape(str)
 function renderSW(swObject)
 {
     var swArray = [];
+    var swCopyText = [];
     $.each(swObject, function (key, value) {
+        swCopyText.push(key);
         if (typeof value == 'string') {
             var swUrl = 'https://d-nb.info/gnd/' + value + '/about/html';
             swArray.push('<a href="' + swUrl + '" target="_blank">' + htmlEscape(key) + '</a>');
+            swCopyText.push(value);
         } else {
             swArray.push(key);
         }
     });
-    return swArray.join('; ');
+    if (swArray.length > 0) {
+        return swArray.join('; ') + "&emsp;<button class='btn' title='Schlagwörter kopieren' data-clipboard-text='" + swCopyText.join('\n') + "'><img src='../img/clippy.svg' width='16'/></button>";
+    }
+    return "";
 }
 
 function bestellInfo(databaseText, currentRecord)
@@ -224,6 +256,21 @@ function bestellInfo(databaseText, currentRecord)
     content += '; ' + render(currentRecord.umfang);
 
     return content;
+}
+
+function renderTitle(data)
+{
+    var info = "<b>"+data["titel"][0] + "</b> <i>" + data["autor"][0] + "</i><br/>";
+    if (data["gesamttitel"].length>0) {
+        info += "("+data["gesamttitel"]+")<br/>";
+    }
+    if (data["hochschulvermerk"].length>0) {
+        info += data["hochschulvermerk"]+"<br/>";
+    }
+    if (data["isbn"].length>0) {
+        info += data["isbn"].join(", ")+"<br/>";
+    }
+    return info;
 }
 
 function coins(currentRecord)

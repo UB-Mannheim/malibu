@@ -301,8 +301,8 @@ input, select {
   /*text-decoration: none;*/
 }
 
-#rvkB3KAT, #rvkHBZ, #rvkK10PLUS, #rvkHEBIS, #rvkOBVSG, #rvkSWB, #rvkSWISS,
-#swB3KAT, #swHBZ, #swK10PLUS, #swHEBIS, #swOBVSG, #swSWB, #swSWISS, #rvkaggregiert a {
+/* #rvkB3KAT, #swK10PLUS, #rvkaggregiert etc. */
+[id^=rvk] a, [id^=sw] a {
 
 
   font-weight: bold;

@@ -7,6 +7,7 @@ body { font-family:  Arial, Verdana, sans-serif; }
 </style>
 <script src="../isbn/jquery.min.js"></script>
 <script src="../isbn/clipboard.min.js"></script>
+<script src="../isbn/rendering.js"></script>
 <script type="text/javascript">
 <!--
 function listeEingabe() {
@@ -112,6 +113,12 @@ function updateStatus() {
 <div id='ausgabe' style='background-color:#F0F0F0'></div>
 
 
+<script type="text/javascript">
+	let param = getParameterByName("verbund");
+    if (param != null) {
+      document.getElementById("verbund").value = param;
+	}
+</script>
 
 <script type="text/javascript">
 new ClipboardJS('.btn');

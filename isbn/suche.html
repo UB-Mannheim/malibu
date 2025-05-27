@@ -19,10 +19,10 @@ Unterstützungstool für Fachreferatsarbeit
 <style type="text/css">
 body { font-family:  Arial, Verdana, sans-serif; }
 </style>
-	
+
 <!-- Stylesheet mit Link, damit per JS eindeutig zugegriffen werden kann -->
-<link id="stylesheet" href="malibu_light.css" type="text/css" rel="stylesheet">	
-	
+<link id="stylesheet" href="malibu_light.css" type="text/css" rel="stylesheet">
+
 <script src="jquery.min.js"></script>
 <script src="clipboard.min.js"></script>
 <script type="text/javascript">
@@ -30,7 +30,7 @@ if (typeof jQuery == 'undefined') {
     alert("jQuery wurde nicht gefunden");
 }
 </script>
-<script src="rendering.js"></script>
+<script src="rendering.js?20250104"></script>
 <script src="paketinfo.js"></script>
 <script type="text/javascript">
 function toggleHidden() {
@@ -42,7 +42,7 @@ function toggleHidden() {
 
 
 function aggregateRVK() {
-    var rvkNodes = $("#rvkSWB a, #rvkK10PLUS a, #rvkB3KAT a, #rvkHBZ a, #rvkHEBIS a, #rvkSWISS a, #rvkOBVSG a");
+    var rvkNodes = $(".rvk a");
     var frequencies = {};
     var rvkExample = {};
     for (let rvkNode of rvkNodes) {
@@ -101,7 +101,7 @@ function aggregateRVK() {
          } else {
               parent.append(": ");
          }
-      	 parent.append("<b>" + frequencies[rvk] + " x </b>");
+         parent.append("<b>" + frequencies[rvk] + " x </b>");
          $(rvkExample[rvk]).clone().appendTo(parent);
     }
     $("#rvkaggregiert").append("<br/><br/><small><img src='../img/flash.svg' height='15px' /> powered by <a href='https://rvk.uni-regensburg.de/api/'>RVK API</a></small>");
@@ -114,7 +114,7 @@ function hideRVKAggregation() {
     $(".rvk").removeAttr("style");
     $(".rvkaggregiert").attr("style", "display: none");
 }
-	
+
 
 
 function aggregateDDC() {
@@ -205,7 +205,7 @@ function hideDDCAggregation() {
 function ChangeDesign() {
     //Falls id "stylesheet" vergeben
     if ( !!(document.getElementById("stylesheet")) ) {
-	  //Nimm Link zu CSS heraus und ändere id
+      //Nimm Link zu CSS heraus und ändere id
       document.getElementById("stylesheet").href = "";
       document.getElementById("stylesheet").id = "no-stylesheet";
     } else {
@@ -213,7 +213,7 @@ function ChangeDesign() {
       document.getElementById("no-stylesheet").id = "stylesheet";
     }
 }
-	
+
 
 $(document).ready(function(){
     var clipboard = new ClipboardJS(".btn");
@@ -225,6 +225,11 @@ $(document).ready(function(){
         showNotification('Jetzt Cmd+C zum Kopieren drücken!', '#8A4B08', 'white');
     });
 
+   updateLinks();
+
+
+    var meinVerbund = getParameterByName("verbund").toLowerCase() || "k10plus";
+    document.querySelector("#selectPpn").value = meinVerbund;
     //Damit werden die Variablen ueber HTML ausgewertet (so wie GET Variablen in PHP)
     if (getParameterByName("isbn")) {
         $('#eingabeIsbn').val(getParameterByName("isbn"));
@@ -233,18 +238,20 @@ $(document).ready(function(){
     } else if (getParameterByName("ppn")) {
         $('#eingabePpn').val(getParameterByName("ppn"));
         $('#eingabeIsbn').val('');
-        if (getParameterByName("verbund")) {
-            $("option[name='eingabeVerbund'][value='"+getParameterByName('verbund')+"']").prop('checked', true);
-            ppnEingabe(getParameterByName("ppn"),getParameterByName("verbund"));
-        } else {
-            ppnEingabe(getParameterByName("ppn"),"SWB");//Wird als Default-Wert gesetzt
-        }
+        ppnEingabe(getParameterByName("ppn"), meinVerbund);
     }
     
     //Aktion bei ISBN Form:
     $('#formIsbn').on('submit',function(){
         var parameter = $('#eingabeIsbn').val();
-        window.location.href = "suche.html?isbn=" + encodeURIComponent(parameter);
+        var newUrl = "suche.html?isbn=" + encodeURIComponent(parameter);
+        if (getParameterByName("bibliothek")) {
+            newUrl += "&bibliothek=" + getParameterByName("bibliothek");
+        }
+        if (getParameterByName("verbund")) {
+            newUrl += "&verbund=" + getParameterByName("verbund");
+        }
+        window.location.href = newUrl;
         return false;//damit sollte die eigentlich submit action ignoriert werden
     });
 
@@ -252,7 +259,11 @@ $(document).ready(function(){
     $('#formPpn').on('submit',function(){
         var parameter = $('#eingabePpn').val();
         var parameter2 = $('option[name=\'eingabeVerbund\']:checked').val();
-        window.location.href = "suche.html?ppn=" + encodeURIComponent(parameter) + "&verbund=" + encodeURIComponent(parameter2);
+        var newUrl = "suche.html?ppn=" + encodeURIComponent(parameter) + "&verbund=" + encodeURIComponent(parameter2);
+        if (getParameterByName("bibliothek")) {
+            newUrl += "&bibliothek=" + getParameterByName("bibliothek");
+        }
+        window.location.href = newUrl;
         return false;//damit sollte die eigentlich submit action ignoriert werden
     });
 
@@ -273,8 +284,7 @@ function showNotification(message, bcolor, color) {
 }
 
 function ppnEingabe(ppn, verbund) {
-    verbund = verbund.toLowerCase();
-    var alle = ["swb", "k10plus", "hebis", "b3kat", "hbz", "swiss", "obvsg"];
+    var alle = ["swb", "k10plus", "hebis", "b3kat", "hbz", "dnb", "swiss", "obvsg"];
     var ind = alle.indexOf(verbund);
     if (ind > -1) {
         $.getJSON(alle[ind]+".php?ppn="+ppn+"&format=json", function(data){
@@ -306,35 +316,59 @@ function isbnEingabe(n) {
     
     var suchString = n.replace(/,/g, ' or ');
     $('#status').text("Gesucht wurden ISBN " + suchString);
-    var swbLink = $('<a target="_blank">SWB</a>').attr("href", "http://swb.bsz-bw.de/DB=2.1/SET=1/TTL=1/CMD?ACT=SRCHA&IKT=1007&TRM=" + suchString);
     var k10plusLink = $('<a target="_blank">K10PLUS</a>').attr("href", "https://kxp.k10plus.de/DB=2.0/SET=1/TTL=1/CMD?ACT=SRCHA&IKT=7&TRM=" + suchString);
     var hebisLink = $('<a target="_blank">HEBIS</a>').attr("href", "http://cbsopac.rz.uni-frankfurt.de/DB=2.1/SET=1/TTL=1/CMD?ACT=SRCHA&IKT=8520&TRM=" + nArray[0]);
     var b3katLink = $('<a target="_blank">B3KAT</a>').attr("href", "https://www.gateway-bayern.de/TP61/start.do?Query=-1%3D%22" + nArray[0] + "%22");
-    var hbzLink = $('<a target="_blank">HBZ</a>').attr("href", "http://okeanos-www.hbz-nrw.de/F/?FUNC=find-c&CCL_TERM=+IBN=%28" + nArray[0]);
+    var hbzLink = $('<a target="_blank">HBZ</a>').attr("href", "https://nrw.digibib.net/search/hbzvk/list?start=1&count=20&defaults=on&q-ib=" + nArray[0]);
     var swissLink = $('<a target="_blank">swisscovery</a>').attr("href", "https://swisscovery.slsp.ch/discovery/search?query=isbn,contains," + nArray[0] + ",AND&tab=41SLSP_NETWORK&search_scope=DN_and_CI&vid=41SLSP_NETWORK:VU1_UNION&mode=advanced&offset=0");
     var obvsgLink = $('<a target="_blank">OBVSG</a>').attr("href", "http://search.obvsg.at/primo_library/libweb/action/search.do?fn=search&ct=search&initialSearch=true&mode=Basic&tab=default_tab&indx=1&dum=true&srt=rank&vid=OBV&tb=t&vl%28freeText0%29=" + nArray[0]);
-    $('#suche'+'SWB').html(swbLink);
-    $('#suche'+'K10PLUS').html(k10plusLink);
-    $('#suche'+'HEBIS').html(hebisLink);
-    $('#suche'+'B3KAT').html(b3katLink);
-    $('#suche'+'HBZ').html(hbzLink);
-    $('#suche'+'SWISS').html(swissLink);
-    $('#suche'+'OBVSG').html(obvsgLink);
+    var dnbLink = $('<a target="_blank">DNB</a>').attr("href","https://portal.dnb.de/opac.htm?method=simpleSearch&cqlMode=true&query=num%3D" + nArray[0]);
+    $('#suche-'+'k10plus').html(k10plusLink);
+    $('#suche-'+'hebis').html(hebisLink);
+    $('#suche-'+'b3kat').html(b3katLink);
+    $('#suche-'+'hbz').html(hbzLink);
+    $('#suche-'+'swiss').html(swissLink);
+    $('#suche-'+'obvsg').html(obvsgLink);
+    $('#suche-'+'dnb').html(dnbLink);
 
-    
-    
     // Bestandsabgleich für die UB Mannheim
-    // (wird ohne entspechende php-Datei ignoriert)
-    // ist aber anpassbar: 
+    // (Default-Vorgehen, wenn kein oder unbekannter
+    // bibliotheks-Parameter gesetzt wurde)
     var url = "man-sru.php?isbn=" + encodeURIComponent(suchString) + "&format=holdings";
+    var pattern = /<div>Bestand der UB Mannheim: (.*)</;
+    var label = 'Bestand der UB Mannheim: ';
+    
+    // Bestandsabgleich über eine bekannte Alma-SRU-Schnittstelle
+    var paramBibliothek = getParameterByName("bibliothek");
+    var name = ""
+    if (paramBibliothek) {
+        $.ajax({
+            dataType: "json",
+            url: './srulibraries.json',
+            async: false,
+            success: function(srulibrares) {
+                if (paramBibliothek in srulibrares) {
+                    name = srulibrares[paramBibliothek].name;
+                    url = "alma-sru.php?isbn=" + encodeURIComponent(suchString) + "&bibliothek=" + getParameterByName("bibliothek") + "&format=holdings";
+                    pattern = /<div>Bestand Alma-SRU: (.*)</;
+                    var posBlank = name.indexOf(" ");
+                    if (posBlank > 0) {
+                        name = name.substr(posBlank + 1) + " " + name.substr(0, posBlank);
+                    }
+                    label = 'Bestand ' + name + ': ';
+                } else {
+                    console.log("Bibliothek '" + paramBibliothek + "' nicht gefunden; daher auf Default (UB Mannheim) zurückgegriffen.");
+                }
+            }
+        });
+    }
+    // Bestandsabgleich durchführen
     $.get(url, function(data){
-        var pattern = /<div>Bestand der UB Mannheim: (.*)</;
-        var holdingsMAN = pattern.exec( data );
-
-        if (holdingsMAN) {
+        var holdings = pattern.exec(data);
+        if (holdings) {
              var detailsLink = $('<a/>').attr('href', url).attr('onclick', 'return toggleHidden()').text("Details");
              var bestandsLine = $('<div/>').attr('style', "background-color:#ffbbbb")
-               .text('Bestand der UB Mannheim: ' + holdingsMAN[1]+ ' (')
+               .text(label + holdings[1]+ ' (')
                .append(detailsLink)
                .append(')<div id="detailsText" style="display: none;" class="hidden"><br/></div>');
              $('#bestandsabgleich').append('<br/>').append(bestandsLine);
@@ -343,148 +377,109 @@ function isbnEingabe(n) {
         $( "#detailsText" ).load( url.replace(/ /g, '+')+" table" );
     });
 
-   
-    $.getJSON("swb.php"+query+"&format=json", function(data){
-        $('#titel').append("<b>"+data["titel"][0] + "</b> <i>" + data["autor"][0] + "</i><br/>");
-        if (data["gesamttitel"].length>0) {
-            $('#titel').append("("+data["gesamttitel"]+")<br/>");
-        }
-        if (data["hochschulvermerk"].length>0) {
-            $('#titel').append(data["hochschulvermerk"]+"<br/>");
-        }
-        if (data["isbn"].length>0) {
-            $('#titel').append(data["isbn"].join(", ")+"<br/>");
-        }
-        
-        $('#ausgaben').html('<table id="ausgabenTable" border="1" width="100%"></table>');
-        databaseText = 'K10plusPPN: ';
-        var bestandsArray = [];
-        $.each(data.einzelaufnahmen, function(key, currentRecord) {
-            $('#ausgaben table').append("<tr id='"+currentRecord.id+"'>");
-//alert(coins(currentRecord));
-            $('#'+currentRecord.id).append("<td>"+coins(currentRecord)+currentRecord.id+"<br/><button class='btn' title='In Zwischenablage kopieren' data-clipboard-text=''>Bestell Info <img src='../img/clippy.svg' width='16'/></button></td>");
-            $('#'+currentRecord.id).append("<td>"+render(currentRecord.auflage)+"</td>");
-            $('#'+currentRecord.id).append("<td>"+render(currentRecord.erscheinungsinfo)+"</td>");
-            if (render(currentRecord.produktSigel) == '') {
-                $('#'+currentRecord.id).append("<td>"+render(currentRecord.umfang)+"</td>");
-            } else {
-                $('#'+currentRecord.id).append("<td>"+render(currentRecord.umfang)+' ['+renderSigel(currentRecord.produktSigel)+"]</td>");
-            }
-            $('#'+currentRecord.id).append("<td>"+renderBestandSWB(currentRecord.bestand, currentRecord.id)+"</td>");
-            bestandsArray.push(currentRecord.bestand.length);
-
-            $('#'+currentRecord.id+" button").attr("data-clipboard-text", bestellInfo(databaseText, currentRecord));
-
-            // invoke Zotero after COinS rebuild
-            var ev = document.createEvent('HTMLEvents');
-            ev.initEvent('ZoteroItemUpdated', true, true);
-            document.dispatchEvent(ev);
-            
-        });
-
-        $('#bestand'+"SWB").append(bestandsArray.join(" + "));
-        $('#rvk'+'SWB').html( renderRVK(data.rvk) );
-        $('#rvk'+'SWB a').each( addBenennung );
-        $('#ddc'+'SWB').html( renderDDC(data.ddc) );
-        $('#sw'+'SWB').html( renderSW(data.sw) ); 
-        
-        if(data.produktSigel && data.produktSigel.length>0) {
-            $('#pda').append( renderPS(data.produktSigel) );
-        }
-
-        var relationenText = "";
-        if(data.vorauflage && data.vorauflage.length>0) {
-            relationenText += "Vorauflage: " + renderRelationen(data.vorauflage);
-        }
-        if(data.folgeauflage && data.folgeauflage.length>0) {
-            relationenText += relationenText.length>0 ? " | " : "";
-            relationenText += "Folgeauflage: " + renderRelationen(data.folgeauflage);
-        }
-        if(data.andererelation && data.andererelation.length>0) {
-            relationenText += relationenText.length>0 ? " | " : "";
-            relationenText += "Andere Relation: " + renderRelationen(data.andererelation);
-        }
-        if(relationenText.length>0) {
-            $('#relationen').html(relationenText.trim());
-        }
-        
-        $('#links').append( renderLinks(data.links) );
-        if (data.dnbNr.length>0) {
-            $('#links').append( renderLinks( [ "http://d-nb.info/"+data.dnbNr[0] ] ) );
-        }
-        if (data.oclcNr.length>0) {
-            $('#links').append( renderLinks( [ "http://www.worldcat.org/oclc/"+data.oclcNr[0] ] ) );
-        }
-        
-        //Durch die Asynchronität gib es hier einige Code-Doppelungen --> Sind diese vermeidbar?
-        //Falls im SWB keine Titelaufnahme gefunden wird, dann sehen wir im BL Katalog noch nach
-        if( $('#ausgaben tr').length == 0 ) {
-            $.getJSON("bl.php"+query+"&format=json", function(data){
-                $('#titel').html("<b>"+data["titel"][0] + "</b> <i>" + data["autor"][0] + "</i><br/>");
-                if (data["gesamttitel"].length>0) {
-                    $('#titel').append("("+data["gesamttitel"]+")<br/>");
-                }
-                if (data["hochschulvermerk"].length>0) {
-                    $('#titel').append(data["hochschulvermerk"]+"<br/>");
-                }
-                if (data["isbn"].length>0) {
-                    $('#titel').append(data["isbn"].join(", ")+"<br/>");
-                }
+    var meinVerbund = getParameterByName("verbund").toLowerCase() || "k10plus";
+    
+    var alleVerbuende = ["k10plus", "hebis", "b3kat", "hbz", "dnb", "swiss", "obvsg"];
+    $.each(alleVerbuende, function(index, verbund){
+        $.getJSON(verbund.toLowerCase()+".php"+query+"&format=json", function(data){
+            // Details am Anfang sollen von meinem gewählten Verbund (bzw. k10plus als Default) kommen
+            if (verbund == meinVerbund) {
+                $('#titel').append(renderTitle(data));
                 
-                $('#ausgaben').html('<table border="1" width="100%" bgcolor="#f0e68c"></table>');
-                databaseText = 'BL-Nr.: ';
+                $('#ausgaben').html('<table id="ausgabenTable" border="1" width="100%"></table>');
+                databaseText = meinVerbund + ' ID: ';
+                var bestandsArray = [];
                 $.each(data.einzelaufnahmen, function(key, currentRecord) {
-                    $('#ausgaben table').append("<tr id='"+currentRecord.id+"'><td>"+coins(currentRecord)+currentRecord.id+"<br/><button class='btn' title='In Zwischenablage kopieren' data-clipboard-text=''>Bestell Info <img src='../img/clippy.svg' width='16'/></button></td>");
+                    $('#ausgaben table').append("<tr id='"+currentRecord.id+"'>");
+                    $('#'+currentRecord.id).append("<td>"+coins(currentRecord)+currentRecord.id+"<br/><button class='btn' title='In Zwischenablage kopieren' data-clipboard-text=''>Bestell Info <img src='../img/clippy.svg' alt='clipboard icon' width='16'/></button></td>");
                     $('#'+currentRecord.id).append("<td>"+render(currentRecord.auflage)+"</td>");
                     $('#'+currentRecord.id).append("<td>"+render(currentRecord.erscheinungsinfo)+"</td>");
-                    $('#'+currentRecord.id).append("<td>"+render(currentRecord.umfang)+"</td>");
-                    $('#'+currentRecord.id).append("<td>"+renderBestandSWB(currentRecord.bestand)+"</td>");
-                    
+                    if (render(currentRecord.produktSigel) == '') {
+                        $('#'+currentRecord.id).append("<td>"+render(currentRecord.umfang)+"</td>");
+                    } else {
+                        $('#'+currentRecord.id).append("<td>"+render(currentRecord.umfang)+' ['+renderSigel(currentRecord.produktSigel)+"]</td>");
+                    }
+                    $('#'+currentRecord.id).append("<td>"+renderBestand(currentRecord.bestand, currentRecord.id, verbund)+"</td>");
+                    bestandsArray.push(currentRecord.bestand.length);
+
                     $('#'+currentRecord.id+" button").attr("data-clipboard-text", bestellInfo(databaseText, currentRecord));
 
                     // invoke Zotero after COinS rebuild
                     var ev = document.createEvent('HTMLEvents');
                     ev.initEvent('ZoteroItemUpdated', true, true);
                     document.dispatchEvent(ev);
-
+                    
                 });
                 
-                $('#links').append( renderLinks(data.links) );
-            });
-        }
+                //Falls keine Titelaufnahme gefunden wurde, dann sehen wir im BL Katalog noch nach
+                //Durch die Asynchronität gib es hier einige Code-Doppelungen --> Sind diese vermeidbar? Oder kann man dies anders umstellen?
+                if( $('#ausgaben tr').length == 0 ) {
+                    $.getJSON("bl.php"+query+"&format=json", function(data){
+                        $('#titel').append(renderTitle(data));
+                        
+                        $('#ausgaben').html('<table border="1" width="100%" bgcolor="#f0e68c"></table>');
+                        databaseText = 'BL-Nr.: ';
+                        $.each(data.einzelaufnahmen, function(key, currentRecord) {
+                            $('#ausgaben table').append("<tr id='"+currentRecord.id+"'><td>"+coins(currentRecord)+currentRecord.id+"<br/><button class='btn' title='In Zwischenablage kopieren' data-clipboard-text=''>Bestell Info <img src='../img/clippy.svg' width='16'/></button></td>");
+                            $('#'+currentRecord.id).append("<td>"+render(currentRecord.auflage)+"</td>");
+                            $('#'+currentRecord.id).append("<td>"+render(currentRecord.erscheinungsinfo)+"</td>");
+                            $('#'+currentRecord.id).append("<td>"+render(currentRecord.umfang)+"</td>");
+                            $('#'+currentRecord.id).append("<td>"+renderBestand(currentRecord.bestand, null, "BL")+"</td>");
+                            
+                            $('#'+currentRecord.id+" button").attr("data-clipboard-text", bestellInfo(databaseText, currentRecord));
 
-       
-    });
-    
-    
-    var andereVerbuende = ["K10PLUS", "HEBIS", "B3KAT", "HBZ", "SWISS", "OBVSG"];
-    $.each(andereVerbuende, function(index, verbund){
-        $.getJSON(verbund.toLowerCase()+".php"+query+"&format=json", function(data){
-            
-            $('#rvk'+verbund).html( renderRVK(data.rvk) );
-            $('#rvk'+verbund+' a').each( addBenennung );
-            $('#ddc'+verbund).html( renderDDC(data.ddc) );
-            $('#sw'+verbund).html( renderSW(data.sw) );
-            $('#links').append( renderLinks(data.links) );
-            if (data.dnbNr.length>0) {
-                $('#links').append( renderLinks( [ "http://d-nb.info/"+data.dnbNr[0] ] ) );
+                            // invoke Zotero after COinS rebuild
+                            var ev = document.createEvent('HTMLEvents');
+                            ev.initEvent('ZoteroItemUpdated', true, true);
+                            document.dispatchEvent(ev);
+
+                        });
+                        
+                        $('#links').append( renderLinks(data.links) );
+                    });
+                }
             }
-            
-            if (data.oclcNr && data.oclcNr.length>0) {
-                $('#links').append( renderLinks( [ "http://www.worldcat.org/oclc/"+data.oclcNr[0] ] ) );
-            }
+
+            // folgende Informationen aus allen Verbünden zusammentragen
+            $('#rvk-'+verbund).html( renderRVK(data.rvk) );
+            $('#rvk-'+verbund+' a').each( addBenennung );
+            $('#ddc-'+verbund).html( renderDDC(data.ddc) );
+            $('#sw-'+verbund).html( renderSW(data.sw) );
+
             var bestandsListe = [];
+            var gesamtBestand = 0;
             for (var i=0; i<data.einzelaufnahmen.length; i++) {
                 bestandsListe.push(data.einzelaufnahmen[i].bestand.length);
+                gesamtBestand += data.einzelaufnahmen[i].bestand.length;
             }
-            $('#bestand'+verbund).append(bestandsListe.join(" + "));
+            if (gesamtBestand > 0) {
+                $('#bestand-'+verbund).append(bestandsListe.join(" + "));
+            }
             if(data.produktSigel && data.produktSigel.length>0) {
                 $('#pda').append( renderPS(data.produktSigel) );
             }
+
+            var relationenText = "";
+            if(data.vorauflage && data.vorauflage.length>0) {
+                relationenText += "Vorauflage: " + renderRelationen(data.vorauflage);
+            }
+            if(data.folgeauflage && data.folgeauflage.length>0) {
+                relationenText += relationenText.length>0 ? " | " : "";
+                relationenText += "Folgeauflage: " + renderRelationen(data.folgeauflage);
+            }
+            if(data.andererelation && data.andererelation.length>0) {
+                relationenText += relationenText.length>0 ? " | " : "";
+                relationenText += "Andere Relation: " + renderRelationen(data.andererelation);
+            }
+            if(relationenText.length>0) {
+                $('#relationen').html(relationenText.trim());
+            }
+            $('#links').append( renderLinks(data.links) );
+            updateLinks();
         });
     });
     
-	//sometimes the table cells are not correctly rendered if empty
+    //sometimes the table cells are not correctly rendered if empty
     $('td:empty').each( function() { $(this).html('&nbsp;'); });
 }
 //-->
@@ -501,30 +496,31 @@ function isbnEingabe(n) {
     <tr>
         <td id="idTD">
             <form id="formPpn" name='formular'  action="#">&nbsp; &nbsp; &nbsp;
-                <input id="eingabePpn" type="text" size="20" maxlength="30" placeholder="id...">
-                <select>
-                    <option type="radio" name="eingabeVerbund" value="K10PLUS">K10PLUS
-                    <option type="radio" name="eingabeVerbund" value="SWB">SWB
-                    <option type="radio" name="eingabeVerbund" value="B3KAT">B3KAT
-                    <option type="radio" name="eingabeVerbund" value="HEBIS">HEBIS
-                    <option type="radio" name="eingabeVerbund" value="HBZ">HBZ
-                    <option type="radio" name="eingabeVerbund" value="SWISS">swisscovery
-                    <option type="radio" name="eingabeVerbund" value="OBVSG">OBVSG
+                <input id="eingabePpn" type="search" size="20" maxlength="30" placeholder="id...">
+                <select id="selectPpn">
+                    <option type="radio" name="eingabeVerbund" value="k10plus">k10plus
+                    <option type="radio" name="eingabeVerbund" value="swb">swb
+                    <option type="radio" name="eingabeVerbund" value="b3kat">b3kat
+                    <option type="radio" name="eingabeVerbund" value="hebis">hebis
+                    <option type="radio" name="eingabeVerbund" value="hbz">hbz
+                    <option type="radio" name="eingabeVerbund" value="dnb">dnb
+                    <option type="radio" name="eingabeVerbund" value="swiss">swisscovery
+                    <option type="radio" name="eingabeVerbund" value="obvsg">obvsg
                 </select>
                 <input class="button" type="submit" value="Submit">
             </form>
         </td>
         <td id="isbnTD">
             <form id="formIsbn" name='formular'  action="#">
-                <input id="eingabeIsbn" type="text" size="40" maxlength="30" placeholder="isbn..." autofocus>
+                <input id="eingabeIsbn" type="search" size="40" maxlength="30" placeholder="isbn..." autofocus>
                 <input class="button" id="submitIsbn" type="submit" value="Submit">
             </form>
         </td>
         <td id="idTD">
-            <span class="box">
-                <a href="http://wiki.bib.uni-mannheim.de/InterneSeiten/doku.php?id=anleitungen:anleitungen_und_formulare#fachreferenten" target="_blank" title="Internes Wiki -> Unterstützungstool für Fachreferatsarbeit">Hilfe</a>
-            </span>
             <span class="box" onclick="ChangeDesign();" id="ChangeDesignButton"><b>Design wechseln</b></span>
+            <span class="box">
+                <a class="link" href="../index.html" data-href="../index.html" title="Zurück zum Hauptmenü">Menü ✨</a>
+            </span>
         </td>
     </tr>
 </table>
@@ -566,45 +562,48 @@ function isbnEingabe(n) {
         <th>Schlagwörter</th>
     </tr>
     <tr>
-        <td><div id="sucheSWB">SWB</div><small><div id="bestandSWB"></div></small></td>
-        <td id="rvkSWB" class="rvk"></td>
+        <td><div id="suche-k10plus">K10PLUS</div><small><div id="bestand-k10plus"></div></small></td>
+        <td id="rvk-k10plus" class="rvk"></td>
         <td id="rvkaggregiert" class="rvkaggregiert" rowspan="7" style="display: none"></td>
-        <td id="ddcSWB" class="ddc"></td>
+        <td id="ddc-k10plus" class="ddc"></td>
         <td id="ddcaggregiert" class="ddcaggregiert" rowspan="7" style="display: none"></td>
-        <td id="swSWB"></td>
+        <td id="sw-k10plus"></td>
     </tr>
     <tr>
-        <td><div id="sucheK10PLUS">K10PLUS</div><small><div id="bestandK10PLUS"></div></small></td>
-        <td id="rvkK10PLUS" class="rvk"></td>
-        <td id="ddcK10PLUS" class="ddc"></td>
-        <td id="swK10PLUS"></td>
+        <td><span id="suche-b3kat">B3Kat</span> (Link zu BVB)<small><div id="bestand-b3kat"></div></small></td>
+        <td id="rvk-b3kat" class="rvk"></td>
+        <td id="ddc-b3kat" class="ddc"></td>
+        <td id="sw-b3kat"></td>
     </tr>
     <tr>
-        <td><span id="sucheB3KAT">B3Kat</span> (Link zu BVB)<small><div id="bestandB3KAT"></div></small></td>
-        <td id="rvkB3KAT" class="rvk"></td>
-        <td id="ddcB3KAT" class="ddc"></td>
-        <td id="swB3KAT"></td>
-    <tr>
-        <td><div id="sucheHBZ">HBZ</div><small><div id="bestandHBZ"></div></small></td>
-        <td id="rvkHBZ" class="rvk"></td>
-        <td id="ddcHBZ" class="ddc"></td>
-        <td id="swHBZ"></td>
-    <tr>
-        <td><div id="sucheHEBIS">HEBIS</div><small><div id="bestandHEBIS"></div></small></td>
-        <td id="rvkHEBIS" class="rvk"></td>
-        <td id="ddcHEBIS" class="ddc"></td>
-        <td id="swHEBIS"></td>
-	<tr>
-        <td><div id="sucheSWISS">swisscovery</div><small><div id="bestandSWISS"></div></small></td>
-        <td id="rvkSWISS" class="rvk"></td>
-        <td id="ddcSWISS" class="ddc"></td>
-        <td id="swSWISS"></td>
+        <td><div id="suche-hbz">HBZ</div><small><div id="bestand-hbz"></div></small></td>
+        <td id="rvk-hbz" class="rvk"></td>
+        <td id="ddc-hbz" class="ddc"></td>
+        <td id="sw-hbz"></td>
     </tr>
     <tr>
-        <td><div id="sucheOBVSG">OBVSG</div><small><div id="bestandOBVSG"></div></small></td>
-        <td id="rvkOBVSG" class="rvk"></td>
-        <td id="ddcOBVSG" class="ddc"></td>
-        <td id="swOBVSG"></td>
+        <td><div id="suche-hebis">HEBIS</div><small><div id="bestand-hebis"></div></small></td>
+        <td id="rvk-hebis" class="rvk"></td>
+        <td id="ddc-hebis" class="ddc"></td>
+        <td id="sw-hebis"></td>
+    </tr>
+    <tr>
+        <td><div id="suche-dnb">DNB</div><small><div id="bestand-dnb"></div></small></td>
+        <td id="rvk-dnb" class="rvk"></td>
+        <td id="ddc-dnb" class="ddc"></td>
+        <td id="sw-dnb"></td>
+    </tr>
+    <tr>
+        <td><div id="suche-swiss">swisscovery</div><small><div id="bestand-swiss"></div></small></td>
+        <td id="rvk-swiss" class="rvk"></td>
+        <td id="ddc-swiss" class="ddc"></td>
+        <td id="sw-swiss"></td>
+    </tr>
+    <tr>
+        <td><div id="suche-obvsg">OBVSG</div><small><div id="bestand-obvsg"></div></small></td>
+        <td id="rvk-obvsg" class="rvk"></td>
+        <td id="ddc-obvsg" class="ddc"></td>
+        <td id="sw-obvsg"></td>
     </tr>
 </table>
 
@@ -617,7 +616,7 @@ function isbnEingabe(n) {
 </div>
 
 
-	
+
 <div id='status'>
 </div>
 
