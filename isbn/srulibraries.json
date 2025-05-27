@@ -99,6 +99,10 @@
     "name": "Berlin FU",
     "sru": "https://fu-berlin.alma.exlibrisgroup.com/view/sru/49KOBV_FUB"
   },
+  "DE-HUB" : {
+    "name": "Berlin HU",
+    "sru": "https://eu02.alma.exlibrisgroup.com/view/sru/49KOBV_HUB"
+  },
   "DE-TUBUDK" : {
     "name": "Berlin TU+UdK",
     "sru": "https://tuudk-berlin.alma.exlibrisgroup.com/view/sru/49KOBV_TUBUDK"
