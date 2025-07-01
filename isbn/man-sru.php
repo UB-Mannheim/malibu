@@ -202,7 +202,7 @@ if (!isset($_GET['format'])) {
         }
         if ($aveNodes) {
             echo "E";
-            if (isset($_GET['with']) && $_GET['with']) {
+            if (isset($_GET['with']) && $_GET['with']=="collections") {
                 sort($collections, SORT_STRING | SORT_FLAG_CASE);
                 echo ' (' . implode(" | ", $collections) . ')';
             }
