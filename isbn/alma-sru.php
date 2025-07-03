@@ -238,7 +238,7 @@ if (!isset($_GET['format'])) {
         }
         if ($aveNodes) {
             echo "E";
-            if ($_GET['with']) {
+            if (isset($_GET['with']) && $_GET['with']=="collections") {
                 sort($collections, SORT_STRING | SORT_FLAG_CASE);
                 echo ' (' . implode(" | ", $collections) . ')';
             }
@@ -269,7 +269,7 @@ if (!isset($_GET['format'])) {
         echo "</table>\n";
         echo "<hr/>\n";
         echo '<div>Bestand Alma-SRU: E';
-        if ($_GET['with']) {
+        if (isset($_GET['with']) && $_GET['with']=="collections") {
             sort($collections, SORT_STRING | SORT_FLAG_CASE);
             echo ' (' . implode(" | ", $collections) . ')';
         }
