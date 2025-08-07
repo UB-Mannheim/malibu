@@ -47,6 +47,11 @@
 			<optgroup id="AT" label="Österreich" />
 			<optgroup id="CH" label="Schweiz" />
 			</select>
+			<br/>
+			<label style="cursor:pointer;">
+				<input type="checkbox" id="toggleClearIsbn" style="vertical-align:middle;" />
+				<span style="vertical-align:middle;">ISBN-Eingabe nach Laden leeren</span>
+			</label>
 		</form>
 		<p>Bei Auswahl eines anderen Verbundes und/oder Bibliothek ändert sich die URL um die entsprechenden Parameter hier.
 		Zudem berücksichtigen die ausgehenden Links dann auch diese Einstellungen (soweit relevant ist).</p>
@@ -106,6 +111,22 @@
 		
 		
 		<script type="text/javascript">
+			// Toggle for clearing ISBN input after page load
+			var clearIsbnKey = 'clearIsbnAfterLoad';
+			var $toggle = document.getElementById('toggleClearIsbn');
+			if ($toggle) {
+				// Default to true if not set
+				var stored = localStorage.getItem(clearIsbnKey);
+				var clearIsbn = (stored === null) ? true : (stored === 'true');
+				$toggle.checked = clearIsbn;
+				$toggle.addEventListener('change', function() {
+					localStorage.setItem(clearIsbnKey, this.checked);
+				});
+				// If not set, set to true in localStorage
+				if (stored === null) {
+					localStorage.setItem(clearIsbnKey, 'true');
+				}
+			}
 			var libraries;
 			fetch('./isbn/srulibraries.json')
 			  .then((response) => response.json())
