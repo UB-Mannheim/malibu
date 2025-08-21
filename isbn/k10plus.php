@@ -51,7 +51,7 @@ if (isset($_GET['swn'])) {
     $suchString = 'pica.swn%3D' . $ppn;
 }
 
-$result = file_get_contents($urlBase . $suchString . $urlSuffix);
+$result = @file_get_contents($urlBase . $suchString . $urlSuffix);
 
 if ($result === false) {
     header('HTTP/1.1 400 Bad Request');
