@@ -15,9 +15,9 @@
  * man-sru?isbn=ISBN
  *   ISBN ist eine 10- bzw. 13-stellige ISBN mit/ohne Bindestriche/Leerzeichen
  *   ISBN kann ebenfalls eine Komma-separierte Liste von ISBNs sein
- * man-sru?isbn=ISBN&format=json
- * man-sru?isbn=ISBN&format=holdings
- * man-sru?isbn=ISBN&format=holdings&with=collections
+ * man-sru.php?isbn=ISBN&format=json
+ * man-sru.php?isbn=ISBN&format=holdings
+ * man-sru.php?isbn=ISBN&format=holdings&with=collections
 *
  * Sucht übergebene ISBN bzw. PPN in der SRU-Schnittstelle der UB Mannheim
  * und gibt maximal 10 Ergebnisse als MARCXML, JSON zurück oder eine
@@ -48,6 +48,9 @@ $filteredSuchString = 'alma.mms_tagSuppressed=false';
 if (isset($_GET['isbn'])) {
     $n = trim($_GET['isbn']);
     $nArray = preg_split("/\s*(or|,|;)\s*/i", $n, -1, PREG_SPLIT_NO_EMPTY);
+    for ($i = 0; $i < count($nArray); $i++) {
+        $nArray[$i] = str_replace("-", "", $nArray[$i]);
+    }
     $suchString = 'alma.all=' . implode('+OR+alma.all=', $nArray);
     $suchStringSWB = implode(' or ', $nArray);
 }

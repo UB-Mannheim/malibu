@@ -55,6 +55,9 @@ if (isset($_GET['isbn'])) {
     $searchObject = "isbn";
 }
 $nArray = preg_split("/\s*(or|,|;)\s*/i", $n, -1, PREG_SPLIT_NO_EMPTY);
+for ($i = 0; $i < count($nArray); $i++) {
+    $nArray[$i] = str_replace("-", "", $nArray[$i]);
+}
 $suchString = 'alma.all=' . implode('+OR+alma.all=', $nArray);
 $filteredSuchString = 'alma.mms_tagSuppressed=false' . '+AND+(' . $suchString . ')';
 
