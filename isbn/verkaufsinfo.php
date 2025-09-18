@@ -188,8 +188,8 @@ if (status_ok($urlGoogle)) {
 
 if (!isset($cover)) {
     $urlOpenlibrary = 'https://covers.openlibrary.org/b/isbn/' . $n13 . '-M.jpg';
-    $headerOpenlibrary = get_headers($urlOpenlibrary, 1);
-    if (!strpos($headerOpenlibrary[0], '404 NotFound')) {
+    $headerOpenlibrary = @get_headers($urlOpenlibrary, 1);
+    if ($headerOpenlibrary !== false && !strpos($headerOpenlibrary[0], '404 NotFound')) {
         $cover = $urlOpenlibrary;
         $coverOrigin = 'https://openlibrary.org/isbn/' . $n13;
     }

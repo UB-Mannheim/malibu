@@ -47,7 +47,7 @@ if (isset($_GET['isbn'])) {
     $suchString = 'dnb.num=' . implode('+OR+dnb.num=', $nArray);
 }
 
-$result = file_get_contents($urlBase . $suchString, false);
+$result = @file_get_contents($urlBase . $suchString, false);
 
 if ($result === false) {
     header('HTTP/1.1 400 Bad Request');
