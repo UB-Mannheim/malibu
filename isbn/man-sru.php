@@ -244,7 +244,7 @@ if (!isset($_GET['format'])) {
         echo '<table><tr><td><a href="' . $urlMAN . '" taget="_blank">See SRU Result</a></td></tr></table>';
     } else {
         $urlSWB = 'http://swb.bsz-bw.de/DB=2.1/SET=11/TTL=2/CMD?ACT=SRCHM&ACT0=SRCH&IKT0=2135&TRM0=%60180%60&ACT1=*&IKT1=1016&TRM1=' . str_replace(" ", "+", $suchStringSWB);
-        $contentSWB = utf8_decode(file_get_contents($urlSWB));
+        $contentSWB = utf8_decode(@file_get_contents($urlSWB));
         //echo $contentSWB;
         $nhits = substr_count($contentSWB, 'class="hit"');
         $ncoins = substr_count($contentSWB, 'class="Z3988"');
