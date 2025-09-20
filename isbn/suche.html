@@ -227,24 +227,13 @@ $(document).ready(function(){
 
    updateLinks();
 
-    // Read setting for clearing ISBN input after page load
-    var clearIsbnKey = 'clearIsbnAfterLoad';
-
 
     var meinVerbund = getParameterByName("verbund").toLowerCase() || "k10plus";
     document.querySelector("#selectPpn").value = meinVerbund;
     //Damit werden die Variablen ueber HTML ausgewertet (so wie GET Variablen in PHP)
     if (getParameterByName("isbn")) {
-        $('#eingabeIsbn').val(getParameterByName("isbn"));
-        $('#eingabePpn').val('');
         isbnEingabe(getParameterByName("isbn"));
-        // Clear the input after page load if toggle is enabled
-        if (localStorage.getItem(clearIsbnKey) === 'true') {
-            setTimeout(function() { $('#eingabeIsbn').val(''); }, 0);
-        }
     } else if (getParameterByName("ppn")) {
-        $('#eingabePpn').val(getParameterByName("ppn"));
-        $('#eingabeIsbn').val('');
         ppnEingabe(getParameterByName("ppn"), meinVerbund);
     }
     
