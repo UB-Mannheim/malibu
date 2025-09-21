@@ -475,6 +475,11 @@ function isbnEingabe(n) {
                 $('#relationen').html(relationenText.trim());
             }
             $('#links').append( renderLinks(data.links) );
+            if (localStorage.getItem("aggregationPrefered") === 'true') {
+                // start immediately with the aggregated view and recompute it after the 
+                // data for each verbund is ready
+                aggregateRVK();
+            }
             updateLinks();
         });
     });

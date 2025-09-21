@@ -50,6 +50,12 @@
 		</form>
 		<p>Bei Auswahl eines anderen Verbundes und/oder Bibliothek ändert sich die URL um die entsprechenden Parameter hier.
 		Zudem berücksichtigen die ausgehenden Links dann auch diese Einstellungen (soweit relevant ist).</p>
+
+		<h3>Lokale Einstellungen</h3>
+
+		Folgende Einstellungen sind lokal im jeweiligen Browser gespeichert.<br/>
+		<input type="checkbox" id="aggregationPrefered" style="vertical-align:middle;" />
+		<label for="aggregationPrefered">Aggregierte Sicht bei RVK bevorzugt</label><br/>
 		
 		<h2>Anwendungsbeschreibung</h2>
 		Es gibt keine offizielle Dokumentation, aber die prinzipielle Anwendung sollte hoffentlich möglichst selbsterklärend sein.
@@ -100,12 +106,7 @@
 					window.location.href = window.location.pathname + "?" + parameters.join("&");
 				}
 			}
-			//-->
-		</script>
-
-		
-		
-		<script type="text/javascript">
+			
 			var libraries;
 			fetch('./isbn/srulibraries.json')
 			  .then((response) => response.json())
@@ -126,6 +127,16 @@
 			  });
 			
 
+			// Interaction with local storage
+			if (JSON.parse(localStorage.getItem("aggregationPrefered"))) {
+				document.getElementById("aggregationPrefered").checked = true;
+			} else {
+				// false or not yet set
+				document.getElementById("aggregationPrefered").checked = false;
+			}
+			document.getElementById("aggregationPrefered").addEventListener('change', function() {
+				localStorage.setItem("aggregationPrefered", this.checked);
+			});
 		</script>
 
 	</body>
