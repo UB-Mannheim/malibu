@@ -140,7 +140,6 @@ function renderRelationen(relationenArray)
 }
 
 
-var paketInfoMap = [];// kann um die lokalen Pakete ergänzt werden
 var overallPaketSigel = [];//alle bereits gefunden Sigel werden in einer Liste gespeichert
 
 function renderPS(psArray)
@@ -152,17 +151,11 @@ function renderPS(psArray)
         var outputArray = [];
         for (var i=0; i<psArray.length; i++) {
             var ps = psArray[i];
-            var psCheck = '';
-            var color = 'ffffff';
             if (overallPaketSigel[ps]) {//um Doppelungen zu vermeiden
                 continue;
             }
             overallPaketSigel[ps] = true;
-            if (paketInfoMap[ps]) {
-                psCheck = paketInfoMap[ps];
-                color = 'CC99FF';
-            }
-            outputArray.push('<span title="' + psCheck + '"  style="background-color:#' + color + '">' + ps + '</span>');
+            outputArray.push('<span title="" style="background-color:#ffffff">' + ps + '</span>');
         }
         if (outputArray.length > 0) {
             return ' | '+outputArray.join(' | ');
