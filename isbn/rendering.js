@@ -238,7 +238,12 @@ function renderSW(swObject)
         }
     });
     if (swArray.length > 0) {
-        return swArray.join('; ') + "&emsp;<button class='btn' title='Schlagwörter kopieren' data-clipboard-text='" + swCopyText.join('\n') + "'><img src='../img/clippy.svg' width='16'/></button>";
+        var swCopyButton = $("<button>")
+            .addClass("btn")
+            .attr("title", "Schlagwörter kopieren")
+            .attr("data-clipboard-text", swCopyText.join('\n'))
+            .append("<img src='../img/clippy.svg' width='16'/>");
+        return swArray.join('; ') + "&emsp;" + swCopyButton.prop('outerHTML');
     }
     return "";
 }
