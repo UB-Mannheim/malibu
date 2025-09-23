@@ -82,7 +82,72 @@ function addBenennung(index, element)
             $('.'+className).addClass("rvkError");
         }
         $('.'+className).attr("data-json", JSON.stringify(json));
+        aggregateRVK();
     });
+}
+
+function aggregateRVK() {
+    var rvkNodes = $(".rvk a");
+    var frequencies = {};
+    var rvkExample = {};
+    for (let rvkNode of rvkNodes) {
+        let rvk = rvkNode.textContent;
+        frequencies[rvk] = frequencies[rvk] ? frequencies[rvk] + 1 : 1;
+        rvkExample[rvk] = rvkNode;
+    }
+    var rvkSorted = Object.keys(frequencies);
+    rvkSorted.sort();
+    $("#rvkaggregiert").html("");
+    var parent;
+    for (let rvk of rvkSorted) {
+         
+         let jsonstring = $(rvkExample[rvk]).attr("data-json");
+         if (jsonstring) {
+             let jsondata = JSON.parse(jsonstring);
+             let treeconcepts = [];
+             let treenotations = [];
+             let currentjson = jsondata;
+             while (currentjson) {
+                 if ("node" in currentjson) {
+                     if ("benennung" in currentjson.node) {
+                         treeconcepts.unshift(currentjson.node.benennung);
+                         treenotations.unshift(currentjson.node.notation);
+                     }
+                     if ("ancestor" in currentjson.node) {
+                         currentjson = currentjson.node.ancestor;
+                     } else {
+                         currentjson = null;
+                     }
+                 } else {
+                     currentjson = null;
+                 }
+             }
+             parent = $("#rvkaggregiert");
+             for (let i=0; i<treeconcepts.length; i++) {
+                 let node = treeconcepts[i];
+                 let notation = treenotations[i];
+                 let check = $("#rvkaggregiert *[title='" + notation + "']");
+                 if (check.length == 0) {
+                     let inner = $("<li>").attr("title", notation).text(node);
+                     let line = $("<ul>").append(inner);
+                     parent.append(line);
+                 }
+                 parent = $("#rvkaggregiert *[title='" + notation + "']");
+             }
+         }
+         if (rvkExample[rvk].classList.contains("rvkError")) {
+             parent = $("#rvkaggregiert");
+             parent.append("<br/>[Error]<br/>");
+         } else {
+            if (!parent) {
+                parent = $("#rvkaggregiert");
+            }
+              parent.append(": ");
+         }
+         parent.append("<b>" + frequencies[rvk] + " x </b>");
+         $(rvkExample[rvk]).clone().appendTo(parent);
+    }
+    $("#rvkaggregiert").append("<br/><br/><small><img src='../img/flash.svg' height='15px' /> powered by <a href='https://rvk.uni-regensburg.de/api/'>RVK API</a></small>");
 }
 
 function renderDDC(ddcArray)

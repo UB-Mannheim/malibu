@@ -30,7 +30,7 @@ if (typeof jQuery == 'undefined') {
     alert("jQuery wurde nicht gefunden");
 }
 </script>
-<script src="rendering.js?20250104"></script>
+<script src="rendering.js?20250922"></script>
 <script type="text/javascript">
 function toggleHidden() {
     $('.hidden').slideToggle();
@@ -40,69 +40,8 @@ function toggleHidden() {
 <script type="text/javascript">
 
 
-function aggregateRVK() {
-    var rvkNodes = $(".rvk a");
-    var frequencies = {};
-    var rvkExample = {};
-    for (let rvkNode of rvkNodes) {
-        let rvk = rvkNode.textContent;
-        frequencies[rvk] = frequencies[rvk] ? frequencies[rvk] + 1 : 1;
-        rvkExample[rvk] = rvkNode;
-    }
-    var rvkSorted = Object.keys(frequencies);
-    rvkSorted.sort();
-    $("#rvkaggregiert").html("");
-    var parent;
-    for (let rvk of rvkSorted) {
-         
-         let jsonstring = $(rvkExample[rvk]).attr("data-json");
-         if (jsonstring) {
-             let jsondata = JSON.parse(jsonstring);
-             let treeconcepts = [];
-             let treenotations = [];
-             let currentjson = jsondata;
-             while (currentjson) {
-                 if ("node" in currentjson) {
-                     if ("benennung" in currentjson.node) {
-                         treeconcepts.unshift(currentjson.node.benennung);
-                         treenotations.unshift(currentjson.node.notation);
-                     }
-                     if ("ancestor" in currentjson.node) {
-                         currentjson = currentjson.node.ancestor;
-                     } else {
-                         currentjson = null;
-                     }
-                 } else {
-                     currentjson = null;
-                 }
-             }
-             parent = $("#rvkaggregiert");
-             for (let i=0; i<treeconcepts.length; i++) {
-                 let node = treeconcepts[i];
-                 let notation = treenotations[i];
-                 let check = $("#rvkaggregiert *[title='" + notation + "']");
-                 if (check.length == 0) {
-                     let inner = $("<li>").attr("title", notation).text(node);
-                     let line = $("<ul>").append(inner);
-                     parent.append(line);
-                 }
-                 parent = $("#rvkaggregiert *[title='" + notation + "']");
-             }
-         }
-         if (rvkExample[rvk].classList.contains("rvkError")) {
-             parent = $("#rvkaggregiert");
-             parent.append("<br/>[Error]<br/>");
-         } else {
-            if (!parent) {
-                parent = $("#rvkaggregiert");
-            }
-              parent.append(": ");
-         }
-         parent.append("<b>" + frequencies[rvk] + " x </b>");
-         $(rvkExample[rvk]).clone().appendTo(parent);
-    }
-    $("#rvkaggregiert").append("<br/><br/><small><img src='../img/flash.svg' height='15px' /> powered by <a href='https://rvk.uni-regensburg.de/api/'>RVK API</a></small>");
-
+function showRVKAggregation() {
+    aggregateRVK();
     $(".rvk").attr("style", "display: none");
     $(".rvkaggregiert").removeAttr("style");
 }
@@ -111,7 +50,6 @@ function hideRVKAggregation() {
     $(".rvk").removeAttr("style");
     $(".rvkaggregiert").attr("style", "display: none");
 }
-
 
 
 function aggregateDDC() {
@@ -224,6 +162,11 @@ $(document).ready(function(){
 
    updateLinks();
 
+   if (localStorage.getItem("aggregationPrefered") === 'true') {
+        // start immediately with the aggregated view and recompute it after the 
+        // data for each verbund is ready
+        showRVKAggregation();
+    }
 
     var meinVerbund = getParameterByName("verbund").toLowerCase() || "k10plus";
     document.querySelector("#selectPpn").value = meinVerbund;
@@ -472,11 +415,6 @@ function isbnEingabe(n) {
                 $('#relationen').html(relationenText.trim());
             }
             $('#links').append( renderLinks(data.links) );
-            if (localStorage.getItem("aggregationPrefered") === 'true') {
-                // start immediately with the aggregated view and recompute it after the 
-                // data for each verbund is ready
-                aggregateRVK();
-            }
             updateLinks();
         });
     });
@@ -557,7 +495,7 @@ function isbnEingabe(n) {
     </colgroup>
     <tr class="verbuendeUeber">
         <th>&nbsp;</th>
-        <th class="rvk">RVK-Notation  <button onclick="aggregateRVK()">⇲</button></th>
+        <th class="rvk">RVK-Notation  <button onclick="showRVKAggregation()">⇲</button></th>
         <th class="rvkaggregiert" style="display: none"><button onclick="hideRVKAggregation()">⇱</button>  RVK aggregiert</th>
         <th class="ddc">DDC-Notation  <button onclick="aggregateDDC()">⇲</button></th>
         <th class="ddcaggregiert" style="display: none"><button onclick="hideDDCAggregation()">⇱</button>  DDC aggregiert</th>
