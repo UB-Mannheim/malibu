@@ -313,6 +313,14 @@ input, select {
   background-color: white;
 }
 
+#rvkaggregiert ul {
+  padding-left: 15px;
+}
+
+#rvkaggregiert li::marker {
+  content: "∟";
+}
+
 .rvkError, .rvkError:visited {
   color: darkred;
 }

@@ -27,6 +27,10 @@ function check(index, value) {
 	if (numberOfDigits>=9) {
 		var verbund = $("#verbund :selected").text();
 		var filter = $("#filter").val();
+		if (filter == "") {
+			// no filter is set, i.e. we can accept everything
+			filter = ".*";
+		}
 		$.get("../isbn/" + verbund + ".php?format=json&isbn="+value, function(data) {
 			var bestand = [];
 			if (data.bestand && data.bestand.length > 0) {
@@ -91,7 +95,7 @@ function updateStatus() {
 		<option>obvsg</option>
 	</select>
 	<p/>
-	<label>2. Nach Bibliothekssigel(n) filtern:</label>
+	<label>2. (optional) Nach Bibliothekssigel(n) filtern:</label>
 	<input id="filter" type="text" placeholder="z.B. 180">
 	(Eingabe von RegExp auch möglich, z.B. "21.*|180")
 	<p/>

@@ -82,7 +82,72 @@ function addBenennung(index, element)
             $('.'+className).addClass("rvkError");
         }
         $('.'+className).attr("data-json", JSON.stringify(json));
+        aggregateRVK();
     });
+}
+
+function aggregateRVK() {
+    var rvkNodes = $(".rvk a");
+    var frequencies = {};
+    var rvkExample = {};
+    for (let rvkNode of rvkNodes) {
+        let rvk = rvkNode.textContent;
+        frequencies[rvk] = frequencies[rvk] ? frequencies[rvk] + 1 : 1;
+        rvkExample[rvk] = rvkNode;
+    }
+    var rvkSorted = Object.keys(frequencies);
+    rvkSorted.sort();
+    $("#rvkaggregiert").html("");
+    var parent;
+    for (let rvk of rvkSorted) {
+         
+         let jsonstring = $(rvkExample[rvk]).attr("data-json");
+         if (jsonstring) {
+             let jsondata = JSON.parse(jsonstring);
+             let treeconcepts = [];
+             let treenotations = [];
+             let currentjson = jsondata;
+             while (currentjson) {
+                 if ("node" in currentjson) {
+                     if ("benennung" in currentjson.node) {
+                         treeconcepts.unshift(currentjson.node.benennung);
+                         treenotations.unshift(currentjson.node.notation);
+                     }
+                     if ("ancestor" in currentjson.node) {
+                         currentjson = currentjson.node.ancestor;
+                     } else {
+                         currentjson = null;
+                     }
+                 } else {
+                     currentjson = null;
+                 }
+             }
+             parent = $("#rvkaggregiert");
+             for (let i=0; i<treeconcepts.length; i++) {
+                 let node = treeconcepts[i];
+                 let notation = treenotations[i];
+                 let check = $("#rvkaggregiert *[title='" + notation + "']");
+                 if (check.length == 0) {
+                     let inner = $("<li>").attr("title", notation).text(node);
+                     let line = $("<ul>").append(inner);
+                     parent.append(line);
+                 }
+                 parent = $("#rvkaggregiert *[title='" + notation + "']");
+             }
+         }
+         if (rvkExample[rvk].classList.contains("rvkError")) {
+             parent = $("#rvkaggregiert");
+             parent.append("<br/>[Error]<br/>");
+         } else {
+            if (!parent) {
+                parent = $("#rvkaggregiert");
+            }
+              parent.append(": ");
+         }
+         parent.append("<b>" + frequencies[rvk] + " x </b>");
+         $(rvkExample[rvk]).clone().appendTo(parent);
+    }
+    $("#rvkaggregiert").append("<br/><br/><small><img src='../img/flash.svg' height='15px' /> powered by <a href='https://rvk.uni-regensburg.de/api/'>RVK API</a></small>");
 }
 
 function renderDDC(ddcArray)
@@ -140,7 +205,6 @@ function renderRelationen(relationenArray)
 }
 
 
-var paketInfoMap = [];// kann um die lokalen Pakete ergänzt werden
 var overallPaketSigel = [];//alle bereits gefunden Sigel werden in einer Liste gespeichert
 
 function renderPS(psArray)
@@ -152,17 +216,11 @@ function renderPS(psArray)
         var outputArray = [];
         for (var i=0; i<psArray.length; i++) {
             var ps = psArray[i];
-            var psCheck = '';
-            var color = 'ffffff';
             if (overallPaketSigel[ps]) {//um Doppelungen zu vermeiden
                 continue;
             }
             overallPaketSigel[ps] = true;
-            if (paketInfoMap[ps]) {
-                psCheck = paketInfoMap[ps];
-                color = 'CC99FF';
-            }
-            outputArray.push('<span title="' + psCheck + '"  style="background-color:#' + color + '">' + ps + '</span>');
+            outputArray.push('<span title="" style="background-color:#ffffff">' + ps + '</span>');
         }
         if (outputArray.length > 0) {
             return ' | '+outputArray.join(' | ');
@@ -238,7 +296,12 @@ function renderSW(swObject)
         }
     });
     if (swArray.length > 0) {
-        return swArray.join('; ') + "&emsp;<button class='btn' title='Schlagwörter kopieren' data-clipboard-text='" + swCopyText.join('\n') + "'><img src='../img/clippy.svg' width='16'/></button>";
+        var swCopyButton = $("<button>")
+            .addClass("btn")
+            .attr("title", "Schlagwörter kopieren")
+            .attr("data-clipboard-text", swCopyText.join('\n'))
+            .append("<img src='../img/clippy.svg' width='16'/>");
+        return swArray.join('; ') + "&emsp;" + swCopyButton.prop('outerHTML');
     }
     return "";
 }
