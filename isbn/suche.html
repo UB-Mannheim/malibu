@@ -232,12 +232,8 @@ $(document).ready(function(){
     document.querySelector("#selectPpn").value = meinVerbund;
     //Damit werden die Variablen ueber HTML ausgewertet (so wie GET Variablen in PHP)
     if (getParameterByName("isbn")) {
-        $('#eingabeIsbn').val(getParameterByName("isbn"));
-        $('#eingabePpn').val('');
         isbnEingabe(getParameterByName("isbn"));
     } else if (getParameterByName("ppn")) {
-        $('#eingabePpn').val(getParameterByName("ppn"));
-        $('#eingabeIsbn').val('');
         ppnEingabe(getParameterByName("ppn"), meinVerbund);
     }
     
