@@ -154,16 +154,36 @@ function renderDDC(ddcArray)
 {
     if (typeof ddcArray === 'string') {
         return ddcArray;
-    } else {
-        for (var i=0; i<ddcArray.length; i++) {
-            var ddc = ddcArray[i];
-            //var ddcUrl = 'http://dewey.info/class/' + ddc + '/';
-            //var ddcUrl = 'https://deweysearchde.pansoft.de/webdeweysearch/executeSearch.html?lastScheduleRecord=' + ddc + '&lastTableRecord=&query=' + ddc;
-            var ddcUrl = 'https://coli-conc.gbv.de/cocoda/app/?fromScheme=http%3A%2F%2Fdewey.info%2Fscheme%2Fedition%2Fe23%2F&toScheme=http%3A%2F%2Furi.gbv.de%2Fterminology%2Frvk%2F&from=http%3A%2F%2Fdewey.info%2Fclass%2F' + ddc + '%2Fe23%2F';
-            ddcArray[i] = '<a href="' + ddcUrl + '" target="_blank">' + ddc + '</a>';
-        }
-        return ddcArray.join(', ');
     }
+    if (!Array.isArray(ddcArray)) {
+        return '';
+    }
+
+    var rendered = [];
+    for (var i = 0; i < ddcArray.length; i++) {
+        var entry = ddcArray[i];
+        var notation = entry;
+        var source = '';
+        if (typeof entry === 'object' && entry !== null) {
+            notation = entry.notation || '';
+            source = entry.source || '';
+        }
+        if (typeof notation !== 'string') {
+            notation = '';
+        }
+        notation = notation.trim();
+        if (notation.length === 0) {
+            continue;
+        }
+        var encodedNotation = encodeURIComponent(notation);
+        var ddcUrl = 'https://coli-conc.gbv.de/cocoda/app/?fromScheme=http%3A%2F%2Fdewey.info%2Fscheme%2Fedition%2Fe23%2F&toScheme=http%3A%2F%2Furi.gbv.de%2Fterminology%2Frvk%2F&from=http%3A%2F%2Fdewey.info%2Fclass%2F' + encodedNotation + '%2Fe23%2F';
+        var attributes = ' target="_blank"';
+        if (source && source.length > 0) {
+            attributes += ' title="' + htmlEscape(source) + '"';
+        }
+        rendered.push('<a href="' + ddcUrl + '"' + attributes + '>' + notation + '</a>');
+    }
+    return rendered.join(', ');
 }
 
 
