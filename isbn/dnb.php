@@ -85,7 +85,7 @@ $map = STANDARD_MARC_MAP;
 $map['sw']['additional'] = './subfield[@code="g" or @code="z"]';
 // intellektuell vergebene Schlagwörter sind immer im Feld 689 und nur falls es dort keine gibt
 // sollen die anderen Felder (mit automatisch vergebenen) Schlagwörter auch betrachtet werden
-$map['sw']['mainPart'] = '//datafield[@tag="689" or (not(preceding-sibling::datafield[@tag="689"]) and not(following-sibling::datafield[@tag="689"]) and starts-with(@tag, "6") and (subfield[@code="2"]="gbv" or subfield[@code="2"]="gnd"))]';
+$map['sw']['mainPart'] = '//datafield[@tag="689" or (not(preceding-sibling::datafield[@tag="689"]) and not(following-sibling::datafield[@tag="689"]) and ((starts-with(@tag, "6") and (subfield[@code="2"]="gbv" or subfield[@code="2"]="gnd")) or (@tag="655" and @ind2="7" and subfield[@code="2"]="gnd-content")))]';
 
 
 if (!isset($_GET['format'])) {

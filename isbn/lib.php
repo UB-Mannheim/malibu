@@ -33,7 +33,7 @@ const STANDARD_MARC_MAP = [
     'rvk' => '//datafield[@tag="084" and contains(subfield[@code="2"], "rvk")]/subfield[@code="a"]',
     'ddc' => '//datafield[@tag="082" and @ind2!="9"]/subfield[@code="a"]',
     'sw' => [
-        'mainPart' => '//datafield[starts-with(@tag,"6") and (subfield[@code="2"]="gbv" or subfield[@code="2"]="gnd")]',
+        'mainPart' => '//datafield[(starts-with(@tag,"6") and (subfield[@code="2"]="gbv" or subfield[@code="2"]="gnd")) or (@tag="655" and @ind2="7" and subfield[@code="2"]="gnd-content")]',
         'value' => './subfield[@code="a"]',
         'subvalues' => './subfield[@code="b" or @code="t"]',
         'additional' => './subfield[@code="9" or @code="g" or @code="z"]',
