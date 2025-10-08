@@ -120,7 +120,14 @@ function performMapping($map, $outputXml)
             $outputMap[$label] = $outputArray;
         }
     }
-    return cleanUp($outputMap);
+
+    $outputMap = cleanUp($outputMap);
+
+    if (isset($outputMap['ddc'])) {
+        $outputMap['ddc'] = extractDdcEntriesFromXml($outputXml);
+    }
+
+    return $outputMap;
 }
 
 function cleanUp($outputMap)
@@ -185,7 +192,14 @@ function cleanUp($outputMap)
     }
     if (is_array($outputMap['ddc'])) {
         foreach ($outputMap['ddc'] as $i => $value) {
-            $outputMap['ddc'][$i] = preg_replace('/[^\d\.]/', '', $value); //str_replace('|', '', str_replace('/', '', $value));
+            if (is_array($value) && array_key_exists('notation', $value)) {
+                $outputMap['ddc'][$i]['notation'] = preg_replace('/[^\d\.]/', '', $value['notation']);
+                if (array_key_exists('source', $value)) {
+                    $outputMap['ddc'][$i]['source'] = trim($value['source']);
+                }
+            } else {
+                $outputMap['ddc'][$i] = preg_replace('/[^\d\.]/', '', $value); //str_replace('|', '', str_replace('/', '', $value));
+            }
         }
     }
     if (array_key_exists('oclcNr', $outputMap) && is_array($outputMap['oclcNr'])) {
@@ -212,6 +226,54 @@ function cleanUp($outputMap)
     }
 
     return $outputMap;
+}
+
+function extractDdcEntriesFromXml($xml)
+{
+    $entries = [];
+    if (!$xml) {
+        return $entries;
+    }
+
+    $fields = $xml->xpath('//datafield[@tag="082" and @ind2!="9"]');
+    if (!$fields) {
+        return $entries;
+    }
+
+    $seen = [];
+    foreach ($fields as $field) {
+        $notationNodes = $field->xpath('./subfield[@code="a"]');
+        if (!$notationNodes) {
+            continue;
+        }
+
+        $source = '';
+        $sourceNodes = $field->xpath('./subfield[@code="2"]');
+        if ($sourceNodes) {
+            $source = trim(getValues($sourceNodes[0]));
+        }
+
+        foreach ($notationNodes as $notationNode) {
+            $notation = preg_replace('/[^\d\.]/', '', getValues($notationNode));
+            if ($notation === '') {
+                continue;
+            }
+
+            $key = $notation . '|' . $source;
+            if (isset($seen[$key])) {
+                continue;
+            }
+
+            $entry = ['notation' => $notation];
+            if ($source !== '') {
+                $entry['source'] = $source;
+            }
+            $entries[] = $entry;
+            $seen[$key] = true;
+        }
+    }
+
+    return $entries;
 }
 
 

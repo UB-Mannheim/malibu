@@ -28,53 +28,6 @@
 include 'conf.php';
 include 'lib.php';
 
-function extractDdcEntries($xml)
-{
-    $entries = [];
-    if (!$xml) {
-        return $entries;
-    }
-    $fields = $xml->xpath('//datafield[@tag="082" and @ind2!="9"]');
-    if (!$fields) {
-        return $entries;
-    }
-
-    $seen = [];
-    foreach ($fields as $field) {
-        $notationNodes = $field->xpath('./subfield[@code="a"]');
-        if (!$notationNodes) {
-            continue;
-        }
-
-        $source = '';
-        $sourceNodes = $field->xpath('./subfield[@code="2"]');
-        if ($sourceNodes) {
-            $source = trim(getValues($sourceNodes[0]));
-        }
-
-        foreach ($notationNodes as $notationNode) {
-            $notation = preg_replace('/[^\d\.]/', '', getValues($notationNode));
-            if ($notation === '') {
-                continue;
-            }
-
-            $key = $notation . '|' . $source;
-            if (isset($seen[$key])) {
-                continue;
-            }
-
-            $entry = ['notation' => $notation];
-            if ($source !== '') {
-                $entry['source'] = $source;
-            }
-            $entries[] = $entry;
-            $seen[$key] = true;
-        }
-    }
-
-    return $entries;
-}
-
 $file = file_get_contents('./srulibraries.json');
 $json = json_decode($file, true);
 if (isset($_GET['bibliothek']) and isset($json[$_GET['bibliothek']])) {
@@ -210,18 +163,11 @@ if (!isset($_GET['format'])) {
     $outputXml = simplexml_load_string($outputString);
 
     $outputMap = performMapping($map, $outputXml);
-    $isSwiss = isset($_GET['bibliothek']) && $_GET['bibliothek'] === 'CH-SWISS';
-    if ($isSwiss) {
-        $outputMap['ddc'] = extractDdcEntries($outputXml);
-    }
 
     $outputIndividualMap = [];
     for ($j = 0; $j < count($outputArray); $j++) {
         $singleRecordXml = simplexml_load_string($outputArray[$j]);
         $outputSingleMap = performMapping($map, $singleRecordXml);
-        if ($isSwiss) {
-            $outputSingleMap['ddc'] = extractDdcEntries($singleRecordXml);
-        }
         array_push($outputIndividualMap, $outputSingleMap);
     }
     $outputMap["einzelaufnahmen"] = $outputIndividualMap;
