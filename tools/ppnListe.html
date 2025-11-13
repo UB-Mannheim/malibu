@@ -20,8 +20,7 @@ function listeEingabe() {
 }
 
 function check(index, value) {
-	$('#ausgabe').append('<div id="query-' + index + '"/>');
-	$('#query-'+index).attr("data-ppn", value);
+	$('#ausgabe').append('<div id="query-' + index + '">&zwj;</div>');
 	value = value.replace(/^([\w-]*).*$/, '$1');
 	if (value.length > 0) {
 		var verbund = $("#verbund :selected").text();
@@ -45,10 +44,12 @@ function check(index, value) {
 			} else {
 				$('#query-'+index).append("---");
 			}
+			$('#query-'+index).attr("data-ppn", value);
 			updateStatus();
 		});
 	} else {
 		$('#query-'+index).append('KEINE PPN');
+		$('#query-'+index).attr("data-ppn", value);
 		updateStatus();
 	}
 }
@@ -56,7 +57,7 @@ function check(index, value) {
 
 // Statusanzeige aktualisieren
 function updateStatus() {
-	var status = parseInt($('#total').text())-$('#ausgabe div:empty').length;
+	var status = $('#ausgabe div[data-ppn]').length;
 	$('#status').html(status);
 }
 </script>

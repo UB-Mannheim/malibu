@@ -20,8 +20,7 @@ function listeEingabe() {
 }
 
 function check(index, value) {
-	$('#ausgabe').append('<div id="query-' + index + '"/>');
-	$('#query-'+index).attr("data-isbn", value);
+	$('#ausgabe').append('<div id="query-' + index + '">&zwj;</div>');
 	var suffix = (document.getElementById("mitSammlungen").checked) ? "&with=collections" : "";
 	var numberOfDigits = value.replace(/\D/g, '').length;
 	if (numberOfDigits>=9) {
@@ -37,10 +36,12 @@ function check(index, value) {
 					$('#query-'+index).append(render('0', value));
 				}
 			}
+			$('#query-'+index).attr("data-isbn", value);
 			updateStatus();
 		});
 	} else {
 		$('#query-'+index).append('KEINE ISBN');
+		$('#query-'+index).attr("data-isbn", value);
 		updateStatus();
 	}
 }
@@ -58,7 +59,7 @@ function render(result, isbn) {
 
 // Statusanzeige aktualisieren
 function updateStatus() {
-	var status = parseInt($('#total').text())-$('#ausgabe div:empty').length;
+	var status = $('#ausgabe div[data-isbn]').length;
 	$('#status').html(status);
 }
 //-->

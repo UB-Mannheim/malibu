@@ -27,7 +27,7 @@ function listeEingabe() {
 }
 
 function check(index, value, verbuende) {
-	$('#ausgabe').append('<div id="query-' + index + '"/>');
+	$('#ausgabe').append('<div id="query-' + index + '">&zwj;</div>');
 	$('#query-'+index).attr("data-isbn", value);
 	value = value.replace(/^([\w-]*).*$/, '$1');
 	if (value.length > 0) {
