@@ -119,6 +119,10 @@
     "name": "Dortmund TU",
     "sru": "https://eu04.alma.exlibrisgroup.com/view/sru/49HBZ_UBD"
   },
+  "DE-DUE" : {
+    "name": "Düsseldorf ULB",
+    "sru": "https://eu04.alma.exlibrisgroup.com/view/sru/49HBZ_DUE"
+  },
   "DE-FUH" : {
     "name": "Hagen FernU",
     "sru": "https://eu04.alma.exlibrisgroup.com/view/sru/49HBZ_FUH"
