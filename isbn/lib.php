@@ -163,9 +163,12 @@ function cleanUp($outputMap)
                 $index = "11|Comic"
                 $value = true
                 */
-                unset($outputMap['sw'][$index]);
                 $indexNew = trim(str_replace($affixes, '', $index));
-                $outputMap['sw'][$indexNew] = $value;
+                if ($indexNew !== $index) {
+                    unset($outputMap['sw'][$index]);
+                    $outputMap['sw'][$indexNew] = $value;
+                }
+
             }
         }
     }
