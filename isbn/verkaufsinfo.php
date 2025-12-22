@@ -141,7 +141,7 @@ if (status_ok($urlAmazon)) {
 }
 
 
-$urlGoogle = "https://www.googleapis.com/books/v1/volumes?q=ISBN:$n13";
+$urlGoogle = "https://www.googleapis.com/books/v1/volumes?q=isbn:$n13";
 if (status_ok($urlGoogle)) {
     $contentGoogle = file_get_contents($urlGoogle);
     $jsonGoogle = json_decode($contentGoogle);
