@@ -51,6 +51,7 @@ if (!isset($_GET['isbn13']) && !isset($_GET['isbn10'])) {
     exit("isbn13 und isbn10 fehlen");
 }
 
+$linksToOutput = "";
 
 $urlAmazon = 'https://www.amazon.de/dp/' . $n10;
 if (status_ok($urlAmazon)) {
@@ -58,91 +59,109 @@ if (status_ok($urlAmazon)) {
     libxml_use_internal_errors(true); //HTML5 erzeugt Warnings beim Einlesen, aber die Option beseitigt dies
     $docAmazon->loadHTMLFile($urlAmazon);
     libxml_use_internal_errors(false);
-    //$contentAmazon = $docAmazon->saveHTML();
-
-
-    //Bild von Amazon
-    foreach (["imgBlkFront", "main-image-nonjs", "original-main-image"] as $id) {
-        if ($docAmazon->getElementById($id) &&
-            $docAmazon->getElementById($id)->getAttribute('src') !== '') {
-            $cover = $docAmazon->getElementById($id)->getAttribute('src');
-            $coverOrigin = $urlAmazon;
-            break;
+    // Try to detect whether automatic request was blocked and
+    // some sort of captcha is presented.
+    $captchaHell = False;
+    $forms = $docAmazon->getElementsByTagName("form");
+    foreach($forms as $form) {
+        $action = $form->getAttribute("action");
+        if($action && $action== "/errors/validateCaptcha") {
+            $captchaHell = True;
         }
     }
+    if (!$captchaHell) {
+        $linksToOutput = $linksToOutput . '<a href="' . $urlAmazon
+            . '" target="_blank">AmazonDE</a> ; <a href="https://www.amazon.com/dp/' . $n10
+            . '" target="_blank">AmazonCOM</a>';
 
-    //Beschreibung von Amazon
-    if ($docAmazon->getElementById('bookDesc_override_CSS') &&
-        $docAmazon->getElementById('bookDesc_override_CSS')->nextSibling) {
-        $node = $docAmazon->getElementById('bookDesc_override_CSS');
-        // description is expected inside the next following tag named "noscript"
-        $i = 0;
-        while ($node && $i < 5) {
-            if ($node->nodeName == "noscript") {
-                $description = $node->textContent;
-                break;
-            }
-            $node = $node->nextSibling;
-            $i++;
-        }
-        $descriptionOrigin = $urlAmazon;
-    }
-    if (empty($description)) {
-        foreach (['postBodyPS', 'iframeContent', 'bookDescription_feature_div'] as $id) {
-            if ($docAmazon->getElementById($id)) {
-                $description = $docAmazon->getElementById($id)->textContent;
-                $descriptionOrigin = $urlAmazon;
+        //Bild von Amazon
+        foreach (["imgBlkFront", "main-image-nonjs", "original-main-image", "landingImage"] as $id) {
+            if ($docAmazon->getElementById($id) &&
+                $docAmazon->getElementById($id)->getAttribute('src') !== '') {
+                $cover = $docAmazon->getElementById($id)->getAttribute('src');
+                $coverOrigin = $urlAmazon;
                 break;
             }
         }
-    }
 
-    //Preis von Amazon
-    if ($docAmazon->getElementById('fbt_item_data')) {
-        $hiddenItemData = $docAmazon->getElementById('fbt_item_data')->textContent;
-        //..."buyingPrice":79.99,"ASIN":"3830493665"...
-        if (preg_match(
-            '/"buyingPrice":(.*),"ASIN":"' . $n10 . '"/',
-            $hiddenItemData,
-            $match
-        )) {
-            preg_match('/"currencyCode":"([^"]*)"/', $hiddenItemData, $descriptionCurrency);
-            $price = $match[1] . ' ' . $descriptionCurrency[1];
-            $priceOrigin = $urlAmazon;
+        //Beschreibung von Amazon
+        if ($docAmazon->getElementById('bookDesc_override_CSS') &&
+            $docAmazon->getElementById('bookDesc_override_CSS')->nextSibling) {
+            $node = $docAmazon->getElementById('bookDesc_override_CSS');
+            // description is expected inside the next following tag named "noscript"
+            $i = 0;
+            while ($node && $i < 5) {
+                if ($node->nodeName == "noscript") {
+                    $description = $node->textContent;
+                    break;
+                }
+                $node = $node->nextSibling;
+                $i++;
+            }
+            $descriptionOrigin = $urlAmazon;
         }
-    } else {
-        foreach (['buyNewSection', 'price', 'corePrice_feature_div'] as $id) {
-            if ($docAmazon->getElementById($id)) {
-                $price = trim($docAmazon->getElementById($id)->textContent);
+        if (empty($description)) {
+            foreach (['postBodyPS', 'iframeContent', 'bookDescription_feature_div'] as $id) {
+                if ($docAmazon->getElementById($id)) {
+                    $description = $docAmazon->getElementById($id)->textContent;
+                    $descriptionOrigin = $urlAmazon;
+                    break;
+                }
+            }
+        }
+
+        //Preis von Amazon
+        if ($docAmazon->getElementById('fbt_item_data')) {
+            $hiddenItemData = $docAmazon->getElementById('fbt_item_data')->textContent;
+            //..."buyingPrice":79.99,"ASIN":"3830493665"...
+            if (preg_match(
+                '/"buyingPrice":(.*),"ASIN":"' . $n10 . '"/',
+                $hiddenItemData,
+                $match
+            )) {
+                preg_match('/"currencyCode":"([^"]*)"/', $hiddenItemData, $descriptionCurrency);
+                $price = $match[1] . ' ' . $descriptionCurrency[1];
                 $priceOrigin = $urlAmazon;
-                break;
+            }
+        } else {
+            foreach (['buyNewSection', 'price', 'corePrice_feature_div'] as $id) {
+                if ($docAmazon->getElementById($id)) {
+                    $price = trim($docAmazon->getElementById($id)->textContent);
+                    $priceOrigin = $urlAmazon;
+                    break;
+                }
             }
         }
-    }
 
-    //Bewertung von Amazon
-    if ($docAmazon->getElementById('acrPopover')) {
-        $ratingValue = $docAmazon->getElementById('acrPopover')->getAttribute('title');
-        $numberOfReviews = $docAmazon->getElementById('acrCustomerReviewText')->textContent;
-        $rating = $ratingValue . ' (' . $numberOfReviews . ')';
-        $ratingOrigin = 'https://www.amazon.de/product-reviews/' . $n10;
-    } elseif ($docAmazon->getElementById('revFMSR')) {
-        $ratingValue = $docAmazon->getElementById('revFMSR')
-                                 ->getElementsByTagName('a')
-                                 ->item(0)
-                                 ->getAttribute('title');
-        $textTotal = $docAmazon->getElementById('revFMSR')->textContent;
-        if (preg_match('/\d+\s(?:Rezension|Rezensionen)/', $textTotal, $treffer)) {
-            $numberOfReviews = $treffer[0];
+        //Bewertung von Amazon
+        if ($docAmazon->getElementById('acrPopover')) {
+            $ratingValue = $docAmazon->getElementById('acrPopover')->getAttribute('title');
+            $numberOfReviews = $docAmazon->getElementById('acrCustomerReviewText')->textContent;
+            $rating = $ratingValue . ' (' . $numberOfReviews . ')';
+            $ratingOrigin = 'https://www.amazon.de/product-reviews/' . $n10;
+        } elseif ($docAmazon->getElementById('revFMSR')) {
+            $ratingValue = $docAmazon->getElementById('revFMSR')
+                                    ->getElementsByTagName('a')
+                                    ->item(0)
+                                    ->getAttribute('title');
+            $textTotal = $docAmazon->getElementById('revFMSR')->textContent;
+            if (preg_match('/\d+\s(?:Rezension|Rezensionen)/', $textTotal, $treffer)) {
+                $numberOfReviews = $treffer[0];
+            }
+            $rating = $ratingValue . ' (' . $numberOfReviews . ')';
+            $ratingOrigin = 'https://www.amazon.com/product-reviews/' . $n10;
         }
-        $rating = $ratingValue . ' (' . $numberOfReviews . ')';
-        $ratingOrigin = 'https://www.amazon.com/product-reviews/' . $n10;
     }
 }
 
 
 $urlGoogle = "https://www.googleapis.com/books/v1/volumes?q=isbn:$n13";
 if (status_ok($urlGoogle)) {
+    if (strlen($linksToOutput) > 0) {
+        $linksToOutput .= " ; ";
+    }
+    $linksToOutput .= '<a href="' . $urlGoogle
+        . '" target="_blank">GoogleBooks</a>';
     $contentGoogle = file_get_contents($urlGoogle);
     $jsonGoogle = json_decode($contentGoogle);
 
@@ -206,10 +225,7 @@ if (isset($cover)) {
                      . '"/></a><br />';
 }
 //Direktlinks zu Amazon, GoogleBooks
-echo '<a href="' . $urlAmazon
-    . '" target="_blank">AmazonDE</a> ; <a href="https://www.amazon.com/dp/' . $n10
-    . '" target="_blank">AmazonCOM</a> ; <a href="' . $urlGoogle
-    . '" target="_blank">GoogleBooks</a>';
+echo $linksToOutput;
 
 echo '</td><td>';
 
