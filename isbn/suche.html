@@ -168,6 +168,19 @@ $(document).ready(function(){
         showRVKAggregation();
     }
 
+    if (localStorage.getItem("hidePaketInfo") === 'true') {
+        $("#pda").attr("style", "display: none");
+    }
+    if (localStorage.getItem("hideVerkaufsInfo") === 'true') {
+        $("#verkaufsinfo").attr("style", "display: none");
+    }
+    if (localStorage.getItem("hideAusgaben") === 'true') {
+        $("#ausgaben").attr("style", "display: none");
+    }
+    if (localStorage.getItem("hideBestandsabgleich") === 'true') {
+        $("#bestandsabgleich").attr("style", "display: none");
+    }
+    
     var meinVerbund = getParameterByName("verbund").toLowerCase() || "k10plus";
     document.querySelector("#selectPpn").value = meinVerbund;
     //Damit werden die Variablen ueber HTML ausgewertet (so wie GET Variablen in PHP)

@@ -56,7 +56,15 @@
 		Folgende Einstellungen sind lokal im jeweiligen Browser gespeichert.<br/>
 		<input type="checkbox" id="aggregationPrefered" style="vertical-align:middle;" />
 		<label for="aggregationPrefered">Aggregierte Sicht bei RVK bevorzugt</label><br/>
-		
+		<input type="checkbox" id="hidePaketInfo" style="vertical-align:middle;" />
+		<label for="hidePaketInfo">Paketinfos ausblenden</label><br/>
+		<input type="checkbox" id="hideVerkaufsInfo" style="vertical-align:middle;" />
+		<label for="hideVerkaufsInfo">Verkaufsinfos ausblenden</label><br/>
+		<input type="checkbox" id="hideAusgaben" style="vertical-align:middle;" />
+		<label for="hideAusgaben">Ausgaben ausblenden</label><br/>
+		<input type="checkbox" id="hideBestandsabgleich" style="vertical-align:middle;" />
+		<label for="hideBestandsabgleich">Bestandsabgleich ausblenden</label><br/>
+
 		<h2>Anwendungsbeschreibung</h2>
 		Es gibt keine offizielle Dokumentation, aber die prinzipielle Anwendung sollte hoffentlich möglichst selbsterklärend sein.
 		Zwei etwas ältere Veröffentlichungen können vielleicht die Anwendungsfälle und mögliche Workflows etwas klarer machen:
@@ -128,15 +136,17 @@
 			
 
 			// Interaction with local storage
-			if (JSON.parse(localStorage.getItem("aggregationPrefered"))) {
-				document.getElementById("aggregationPrefered").checked = true;
-			} else {
-				// false or not yet set
-				document.getElementById("aggregationPrefered").checked = false;
+			for (let configParam of ["aggregationPrefered", "hidePaketInfo", "hideVerkaufsInfo", "hideAusgaben", "hideBestandsabgleich"]) {
+				if (JSON.parse(localStorage.getItem(configParam))) {
+					document.getElementById(configParam).checked = true;
+				} else {
+					// false or not yet set
+					document.getElementById(configParam).checked = false;
+				}
+				document.getElementById(configParam).addEventListener('change', function() {
+					localStorage.setItem(configParam, this.checked);
+				});
 			}
-			document.getElementById("aggregationPrefered").addEventListener('change', function() {
-				localStorage.setItem("aggregationPrefered", this.checked);
-			});
 		</script>
 
 	</body>
