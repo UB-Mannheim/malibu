@@ -2,7 +2,7 @@
 /*
  * Source: https://github.com/UB-Mannheim/malibu/
  *
- * Copyright (C) 2013 Universitätsbibliothek Mannheim
+ * Copyright (C) 2025 Universitätsbibliothek Mannheim
  *
  * Author:
  *    Philipp Zumstein <philipp.zumstein@bib.uni-mannheim.de>
@@ -21,79 +21,69 @@
  * b3kat?ppn=PPN&format=json
  *   Ausgabe erfolgt als JSON
  *
- * Sucht übergebene ISBN bzw. PPN im B3KAT-Katalog
- * und gibt maximal 10 Ergebnisse als MABXML zurück
- * bzw. als JSON.
+ * Sucht übergebene ISBN bzw. PPN in der SRU-Schnittstelle vom B3KAT
+ * und gibt maximal 10 Ergebnisse als MARCXML oder JSON zurück.
+ * 
+ * http://bvbr.bib-bvb.de:5661/bvb01sru?version=1.1&recordSchema=marcxml&operation=explain
  */
 
 include 'conf.php';
 include 'lib.php';
 
-$id = yaz_connect(B3KAT_URL, array("user" => B3KAT_USER, "password" => B3KAT_PASSWORD)); //"mab2; charset=iso5426,utf8"
-yaz_syntax($id, B3KAT_SYNTAX);
-yaz_range($id, 1, 10);
-yaz_element($id, B3KAT_ELEMENTSET);
-
 if (isset($_GET['ppn'])) {
     $ppn = trim($_GET['ppn']);
-    //aus der Doku: 53 Number local call (BV-Nr.)
-    yaz_search($id, "rpn", '@attr 5=100 @attr 1=53 "' . $ppn . '"');
+    $suchString = 'marcxml.idn=' . $ppn;
 }
+
+$urlBase = 'http://bvbr.bib-bvb.de:5661/bvb01sru?version=1.1&maximumRecords=10&recordSchema=marcxml&operation=searchRetrieve&query=';
 if (isset($_GET['isbn'])) {
     $n = trim($_GET['isbn']);
-    $nArray = explode(",", $n);
-    if (count($nArray) > 1) {
-        //mehrere ISBNs, z.B. f @or @or @attr 1=7 "9783937219363" @attr 1=7 "9780521369107" @attr 1=7 "9780521518147"
-        //Anfuehrungsstriche muessen demaskiert werden, egal ob String mit ' gemacht wird
-        $suchString = str_repeat("@or ", count($nArray) - 1) . '@attr 1=7 \"' . implode('\" @attr 1=7 \"', $nArray) . '\"';
-        yaz_search($id, "rpn", $suchString);
-    } else {
-        yaz_search($id, "rpn", '@attr 5=100 @attr 1=7 "' . $n . '"');
-    }
-    // @attr 5=100 -> no truncation, ist aber Standardeinstellung, kann daher auch weg
+    $nArray = preg_split("/\s*(or|,|;)\s*/i", $n, -1, PREG_SPLIT_NO_EMPTY);
+    $suchString = 'marcxml.isbn=' . implode('+OR+marcxml.isbn=', $nArray);
 }
 
+$result = @file_get_contents($urlBase . $suchString, false);
 
-yaz_wait();
-$error = yaz_error($id);
-if (!empty($error)) {
-    echo "Error Number: " . yaz_errno($id);
-    echo "Error Description: " . $error;
-    echo "Additional Error Information: " . yaz_addinfo($id);
+if ($result === false) {
+    header('HTTP/1.1 400 Bad Request');
+    echo "Verbindung zu SRU-Schnittstelle fehlgeschlagen\n";
+    var_dump($urlBase . $suchString);
+    exit;
 }
+
+// Delete namespaces such that we don't need to specify them
+// in every xpath query.
+$result = str_replace(' xmlns="http://www.loc.gov/MARC21/slim"', '', $result);
+$result = str_replace(' xmlns:zs="http://www.loc.gov/zing/srw/"', '', $result);
+$result = str_replace('<zs:', '<', $result);
+$result = str_replace('</zs:', '</', $result);
+
+$doc = new DOMDocument();
+$doc->preserveWhiteSpace = false;
+@$doc->loadHTML($result);
+$xpath = new DOMXPath($doc);
+
+$records = $xpath->query("//records/record/recorddata/record"); //beachte: kein CamelCase sondern alles klein schreiben
 
 $outputString = "<?xml version=\"1.0\"?>\n";
-$outputString .= "<datei>\n";
+$outputString .= "<collection>\n";
 $outputArray = [];
 
-
-for ($p = 1; $p <= yaz_hits($id); $p++) {
-    $record = yaz_record($id, $p, "render;charset=iso5426,utf8"); //render;charset=iso5426,utf8
-    $recordArray = explode("\x1e", $record);
-    $header = substr($recordArray[0], 0, 24);
-    $recordContent = '<datensatz id="" typ="' . substr($header, 23, 1) . '" status="' . substr($header, 5, 1) . '" mabVersion="' . substr($header, 6, 4) . '">' . "\n";
-    $recordContent .= printLine(substr($recordArray[0], 24));
-
-    for ($j = 1; $j < count($recordArray); $j++) {
-        $recordContent .= printLine($recordArray[$j]);
-    }
-
-    $recordContent .= '</datensatz>' . "\n";
-    $outputString .= $recordContent;
-    array_push($outputArray, $recordContent);
+foreach ($records as $record) {
+    $outputString .= $doc->saveXML($record);
+    array_push($outputArray, $doc->saveXML($record));
 }
+$outputString .= "</collection>";
 
-$outputString .= "</datei>";
-yaz_close($id);
-
-$map = STANDARD_MAB_MAP;
-$map['bestand'] = '//feld[@nr="LOW" and @ind="a"]';
+$map = STANDARD_MARC_MAP;
+$map['bestand'] = '//datafield[@tag="049"]/subfield[@code="a"]';
 
 if (!isset($_GET['format'])) {
     header('Content-type: text/xml');
     echo $outputString;
 } elseif ($_GET['format'] == 'json') {
     $outputXml = simplexml_load_string($outputString);
+
     $outputMap = performMapping($map, $outputXml);
     $outputIndividualMap = [];
     for ($j = 0; $j < count($outputArray); $j++) {

@@ -80,9 +80,6 @@ foreach ($records as $record) {
 $outputString .= "</collection>";
 
 $map = STANDARD_MARC_MAP;
-// SW Zusätze im Unterfeld 9 sind nur "rswk-swf", was wir nicht wollen,
-// daher müssen wir den Teil hier überschreiben mit den restlichen Unterfelder
-$map['sw']['additional'] = './subfield[@code="g" or @code="z"]';
 // intellektuell vergebene Schlagwörter sind immer im Feld 689 und nur falls es dort keine gibt
 // sollen die anderen Felder (mit automatisch vergebenen) Schlagwörter auch betrachtet werden
 $map['sw']['mainPart'] = '//datafield[@tag="689" or (not(preceding-sibling::datafield[@tag="689"]) and not(following-sibling::datafield[@tag="689"]) and starts-with(@tag, "6") and (subfield[@code="2"]="gbv" or subfield[@code="2"]="gnd"))]';

@@ -106,7 +106,10 @@ function performMapping($map, $outputXml)
                             if (strpos($additionalText, ':') == 1) {
                                 $additionalText = substr($additionalText, 2);
                             }
-                            $valueText = $valueText . ' <' . $additionalText . '>';
+                            // SW Zusätze im Unterfeld 9 sind beim b3kat oder dnb nur "rswk-swf", was wir nicht wollen
+                            if ($additionalText !== "rswk-swf") {
+                                $valueText = $valueText . ' <' . $additionalText . '>';
+                            }
                         }
                     }
 
