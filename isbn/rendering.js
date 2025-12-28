@@ -382,7 +382,8 @@ function isbn10(z)
  * stellige ISBN sein muss.
  */
     if (z.length === 13) {
-        var t = ( z.substr(3, 1) + 2 * z.substr(4, 1) + 3 * z.substr(5, 1) + 4 * z.substr(6, 1) + 5 * z.substr(7, 1) + 6 * z.substr(8, 1) + 7 * z.substr(9, 1) + 8 * z.substr(10, 1) + 9 * z.substr(11, 1) ) % 11;
+        d = z.split('').map(Number);
+        var t = (d[3] + 2 * d[4] + 3 * d[5] + 4 * d[6] + 5 * d[7] + 6 * d[8] + 7 * d[9] + 8 * d[10] + 9 * d[11] ) % 11;
         if (t === 10) {
             t = 'X';
         }
@@ -403,7 +404,8 @@ function isbn13(z)
     z = z.replace(/-/g, "").replace(/ /g, "").replace(/x/g, "X");
     if (z.length === 10) {
         z = '978' + z.substr(0, 9);
-        var t = (10 - (( z.substr(0, 1) + 3 * z.substr(1, 1) + z.substr(2, 1) + 3 * z.substr(3, 1) + z.substr(4, 1) + 3 * z.substr(5, 1) + z.substr(6, 1) + 3 * z.substr(7, 1) + z.substr(8, 1) + 3 * z.substr(9, 1) + z.substr(10, 1) + 3 * z.substr(11, 1) ) % 10 )) % 10;
+        d = z.split('').map(Number);
+        var t = (10 - ((d[0] + 3*d[1] + d[2] + 3*d[3] + d[4] + 3*d[5] + d[6] + 3*d[7] + d[8] + 3*d[9] + d[10] + 3*d[11] ) % 10 )) % 10;
         return z + t;
     } else {
         return z;
