@@ -23,7 +23,7 @@
  *
  * Sucht übergebene ISBN bzw. PPN in der SRU-Schnittstelle vom B3KAT
  * und gibt maximal 10 Ergebnisse als MARCXML oder JSON zurück.
- * 
+ *
  * http://bvbr.bib-bvb.de:5661/bvb01sru?version=1.1&recordSchema=marcxml&operation=explain
  */
 

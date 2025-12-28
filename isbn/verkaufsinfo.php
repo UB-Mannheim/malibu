@@ -61,12 +61,12 @@ if (status_ok($urlAmazon)) {
     libxml_use_internal_errors(false);
     // Try to detect whether automatic request was blocked and
     // some sort of captcha is presented.
-    $captchaHell = False;
+    $captchaHell = false;
     $forms = $docAmazon->getElementsByTagName("form");
-    foreach($forms as $form) {
+    foreach ($forms as $form) {
         $action = $form->getAttribute("action");
-        if($action && $action== "/errors/validateCaptcha") {
-            $captchaHell = True;
+        if ($action && $action== "/errors/validateCaptcha") {
+            $captchaHell = true;
         }
     }
     if (!$captchaHell) {

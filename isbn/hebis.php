@@ -24,7 +24,7 @@
  * Sucht übergebene ISBN bzw. PPN im HEBIS-Katalog
  * und gibt maximal 10 Ergebnisse als MARCXML zurück
  * bzw. als JSON.
- * 
+ *
  * http://sru.hebis.de/sru/DB=2.1?version=1.1&recordSchema=marcxml&operation=explain
  */
 
