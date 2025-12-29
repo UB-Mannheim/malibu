@@ -36,7 +36,7 @@ const STANDARD_MARC_MAP = [
         'mainPart' => '//datafield[starts-with(@tag,"6") and (subfield[@code="2"]="gbv" or subfield[@code="2"]="gnd")]',
         'value' => './subfield[@code="a"]',
         'subvalues' => './subfield[@code="b" or @code="t"]',
-        'additional' => './subfield[@code="9" or @code="g" or @code="z"]',
+        'additional' => './subfield[@code="9" or @code="p" or @code="g" or @code="z"]',
         'key' => './subfield[@code="0" and contains(text(), "(DE-588)")]'
     ],
     'produktSigel' => '//datafield[@tag="912" and not(@ind2="7")]/subfield[@code="a"]',
