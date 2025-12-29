@@ -266,19 +266,26 @@ function isbnEingabe(n) {
     var suchString = n.replace(/,/g, ' or ');
     $('#status').text("Gesucht wurden ISBN " + suchString);
     var k10plusLink = $('<a target="_blank">K10PLUS</a>').attr("href", "https://kxp.k10plus.de/DB=2.0/SET=1/TTL=1/CMD?ACT=SRCHA&IKT=7&TRM=" + suchString);
+    var k10plusSourceLink = $('<a target="_blank"><img src="../img/code.svg" alt="code icon" width="16"/></a>').attr("href", "./k10plus.php?isbn=" + suchString + "&format=json");
     var hebisLink = $('<a target="_blank">HEBIS</a>').attr("href", "http://cbsopac.rz.uni-frankfurt.de/DB=2.1/SET=1/TTL=1/CMD?ACT=SRCHA&IKT=8520&TRM=" + nArray[0]);
+    var hebisSourceLink = $('<a target="_blank"><img src="../img/code.svg" alt="code icon" width="16"/></a>').attr("href", "./hebis.php?isbn=" + suchString + "&format=json");
     var b3katLink = $('<a target="_blank">B3KAT</a>').attr("href", "https://www.gateway-bayern.de/TP61/start.do?Query=-1%3D%22" + nArray[0] + "%22");
+    var b3katSourceLink = $('<a target="_blank"><img src="../img/code.svg" alt="code icon" width="16"/></a>').attr("href", "./b3kat.php?isbn=" + suchString + "&format=json");
     var hbzLink = $('<a target="_blank">HBZ</a>').attr("href", "https://nrw.digibib.net/search/hbzvk/list?start=1&count=20&defaults=on&q-ib=" + nArray[0]);
+    var hbzSourceLink = $('<a target="_blank"><img src="../img/code.svg" alt="code icon" width="16"/></a>').attr("href", "./hbz.php?isbn=" + suchString + "&format=json");
     var swissLink = $('<a target="_blank">swisscovery</a>').attr("href", "https://swisscovery.slsp.ch/discovery/search?query=isbn,contains," + nArray[0] + ",AND&tab=41SLSP_NETWORK&search_scope=DN_and_CI&vid=41SLSP_NETWORK:VU1_UNION&mode=advanced&offset=0");
+    var swissSourceLink = $('<a target="_blank"><img src="../img/code.svg" alt="code icon" width="16"/></a>').attr("href", "./swiss.php?isbn=" + suchString + "&format=json");
     var obvsgLink = $('<a target="_blank">OBVSG</a>').attr("href", "http://search.obvsg.at/primo_library/libweb/action/search.do?fn=search&ct=search&initialSearch=true&mode=Basic&tab=default_tab&indx=1&dum=true&srt=rank&vid=OBV&tb=t&vl%28freeText0%29=" + nArray[0]);
+    var obvsgSourceLink = $('<a target="_blank"><img src="../img/code.svg" alt="code icon" width="16"/></a>').attr("href", "./obvsg.php?isbn=" + suchString + "&format=json");
     var dnbLink = $('<a target="_blank">DNB</a>').attr("href","https://portal.dnb.de/opac.htm?method=simpleSearch&cqlMode=true&query=num%3D" + nArray[0]);
-    $('#suche-'+'k10plus').html(k10plusLink);
-    $('#suche-'+'hebis').html(hebisLink);
-    $('#suche-'+'b3kat').html(b3katLink);
-    $('#suche-'+'hbz').html(hbzLink);
-    $('#suche-'+'swiss').html(swissLink);
-    $('#suche-'+'obvsg').html(obvsgLink);
-    $('#suche-'+'dnb').html(dnbLink);
+    var dnbSourceLink = $('<a target="_blank"><img src="../img/code.svg" alt="code icon" width="16"/></a>').attr("href", "./dnb.php?isbn=" + suchString + "&format=json");
+    $('#suche-'+'k10plus').html(k10plusLink).append("  ").append(k10plusSourceLink);
+    $('#suche-'+'hebis').html(hebisLink).append("  ").append(hebisSourceLink);
+    $('#suche-'+'b3kat').html(b3katLink).append("  ").append(b3katSourceLink);
+    $('#suche-'+'hbz').html(hbzLink).append("  ").append(hbzSourceLink);
+    $('#suche-'+'swiss').html(swissLink).append("  ").append(swissSourceLink);
+    $('#suche-'+'obvsg').html(obvsgLink).append("  ").append(obvsgSourceLink);
+    $('#suche-'+'dnb').html(dnbLink).append("  ").append(dnbSourceLink);
 
     // Bestandsabgleich für die UB Mannheim
     // (Default-Vorgehen, wenn kein oder unbekannter
