@@ -95,7 +95,7 @@ Moreover, for the retrieval of data from the British National Library, you shoul
 
 The easiest way for developing/changing code on linux or windows is to use the same docker image
 from Dockerhub and additionally mount the current malibu directory into docker:
-```
+```bash
 docker run -d -p 12345:80 -v `pwd`:/var/www/html/malibu-dev ubma/malibu
 ```
 The development version of malibu can then be accessed at [http://localhost:12345/malibu-dev/isbn/suche.html](http://localhost:12345/malibu-dev/isbn/suche.html)

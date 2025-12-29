@@ -44,8 +44,6 @@ if (!isset($_GET['ppn']) and !isset($_GET['isbn'])) {
     exit;
 }
 
-$suchString = '';
-
 if (isset($_GET['ppn'])) {
     $n = trim($_GET['ppn']);
     $searchObject = "ppn";
@@ -151,7 +149,7 @@ $map['sammlung'] = '//datafield[@tag="AVE"]/subfield[@code="m"]';
 // 0 zur Verlinkung mit der GND beginnend mit "(DE-588)". Aber unklar wie dies
 // etwa bei Formschlagwörtern ohne Verlinkung aussieht.)
 $map['sw'] = array(
-        'mainPart' => '//datafield[starts-with(@tag,"6") and (starts-with(subfield[@code="0"],"(DE-588)") or subfield[@code="2"]="gnd")]',
+    'mainPart' => '//datafield[(starts-with(@tag,"6") and (starts-with(subfield[@code="0"],"(DE-588)") or subfield[@code="2"]="gnd")) or (@tag="655" and @ind2="7" and subfield[@code="2"]="gnd-content")]',
         'value' => './subfield[@code="a"]',
         'subvalues' => './subfield[@code="b" or @code="t"]',
         'additional' => './subfield[@code="g" or @code="z"]',
@@ -165,10 +163,11 @@ if (!isset($_GET['format'])) {
     $outputXml = simplexml_load_string($outputString);
 
     $outputMap = performMapping($map, $outputXml);
+
     $outputIndividualMap = [];
     for ($j = 0; $j < count($outputArray); $j++) {
-        $outputXml = simplexml_load_string($outputArray[$j]);
-        $outputSingleMap = performMapping($map, $outputXml);
+        $singleRecordXml = simplexml_load_string($outputArray[$j]);
+        $outputSingleMap = performMapping($map, $singleRecordXml);
         array_push($outputIndividualMap, $outputSingleMap);
     }
     $outputMap["einzelaufnahmen"] = $outputIndividualMap;
